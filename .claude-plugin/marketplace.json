@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-skills",
-  "description": "Production-tested skills for SEO, security auditing, and web tools",
+  "description": "Production-tested skills for SEO, security auditing, writing, and web tools",
   "owner": {
     "name": "James Dickey",
     "url": "https://github.com/jdickey1"
@@ -25,6 +25,13 @@
       "name": "seo-review",
       "description": "Website SEO review covering technical SEO, on-page optimization, local search, Google Business Profile, structured data, and AI search readiness.",
       "source": "./plugins/seo-review",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "writing",
+      "description": "Research-backed writing standards for human-quality content. Anti-AI detection, headline optimization, platform guides for X, LinkedIn, and web copy, persuasion frameworks, and pre-publish quality gates.",
+      "source": "./plugins/writing",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
     },
