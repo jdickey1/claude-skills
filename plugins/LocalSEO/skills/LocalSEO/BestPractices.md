@@ -8,7 +8,7 @@ The rules behind the checklists. Reference this when making SEO decisions.
 
 2. **H1 = keyword + city** - Every service page's H1 should include both the target keyword and the city name. Example: "Kitchen Remodeling in Austin, TX"
 
-3. **Descriptive URL slugs** - Google should understand what the page is about just by reading the slug. `/kitchen-remodeling-austin` not `/services/page-3`
+3. **Readable URL slugs** - URLs should be clean and human-readable for trust and click-through rate. `/kitchen-remodeling` not `/services/page-3`. Don't stuff keywords or locations into slugs — Google's John Mueller has confirmed keywords in URLs are a "very lightweight" ranking factor, and Backlinko's data shows near-zero correlation after controlling for other factors. Readable beats keyword-laden.
 
 4. **No duplicate keyword targeting** - Never build two pages targeting the same keyword. Google will rank neither. One keyword, one page.
 
@@ -51,6 +51,25 @@ The rules behind the checklists. Reference this when making SEO decisions.
 20. **Build links to your homepage first** - 80-90% of backlinks should point to your homepage.
 
 21. **Use branded anchor text** - It's the safest and most effective form of link building. Your brand name as the link text.
+
+## What Actually Moves the Needle (Priority Order)
+
+Based on ranking factor studies and confirmed Google statements, these are the highest-impact factors for local businesses — in order:
+
+1. **Google Business Profile signals** - Category, proximity, reviews, posting frequency, completeness. This drives the map 3-pack more than anything on your website.
+2. **Title tags with location + service keywords** - Front-loaded, under 60 characters. The single highest-impact on-page element.
+3. **H1 tags matching search intent** - H1 = keyword + city. Tells Google and users exactly what the page is about.
+4. **Content depth** - Pages with 2,500+ words consistently outrank thin competitor pages. Comprehensive beats brief.
+5. **FAQ schema** - Enables rich results and positions content for AI search answers.
+6. **Internal linking between related pages** - Distributes authority and helps Google understand your site structure.
+7. **Google reviews (volume + velocity + response time)** - More reviews, collected consistently, responded to fast.
+8. **Citations with consistent NAP** - Bing Places, Yelp, BBB, directories. Consistency matters more than volume.
+
+### What does NOT move the needle (common agency busywork)
+
+- **Keyword-stuffed URL slugs** - Google's John Mueller: "very lightweight" factor. Backlinko data: near-zero correlation. Clean, readable URLs are fine. Don't restructure URLs for keywords — the redirect risk outweighs any benefit.
+- **Blog posts targeting informational intent** - "How to fix a leaky faucet" attracts DIYers, not customers. Skip this for local businesses.
+- **Excessive anchor text optimization** - Branded anchor text is safest and most effective. Over-optimized anchors trigger penalties.
 
 ## The Timeline
 

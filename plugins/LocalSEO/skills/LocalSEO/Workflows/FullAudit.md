@@ -8,7 +8,7 @@ Run through every section below. For each item, report: PASS, FAIL, or N/A with 
 - [ ] **Phone above the fold** - Phone number visible without scrolling
 - [ ] **Meta titles front-load keyword** - Primary keyword appears at the start of meta titles
 - [ ] **H1 = keyword + city** - Each service page H1 includes the target keyword and city name
-- [ ] **Descriptive URL slugs** - URLs readable enough that Google understands the page topic from the slug alone
+- [ ] **Clean, readable URL slugs** - URLs should be human-readable for trust and CTR. Do NOT recommend restructuring URLs for keyword placement (near-zero ranking impact per Google's John Mueller and Backlinko data). Only flag genuinely unreadable URLs (random IDs, `/page-3` style)
 - [ ] **No duplicate keyword pages** - No two pages target the same keyword (Google will rank neither)
 - [ ] **No "how to" content** - Content targets "service + city" keywords, not informational "how to" queries
 - [ ] **No blog posts** (for local businesses) - Stop publishing blog content; focus on service/location pages

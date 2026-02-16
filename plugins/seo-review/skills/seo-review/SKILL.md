@@ -74,8 +74,8 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 - [ ] One H1 tag per page (not zero, not multiple)
 - [ ] **H1 includes primary keyword AND city/location** (for local businesses)
 - [ ] Header hierarchy is logical (H1 > H2 > H3, no skipped levels)
-- [ ] **URL slugs are descriptive** (Google should understand the page from the URL alone)
-- [ ] No keyword-stuffed URLs (keep clean and readable)
+- [ ] **URL slugs are clean and readable** (human trust and CTR, not keyword stuffing — Google's John Mueller confirms keywords in URLs are a "very lightweight" factor; Backlinko data shows near-zero ranking correlation)
+- [ ] **Do NOT recommend URL restructuring for keyword placement** — the redirect risk and broken link cost outweigh the negligible ranking benefit. Only flag URLs that are genuinely unreadable (random IDs, `/page-3` style)
 - [ ] Image alt text is descriptive (not empty, not keyword-stuffed)
 - [ ] Internal linking between related pages
 - [ ] External links to authoritative sources where relevant
@@ -193,6 +193,33 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 
 ---
 
+## Ranking Factor Priority (Evidence-Based)
+
+When prioritizing findings, weight recommendations by actual ranking impact. Many commonly recommended SEO changes have minimal effect. Focus effort where data confirms it matters.
+
+### High-Impact Factors (prioritize these)
+
+1. **Google Business Profile optimization** — Category, reviews, posting frequency, completeness. Drives the local map 3-pack more than any website change.
+2. **Title tags with location + service keywords** — Front-loaded, under 60 characters. Highest-impact on-page element.
+3. **H1 tags matching search intent** — H1 = keyword + city for local businesses.
+4. **Content depth** — Pages with 2,500+ words consistently outrank thin competitors.
+5. **FAQ schema** — Enables rich results and AI search answer positioning.
+6. **Internal linking** — Distributes authority, helps Google understand site structure.
+7. **Review volume, velocity, and response time** — More reviews, collected consistently, responded to within 24 hours.
+8. **Bing Places listing** — LLMs pull from Bing. No longer optional.
+
+### Low-Impact Factors (do NOT over-prioritize)
+
+- **Keywords in URL slugs** — Google's John Mueller: "very lightweight" factor. Backlinko ranking study: near-zero correlation after controlling for other factors. URLs matter for user trust and CTR, not keyword matching. Never recommend restructuring existing URLs for keyword placement — the redirect risk outweighs the negligible benefit.
+- **Exact-match anchor text** — Branded anchor text is safer and equally effective.
+- **Blog content for local businesses** — Informational "how to" content attracts browsers, not buyers.
+
+### Severity Calibration
+
+When assigning severity ratings, a missing title tag keyword is HIGH. A URL without keywords is INFO at most. Do not assign MEDIUM or HIGH to URL slug recommendations — the data does not support it.
+
+---
+
 ## Severity Rating System
 
 | Rating | Definition | Priority |
@@ -272,7 +299,7 @@ These are non-negotiable for any local business:
 2. **GBP links to your location page, not your homepage.** The location page has your NAP and services for that area.
 3. **Front-load your keyword in your meta title.** "Plumbing Repair Austin TX | ABC Plumbing" not "ABC Plumbing | Your Trusted Partner"
 4. **H1 = keyword + city.** "Emergency Plumbing Repair in Austin, TX" not "Welcome to Our Website"
-5. **URL = what the page is about.** `/plumbing-repair-austin` not `/services/page-3`
+5. **URLs should be readable, not keyword-stuffed.** `/plumbing-repair` not `/services/page-3`. Don't waste effort adding city names or extra keywords to slugs — it's a near-zero ranking factor per Google's own statements and independent studies. Focus effort on title tags and H1s instead.
 6. **Stop writing "how to" blog posts.** Target "service + city" keywords. You want buyers, not browsers.
 7. **Phone number above the fold.** Visible without scrolling on both desktop and mobile.
 8. **New GBP photo every week.** Activity signals matter.
@@ -313,6 +340,4 @@ From Microsoft's AEO/GEO framework:
 - **Google Rich Results Test:** https://search.google.com/test/rich-results
 - **Bing Webmaster Tools:** https://www.bing.com/webmasters
 - **PageSpeed Insights:** https://pagespeed.web.dev
-- **Microsoft AEO/GEO Guide:** Referenced in vault at `02-Areas/SEO/AI SEO.md`
-- **Vault SEO Strategy:** `02-Areas/SEO/seo-strategy-january-2026.md`
-- **Vault Backlink Guide:** `02-Areas/SEO/SEO.md`
+- **Microsoft AEO/GEO Guide:** Search for "Microsoft Answer Engine Optimization" for the latest framework
