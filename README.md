@@ -1,6 +1,6 @@
 # Claude Code Skills
 
-> **Production-tested skills for Claude Code** — SEO, security auditing, and web tools that actually work.
+> **Production-tested skills for Claude Code** — SEO, security auditing, writing, and web tools that actually work.
 
 These skills extend [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with specialized domain knowledge and workflows. They are not wrappers or thin prompts — each one encodes real methodology built from hands-on consulting work.
 
@@ -43,6 +43,16 @@ The automation tools in `LocalSEO/Tools/` are production Node.js scripts that in
 - AI search readiness (AEO/GEO) — optimizing for AI-generated answers
 - Content strategy and link building assessment
 
+### writing
+
+**Research-backed writing standards for human-quality content.** Universal rules that apply to everything you write, plus platform-specific optimization guides.
+
+- Anti-AI detection: em dash ban, buzzword replacement table, contractions, sentence rhythm variation
+- Headline optimization with hard statistics (80% of readers never get past the headline)
+- Platform guides: X posts (algorithm signals, link decoupling), X articles, LinkedIn (algorithm priorities, hook formulas), website copy (SEO, CTAs, content structure)
+- Persuasion frameworks: PAS, BAB, AIDA, FAB, 4Ps, plus classic direct response principles
+- Pre-publish checklist covering all quality gates
+
 ### web-reader
 
 **Clean web page content extraction.** Fetches any URL and returns it as structured markdown for analysis. Simple, reliable, and useful as a building block for other workflows.
@@ -63,6 +73,7 @@ The automation tools in `LocalSEO/Tools/` are production Node.js scripts that in
 /plugins install LocalSEO@claude-skills
 /plugins install security-audit@claude-skills
 /plugins install seo-review@claude-skills
+/plugins install writing@claude-skills
 /plugins install web-reader@claude-skills
 ```
 
@@ -76,6 +87,8 @@ Skills activate automatically based on context. Ask Claude Code to:
 - "Do an SEO review of example.com"
 - "Create a content brief for [keyword]"
 - "Audit my Google Business Profile"
+- "Write a LinkedIn post about [topic]"
+- "Review this copy for AI tells"
 - "Read this page and summarize it"
 
 ### Updating
