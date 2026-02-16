@@ -1,0 +1,39 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-skills",
+  "description": "Production-tested skills for SEO, security auditing, and web tools",
+  "owner": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  },
+  "plugins": [
+    {
+      "name": "LocalSEO",
+      "description": "Local SEO audit, optimization, and automation for service businesses. Includes keyword research, competitor backlink analysis, GBP optimization, content briefs, and a full DIY automation system.",
+      "source": "./plugins/LocalSEO",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "security-audit",
+      "description": "Comprehensive cybersecurity audit framework following OWASP Top 10 and NIST 800-53. Red-team methodology for web application security review.",
+      "source": "./plugins/security-audit",
+      "category": "security",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "seo-review",
+      "description": "Website SEO review covering technical SEO, on-page optimization, local search, Google Business Profile, structured data, and AI search readiness.",
+      "source": "./plugins/seo-review",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "web-reader",
+      "description": "Fetches web page content as clean markdown for analysis and processing.",
+      "source": "./plugins/web-reader",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    }
+  ]
+}
