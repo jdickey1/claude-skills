@@ -1,0 +1,8 @@
+{
+  "name": "security-audit",
+  "description": "Comprehensive cybersecurity audit framework following OWASP Top 10 and NIST 800-53. Red-team methodology for web application security review.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}

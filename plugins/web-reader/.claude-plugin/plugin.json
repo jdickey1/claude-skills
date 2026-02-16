@@ -1,0 +1,8 @@
+{
+  "name": "web-reader",
+  "description": "Fetches web page content as clean markdown for analysis and processing.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
