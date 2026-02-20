@@ -97,7 +97,7 @@ Analyze the fetched content and produce all of the following:
 
 Fill in this exact template:
 
-```markdown
+````markdown
 # X Analysis: @{username}
 
 **Source**: {url}
@@ -132,7 +132,7 @@ Fill in this exact template:
 ```
 {original text from the tweet/thread}
 ```
-```
+````
 
 Choose a concise `{category}` tag based on the content topic (e.g., `ai-policy`, `texas-politics`, `datacenter`, `legal`, `media`).
 
