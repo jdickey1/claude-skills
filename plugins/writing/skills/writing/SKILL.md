@@ -90,6 +90,28 @@ David Ogilvy: "On the average, five times as many people read the headline as re
 
 **Full research and formulas**: See [references/headlines.md](references/headlines.md)
 
+### 10. Don't Referee Your Own Argument
+
+Lines like "That's not a tagline" or "This isn't just marketing" are the writer stepping in front of the evidence. If the evidence is good, it doesn't need a narrator telling the reader it's good. One structural pivot per piece, maximum. Two is one too many.
+
+- Wrong: "That's not positioning. That's just what's true."
+- Right: Let the evidence land. Move on.
+
+### 11. End in the Speaker's Voice, Not the Writer's
+
+When writing for an organization or another person, the final paragraph should sound like *them*, not like you. "That's just what's true" sounds like a copywriter. "We have been blessed with so much" sounds like a university president. The closer is where the reader decides who's talking. Make sure it's the right person.
+
+### 12. Front-Load Credentials, Then Trust the Reader
+
+State key credentials, numbers, and authority markers with full specificity *once*, early in the piece. After that, refer to them casually. Restating credentials mid-piece signals insecurity. The reader remembers. Don't re-cite your authority every time you reference it.
+
+- First mention: "one of only 16 fully recommended Newman Guide colleges in America"
+- Later: "as a Newman Guide university" (the reader already knows what that means)
+
+### 13. Earned Language Over Credential-Dropping
+
+Don't just list what you are. Show that you earned it. "Diligence and fidelity to mission that earned a spot on the Newman Guide" is stronger than "a Newman Guide institution." The reader respects achievement more than status.
+
 ## Hook Patterns (Universal)
 
 The first line of anything has one job: stop the scroll. Patterns that work:
@@ -127,3 +149,7 @@ Before finalizing any content:
 - [ ] Specific numbers/names/examples (not abstractions)
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
+- [ ] No self-refereeing ("That's not just X, it's Y") more than once
+- [ ] Final paragraph is in the speaker's voice, not the writer's
+- [ ] Credentials stated fully once, referenced lightly after
+- [ ] Achievements framed as earned, not just listed
