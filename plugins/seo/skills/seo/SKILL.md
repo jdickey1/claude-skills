@@ -154,6 +154,7 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - [ ] NAP (Name, Address, Phone) is consistent across all pages
 - [ ] **H1 includes primary keyword AND city/location**
 - [ ] Content targets "service + city" keywords, not informational "how to" queries
+- [ ] **Business name is clean** — no keyword stuffing in business name (Google suspends for "Best Plumber in Denver - 24/7 Emergency Plumbing"). Use legal business name only.
 
 ### TIER 2: HIGH PRIORITY
 
@@ -171,13 +172,17 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - [ ] **GBP posts include keyword AND location** in every update (2-3 posts/week ideal)
 - [ ] Reviews being actively collected (ask every customer — systematize with follow-up emails, QR codes, SMS)
 - [ ] **Reviews responded to within 24 hours** (every single one)
-- [ ] **Review velocity maintained** — consistent new reviews matter more than total count. Review velocity is a live ranking signal; rankings drop when generation stops.
+- [ ] **Review velocity maintained** — consistent new reviews matter more than total count. Review velocity is a live ranking signal; rankings drop when generation stops. Reviews account for ~20% of local pack ranking weight.
+- [ ] **Review text quality** — reviews mentioning specific services and locations carry more ranking weight. Coach customers to mention the service they received and their city.
 - [ ] Attributes filled out (accessibility, amenities, etc.)
+- [ ] **Behavioral signals healthy** — clicks to directions, calls from profile, website clicks, and message inquiries are all ranking signals. An active, engaging profile outranks a passive one.
 
 ##### Service Area Businesses (SABs)
-- [ ] Service areas defined precisely (20 zip codes/cities you actually serve)
+- [ ] Service areas defined precisely (20 zip codes/cities you actually serve — Google verifies claims)
 - [ ] Business address hidden from public if home-based
-- [ ] Unique service area pages per major city (not city-name swaps)
+- [ ] No service area abuse — don't claim coverage you can't actually serve (suspension risk)
+- [ ] Unique service area pages per major city with this structure: H1 ("Service in City"), local testimonials, city-specific details (climate, building codes, local issues), service breakdown, location-specific FAQ
+- [ ] Each service area page has genuinely unique content (not city-name swaps — Google spam updates target these)
 
 #### B2 - Structured Data / Schema Markup
 All schema should use **JSON-LD format** (Google recommended, AI-universal).
@@ -207,6 +212,11 @@ Citations have shifted from "ranking fuel" to **verification layer** — busines
 - [ ] Pursue "Best of" lists and awards (expert-curated lists are #1 AI citation factor)
 - [ ] NAP is identical across all citations (exact match, no variations)
 - [ ] No duplicate listings on any platform
+
+**Citation Quality Hierarchy:**
+- **Tier 1 (highest value):** Industry-specific directories (Justia for legal, Angie's for contractors), authoritative general directories (Yelp, Apple Maps, Bing), expert-curated "Best of" lists, quality news/press mentions, professional association memberships
+- **Tier 2 (moderate value):** Local business directories, city guides, white pages, social media profiles with complete info
+- **Tier 3 (lower value):** Auto-populated directories, low-authority or spam directories (avoid these)
 
 #### B4 - Content Strategy
 - [ ] Each service has its own dedicated page
@@ -265,7 +275,7 @@ AI Overviews now appear in 16% of Google desktop searches. 65%+ of searches end 
 #### C4 - Multi-Platform AI Visibility
 - [ ] **Bing optimized** — ChatGPT uses Bing's index. If you're not on Bing, you're not in ChatGPT.
 - [ ] **Sitemap freshness** — Bing weights `lastmod`, `changefreq` more than Google
-- [ ] Content is voice-search friendly (conversational Q&A format, natural language)
+- [ ] Content is voice-search friendly (conversational Q&A format, natural language). 50%+ of local searches are now voice; 58% of consumers use voice for local business info (hours, directions, phone). Voice pages load 52% faster than average.
 - [ ] **Reddit presence** (if applicable) — ChatGPT citations of Reddit increased 87% in 2025; authentic participation in relevant subreddits drives AI citations
 - [ ] Video content exists and is properly titled/described (YouTube = 25% of all AI citations)
 
@@ -306,16 +316,17 @@ When prioritizing findings, weight recommendations by actual ranking impact. Foc
 
 ### High-Impact Factors (prioritize these)
 
-1. **Google Business Profile optimization** — Category, reviews, posting frequency, completeness. Drives the local map 3-pack more than any website change. Primary category is the #1 local ranking factor.
+1. **Google Business Profile optimization** — Category, reviews, posting frequency, completeness. Drives the local map 3-pack more than any website change. Primary category is the #1 local ranking factor. Note: proximity now contributes only ~15% to local rankings (down from 25-30% in 2020); prominence and relevance signals (~60%) now dominate, meaning a further business with stronger signals outranks a closer one with weaker signals.
 2. **E-E-A-T signals** — r=0.81 correlation with AI citations. Stronger predictor than domain authority. 96% of Google AI Overview content comes from verified E-E-A-T sources. Pages ranked #6-#10 with strong E-E-A-T are cited 2.3x more than #1-ranked pages with weak authority.
 3. **Title tags with location + service keywords** — Front-loaded, 50-60 characters. Highest-impact on-page element.
 4. **H1 tags matching search intent** — H1 = keyword + city for local businesses.
 5. **Content depth with original insights** — Pages with 2,500+ words consistently outrank thin competitors. Original data earns 4.1x more AI citations.
-6. **Review velocity and recency** — New reviews increase rankings regardless of sentiment. This is a live ranking signal — rankings drop when review generation stops.
-7. **FAQ schema** — Enables rich results and AI search answer positioning.
-8. **Internal linking** — Distributes authority, helps Google understand site structure.
-9. **Bing Places + Apple Business Connect** — LLMs pull from Bing. Siri pulls from Apple Maps. No longer optional.
-10. **Structured data (JSON-LD)** — Content with schema is 2.3-2.5x more likely to appear in AI-generated answers.
+6. **Review velocity and recency** — New reviews increase rankings regardless of sentiment. This is a live ranking signal — rankings drop when review generation stops. Review text mentioning specific services and locations now carries additional ranking weight.
+7. **Behavioral/engagement signals** — Clicks to directions, calls from GBP, website clicks, and message inquiries are active ranking factors. Google rewards businesses that "look alive" with regular activity and customer interactions. "Business open at search time" is a top-5 local ranking factor (Whitespark 2026).
+8. **FAQ schema** — Enables rich results and AI search answer positioning.
+9. **Internal linking** — Distributes authority, helps Google understand site structure.
+10. **Bing Places + Apple Business Connect** — LLMs pull from Bing. Siri pulls from Apple Maps. No longer optional.
+11. **Structured data (JSON-LD)** — Content with schema is 2.3-2.5x more likely to appear in AI-generated answers.
 
 ### Low-Impact Factors (do NOT over-prioritize)
 
@@ -351,6 +362,22 @@ When recommending new pages or content during an audit, validate that the target
 | **MEDIUM** | Missing citations, thin content, poor internal linking, no AI optimization, no author attribution. Competitive disadvantage. | Fix within 1 month |
 | **LOW** | Minor improvements - image optimization, anchor text diversity, content freshness. Polish items. | Fix in next cycle |
 | **INFO** | Best practice recommendation. No immediate ranking impact but compounds over time. | Consider for roadmap |
+
+---
+
+## Google Spam Warnings (Local Business)
+
+Flag these during audits — Google is actively penalizing:
+
+- **Keyword-stuffed business names** — "Best Plumber in Denver - 24/7 Emergency" instead of legal name. Suspension risk.
+- **Fake addresses** — Virtual offices or fake storefronts to game proximity. Algorithmic demotion or suspension.
+- **Phone number spoofing** — Using local area codes that don't match actual location.
+- **Service area abuse** — Claiming coverage you can't actually serve.
+- **Review manipulation** — Fake reviews, paid reviews, review exchange schemes. Stricter enforcement in 2025+.
+- **Thin city pages** — Generic content with city-name swaps. Spam update target.
+- **NAP inconsistencies** — Same business with different name/address/phone across platforms.
+
+Google's 2025 enforcement is significantly stricter: more aggressive spam profile filtering, higher suspension risk, algorithmic demotion without warning, and tighter review authentication (especially for SABs).
 
 ---
 
@@ -406,7 +433,7 @@ These aren't one-time fixes. They need to happen consistently:
 | Upload new GBP photo | Weekly |
 | Post GBP update (keyword + location) | 2-3x per week |
 | Respond to reviews | Within 24 hours |
-| Ask customers for reviews | Every single one |
+| Ask customers for reviews (coach them to mention service + city) | Every single one |
 | Check for 404 errors | Weekly |
 | Verify indexing | Monthly |
 | Update top content with new data/examples | Quarterly |
