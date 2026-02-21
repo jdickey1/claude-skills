@@ -71,6 +71,27 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - **WebSearch** - Check indexation (`site:domain.com`), search for business name, check competitors
 - **WebFetch** - Fetch robots.txt, sitemap.xml, specific URLs
 
+### Verification Rules (CRITICAL — Prevents False Findings)
+
+**Content extractors (web-reader, WebFetch) strip structural HTML elements** like navigation, headers, footers, and sticky bars. NEVER conclude something is missing based solely on extracted content.
+
+**For any finding about elements in the header, nav, footer, or above-the-fold area** (phone numbers, CTAs, addresses, logos), you MUST verify with a targeted raw HTML check:
+```bash
+curl -s <url> | grep -oP '.{0,80}(tel:|phone|555|address).{0,80}' | head -10
+```
+
+**For any finding about `<head>` tags** (hreflang, canonical, OG tags, meta robots, twitter cards), you MUST extract the actual `<head>` block and search within it — NOT grep the full HTML blob (which can be 100KB+ and truncate):
+```bash
+curl -s <url> | sed -n '/<head/,/<\/head>/p' | grep -i 'hreflang\|canonical\|og:\|twitter:\|noindex'
+```
+
+**Confidence levels must reflect verification method:**
+- **CONFIRMED** = Verified via raw HTML source (curl + targeted grep on `<head>` or `<body>` sections). Only use this when you have directly seen the presence or absence in the actual HTML.
+- **LIKELY** = Inferred from content extraction tools (web-reader, WebFetch) but NOT verified in raw HTML. This is the DEFAULT for findings from content extractors.
+- **NEEDS VERIFICATION** = Conflicting signals or unable to check raw HTML.
+
+**Never mark a "missing element" finding as CONFIRMED unless you checked the raw HTML `<head>` or DOM directly.** Content extractors are for analyzing page content and copy — not for verifying HTML structure.
+
 ### Audit Execution Order
 
 1. **Indexation check** - `site:domain.com`, robots.txt, sitemap.xml
