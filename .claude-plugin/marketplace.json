@@ -8,9 +8,9 @@
   },
   "plugins": [
     {
-      "name": "LocalSEO",
-      "description": "Local SEO audit, optimization, and automation for service businesses. Includes keyword research, competitor backlink analysis, GBP optimization, content briefs, and a full DIY automation system.",
-      "source": "./plugins/LocalSEO",
+      "name": "seo",
+      "description": "Comprehensive SEO audit, optimization, and automation. Covers technical SEO, on-page optimization, local business SEO, Google Business Profile, AI search readiness, content strategy, link building, and a full DIY automation system.",
+      "source": "./plugins/seo",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
     },
@@ -19,13 +19,6 @@
       "description": "Comprehensive cybersecurity audit framework following OWASP Top 10 and NIST 800-53. Red-team methodology for web application security review.",
       "source": "./plugins/security-audit",
       "category": "security",
-      "homepage": "https://github.com/jdickey1/claude-skills"
-    },
-    {
-      "name": "seo-review",
-      "description": "Website SEO review covering technical SEO, on-page optimization, local search, Google Business Profile, structured data, and AI search readiness.",
-      "source": "./plugins/seo-review",
-      "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
     },
     {
