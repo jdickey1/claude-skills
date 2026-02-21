@@ -59,14 +59,35 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] Content scannable (short paragraphs, 60-70 Flesch Reading Ease)
 
 ### E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness)
-- [ ] Author byline on content (not anonymous)
-- [ ] Author page with credentials, bio, photo
-- [ ] Author schema (Person with jobTitle, sameAs links)
-- [ ] First-hand experience demonstrated (not generic advice)
-- [ ] About page with company credentials, team, history
-- [ ] Trust signals visible (certifications, awards, memberships)
-- [ ] Claims backed by data or citations
-- [ ] Consistent identity across website and external profiles
+
+**Trust (check first — foundation of all E-E-A-T):**
+- [ ] HTTPS/SSL implemented
+- [ ] Privacy policy, Terms of service exist
+- [ ] Contact page with multiple methods
+- [ ] Transparent sourcing, no unverifiable claims
+- [ ] Affiliate/sponsorship disclosure present
+- [ ] AI content disclosure when substantially used
+
+**Experience (hardest to fake):**
+- [ ] First-hand experience in content (not generic advice)
+- [ ] Original photos/videos (not stock)
+- [ ] Case studies with measurable outcomes
+- [ ] Honest about challenges and limitations
+- [ ] Process documentation showing insider knowledge
+
+**Expertise:**
+- [ ] Author byline on all content (not anonymous)
+- [ ] Author page with photo, bio, credentials, social links
+- [ ] Author schema (Person with jobTitle, knowsAbout, sameAs)
+- [ ] YMYL content has formal credentials (health, finance, legal, safety, civic)
+- [ ] Content shows deep knowledge (nuance, edge cases, competing perspectives)
+
+**Authoritativeness:**
+- [ ] About page with team bios, photos, LinkedIn links, company credentials
+- [ ] Consistent brand/author identity across all platforms
+- [ ] Entity signals (sameAs schema to LinkedIn, social, Wikidata)
+- [ ] Third-party recognition (press, awards, speaking, industry mentions)
+- [ ] Topical authority through interconnected content clusters
 
 ### Contact & Conversion
 - [ ] Clear CTAs on every service page
