@@ -178,39 +178,53 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 
 ## Tier 3: AI Search (AEO/GEO)
 
-### AI Search Readiness
-- [ ] Answer-first layout (direct answer in first 40-60 words)
-- [ ] Self-contained answer blocks (134-167 words)
-- [ ] Clear, extractable content blocks
-- [ ] Headings mirror real questions
-- [ ] Tables and comparison matrices (2.5-2.8x citation boost)
-- [ ] Numbered/bulleted lists (50% of top AI citations)
-- [ ] Content states: who, what problem, why better
-- [ ] Original data/statistics (4.1x citation boost)
-- [ ] Modular, independently citable blocks
-- [ ] Strongest content in first 30% of page
+AI Overviews appear in ~16-60% of Google searches. Organic CTR drops 61% when AI Overviews appear. Being cited in AI answers is the counter-strategy: cited brands recover +35% organic CTR.
 
-### Generative Engine Optimization
-- [ ] Brand on third-party sites
+**AEO** = be the direct answer (featured snippets, voice, position zero). **GEO** = be the source AI synthesizes from (ChatGPT, Perplexity, Claude, Copilot).
+
+### Answer Engine Optimization (AEO)
+- [ ] Answer-first layout ("Question, Answer, Evidence" pattern; 44% of AI citations from first 30% of content)
+- [ ] Self-contained answer blocks (120-180 words; 70% more ChatGPT citations vs unstructured)
+- [ ] Tables and comparison matrices (2.8x citation boost; 96% AI parsing accuracy)
+- [ ] Numbered/bulleted lists (50% of top AI citations; +200-300% citation lift)
+- [ ] FAQ sections (72% citation rate vs 34% for paragraph-only; question H2s 84% more likely to trigger AI Overviews)
+- [ ] Content states: who it's for, what problem it solves, why it's better
+- [ ] Statistics (+22% citation likelihood) and quotes from authoritative sources (+37%)
+- [ ] Original data/statistics (4.1x more AI citations; 0.89 correlation with AI selection)
+- [ ] Modular, independently citable content blocks
+- [ ] Multimodal content (text + images + video + schema = 156% higher citations; full multimodal + schema = 317%)
+
+### Generative Engine Optimization (GEO)
+- [ ] Brand entity recognition (consistent mentions across authoritative third-party sites)
 - [ ] Review profiles on Trustpilot/G2/Capterra/Yelp (3x citation boost)
 - [ ] Expert reviews or press mentions
-- [ ] Consistent brand voice
-- [ ] Author attribution with credentials
-- [ ] Definitive language (not tentative)
+- [ ] Author attribution with visible credentials (+40% AI citations)
+- [ ] Definitive language ("X is true" not "X might be true"; 15+ entities/page = 4.8x citation likelihood)
+- [ ] Current-year citations (positions 3-5 vs older references in 6-8)
+- [ ] Content freshness maintained (53% of ChatGPT citations updated within 6 months; 90-day update cadence)
+- [ ] Defensive AI SEO (monitor AI answers about brand; create authoritative "single source of truth" content)
 
 ### Technical AI Accessibility
-- [ ] Content in HTML (not JS-only)
-- [ ] No cloaking
-- [ ] Semantic HTML elements
+- [ ] Content in HTML (not JS-only rendering)
+- [ ] No cloaking (same content served to bots and users)
+- [ ] Semantic HTML elements (article, section, nav, main)
+- [ ] Schema markup comprehensive (36% AI citation boost; 2.3x more likely in AI Overviews)
+- [ ] Page speed optimized (FCP <0.4s = 6.7 citations avg; >1.13s = 2.1 citations)
 - [ ] SSR/SSG for key content
 - [ ] Descriptive image alt text
-- [ ] AI crawler governance in robots.txt (GPTBot, ClaudeBot, PerplexityBot)
+- [ ] AI crawler governance in robots.txt (GPTBot, ClaudeBot, PerplexityBot; only 14% of top domains have directives)
 
 ### Multi-Platform AI Visibility
-- [ ] Bing optimized (ChatGPT's index)
-- [ ] Sitemap freshness (lastmod, changefreq)
+Only 11% of domains appear in both ChatGPT and Perplexity citations — optimize per platform.
+
+- [ ] Google AI Overviews (Reddit 20%, YouTube 23.3%; 47% of citations from positions #6-#20+)
+- [ ] ChatGPT (Wikipedia 43%, DA 60+ preferred; 7.92 citations/question)
+- [ ] Perplexity (real-time web retrieval; 21.87 citations/question; recency over authority)
+- [ ] Bing/Copilot (software/tech sources preferred; important for enterprise B2B)
+- [ ] Sitemap freshness (lastmod, changefreq — Bing weights these more than Google)
 - [ ] Voice-search friendly content (50%+ local searches are voice; 58% use voice for local business info)
-- [ ] Video content (YouTube = 25% of AI citations)
+- [ ] Reddit presence (authentic participation; Google AI Overviews cite Reddit 20%)
+- [ ] Video content (YouTube = 23.3% of Google AI Overview citations; chapter timestamps enable segment citing)
 
 ## Tier 4: Links & Authority
 
