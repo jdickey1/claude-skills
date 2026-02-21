@@ -185,19 +185,28 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - [ ] Each service area page has genuinely unique content (not city-name swaps — Google spam updates target these)
 
 #### B2 - Structured Data / Schema Markup
-All schema should use **JSON-LD format** (Google recommended, AI-universal).
+All schema should use **JSON-LD format** (Google recommended, AI-universal). Use separate `<script type="application/ld+json">` tags per schema type (easier to debug than `@graph`). Only mark up content that is **visible on the page** — marking invisible content risks manual action penalties.
 
-- [ ] LocalBusiness or Organization schema on homepage (use specific subtype: `Plumber`, `Attorney`, etc.)
+- [ ] LocalBusiness or Organization schema on homepage (use specific subtype: `Plumber`, `Attorney`, `Restaurant`, etc.)
 - [ ] Schema includes: name, address, phone, hours, geo coordinates
-- [ ] **Person schema for authors** with `jobTitle`, `sameAs` links to LinkedIn/profiles
+- [ ] **Person schema for authors** with `jobTitle`, `description`, `sameAs` links to LinkedIn/profiles, `worksFor`, and `image`
 - [ ] BreadcrumbList schema for navigation
-- [ ] Service schema on service pages
-- [ ] FAQ schema on pages with FAQs (enables rich results and AI extraction)
-- [ ] Review/AggregateRating schema (if reviews on site)
-- [ ] Product schema (for product pages)
-- [ ] Article schema (for blog/content pages) with `author`, `datePublished`, `dateModified`
-- [ ] Schema validates in Google Rich Results Test
-- [ ] **Content with schema is 2.3-2.5x more likely to appear in AI-generated answers**
+- [ ] Service schema on service pages (nest within LocalBusiness)
+- [ ] FAQ schema on pages with FAQs — **3.2x more likely to appear in AI Overviews**. Visibility reduced in standard search since 2023 but high AI citation value remains.
+- [ ] Review/AggregateRating schema (if reviews on site) — `ratingValue` and `reviewCount` must match visible numbers exactly. Self-serving or inflated reviews risk penalties.
+- [ ] Product schema (for product pages) with price, currency, availability
+- [ ] Article schema (for blog/content pages) with `author` (Person type), `datePublished`, `dateModified`, and `image` (min 696px wide)
+- [ ] Schema validates in **both** Google Rich Results Test AND Schema Markup Validator (Rich Results Test only covers Google-specific types; Markup Validator covers all schema)
+- [ ] **Content with schema is 2.3-2.5x more likely to appear in AI-generated answers** — GPT-4 accuracy improves from 16% to 54% when content has structured data (Data World study)
+- [ ] No over-marking — use only schema types that authentically represent the page content. Adding irrelevant types hoping for ranking boost is counterproductive.
+
+##### Local Business Schema
+- [ ] `areaServed` property for SABs — list service areas as array of postal codes or place names
+- [ ] Separate LocalBusiness schema per location page (don't duplicate same schema across all pages)
+- [ ] `openingHoursSpecification` in ISO 8601 format with day-specific entries
+- [ ] `VirtualLocation` property for fully remote service providers (consultants, therapists meeting via video only)
+
+**Recently deprecated (Jan 2026, no penalty but no rich results):** Book Actions, Course Info, Claim Review, Estimated Salary, Learning Video, Special Announcement, Vehicle Listing. **HowTo** is limited to desktop only. Remove deprecated types during cleanup but don't panic about existing ones.
 
 #### B3 - Citations & Directory Listings (Local Business)
 Citations have shifted from "ranking fuel" to **verification layer** — businesses with consistent citations perform 18x stronger in local search. For AI search, 3 of top 4 visibility factors are citation-related (Whitespark 2026).
@@ -323,7 +332,7 @@ When prioritizing findings, weight recommendations by actual ranking impact. Foc
 5. **Content depth with original insights** — Pages with 2,500+ words consistently outrank thin competitors. Original data earns 4.1x more AI citations.
 6. **Review velocity and recency** — New reviews increase rankings regardless of sentiment. This is a live ranking signal — rankings drop when review generation stops. Review text mentioning specific services and locations now carries additional ranking weight.
 7. **Behavioral/engagement signals** — Clicks to directions, calls from GBP, website clicks, and message inquiries are active ranking factors. Google rewards businesses that "look alive" with regular activity and customer interactions. "Business open at search time" is a top-5 local ranking factor (Whitespark 2026).
-8. **FAQ schema** — Enables rich results and AI search answer positioning.
+8. **FAQ schema** — Rich result visibility reduced since 2023, but 3.2x more likely to appear in AI Overviews. High AI citation value outweighs reduced standard search visibility.
 9. **Internal linking** — Distributes authority, helps Google understand site structure.
 10. **Bing Places + Apple Business Connect** — LLMs pull from Bing. Siri pulls from Apple Maps. No longer optional.
 11. **Structured data (JSON-LD)** — Content with schema is 2.3-2.5x more likely to appear in AI-generated answers.
@@ -459,7 +468,7 @@ Do all of this consistently for **6 months** and you will not recognize your bus
 
 | Signal | Impact on AI Citations |
 |--------|----------------------|
-| Schema markup (JSON-LD) | 2.3-2.5x more likely to be cited |
+| Schema markup (JSON-LD) | 2.3-2.5x more likely to be cited; GPT-4 accuracy 16%→54% with schema |
 | Tables and comparison matrices | 2.5-2.8x citation rate vs text-only |
 | Original data/statistics | 4.1-5.5x citation boost |
 | Strong E-E-A-T signals | r=0.81 correlation (strongest predictor) |
@@ -482,7 +491,8 @@ Do all of this consistently for **6 months** and you will not recognize your bus
 - **Google Search Central:** https://developers.google.com/search
 - **Google Business Profile Help:** https://support.google.com/business
 - **Schema.org:** https://schema.org
-- **Google Rich Results Test:** https://search.google.com/test/rich-results
+- **Google Rich Results Test:** https://search.google.com/test/rich-results (Google-specific rich result eligibility)
+- **Schema Markup Validator:** https://validator.schema.org (comprehensive validation across all engines)
 - **Bing Webmaster Tools:** https://www.bing.com/webmasters
 - **Bing Places for Business:** https://www.bingplaces.com
 - **Apple Business Connect:** https://businessconnect.apple.com

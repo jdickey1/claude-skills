@@ -104,15 +104,20 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] No city-name-swap pages (spam update target)
 
 ### Structured Data / Schema (JSON-LD)
-- [ ] LocalBusiness/Organization schema (specific subtype)
-- [ ] Schema includes name, address, phone, hours, geo
-- [ ] Person schema for authors (jobTitle, sameAs)
+- [ ] LocalBusiness/Organization schema (specific subtype: Plumber, Attorney, etc.)
+- [ ] Schema includes name, address, phone, hours, geo coordinates
+- [ ] Person schema for authors (jobTitle, description, sameAs, worksFor, image)
 - [ ] BreadcrumbList schema
-- [ ] Service schema on service pages
-- [ ] FAQ schema where applicable
-- [ ] Article schema with author, dates
-- [ ] Review/AggregateRating schema
-- [ ] Schema validates in Rich Results Test
+- [ ] Service schema on service pages (nested within LocalBusiness)
+- [ ] FAQ schema where applicable (3.2x AI Overview visibility boost)
+- [ ] Article schema with author (Person type), dates, image (min 696px wide)
+- [ ] Review/AggregateRating schema (ratingValue + reviewCount must match visible numbers)
+- [ ] Schema validates in Rich Results Test AND Schema Markup Validator
+- [ ] Only visible content marked up (invisible content = manual action risk)
+- [ ] No over-marking (only schema types that authentically represent page content)
+- [ ] areaServed for SABs (postal codes array)
+- [ ] Separate LocalBusiness per location page (no duplication)
+- [ ] Deprecated types removed (Book Actions, Course Info, Claim Review, Estimated Salary, Learning Video, Special Announcement, Vehicle Listing — Jan 2026)
 
 ### Citations & Directories (Local Business)
 - [ ] Bing Places (critical for ChatGPT visibility)
