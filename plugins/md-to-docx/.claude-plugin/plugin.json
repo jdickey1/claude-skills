@@ -1,0 +1,8 @@
+{
+  "name": "md-to-docx",
+  "description": "Convert Markdown files to Word documents (.docx) using pandoc.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
