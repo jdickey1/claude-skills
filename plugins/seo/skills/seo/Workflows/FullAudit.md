@@ -134,13 +134,19 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 
 ### Content Strategy
 - [ ] Each service has dedicated page
-- [ ] Content is substantial (2,500+ words for depth)
-- [ ] No keyword cannibalization
+- [ ] Content depth matches/exceeds top-10 competitors (1,500-2,500 words typical, comprehensiveness > word count)
+- [ ] Original research, proprietary data, or unique insights present
+- [ ] No keyword cannibalization (one-intent-one-URL rule)
+- [ ] Topic cluster architecture (hub-and-spoke with pillar + cluster pages)
+- [ ] Content pruning done (update, merge, or delete underperforming pages)
 - [ ] Content targets buyers not browsers
-- [ ] Social proof on service pages
+- [ ] Social proof on service pages (testimonials, case studies with metrics, video testimonials)
+- [ ] User-generated content integrated (reviews, Q&A sections)
 - [ ] FAQ answers real customer questions (voice-search friendly)
-- [ ] Content updated meaningfully quarterly
+- [ ] Content updated meaningfully when new info exists (not calendar-driven)
 - [ ] First-hand experience demonstrated (E-E-A-T)
+- [ ] Internal linking: hub-spoke structure, 3-10 contextual links/page, descriptive anchors
+- [ ] Embedded video on key pages (VideoObject schema with chapters)
 - [ ] No thin city pages with keyword swaps (spam target)
 
 ## Tier 3: AI Search (AEO/GEO)
