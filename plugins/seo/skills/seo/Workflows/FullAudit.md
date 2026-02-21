@@ -26,7 +26,7 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] XML sitemap accessible at `/sitemap.xml` (only canonical, 200-status, indexable URLs)
 - [ ] Sitemap referenced in robots.txt
 - [ ] No accidental `noindex` on important pages
-- [ ] Canonical tags present and correct
+- [ ] Canonical tags: self-referencing on every page, only one per page, paginated pages get own canonical
 - [ ] No duplicate pages targeting same keyword
 - [ ] HTTPS enforced
 - [ ] No 404 errors on linked pages
@@ -34,23 +34,29 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] Important pages within 3-4 clicks of homepage
 
 ### Page Speed & Core Web Vitals
-- [ ] LCP under 2.5 seconds
+- [ ] LCP under 2.5 seconds (≥75% of visits)
 - [ ] INP under 200 milliseconds
 - [ ] CLS under 0.1
-- [ ] Images optimized (WebP/AVIF, lazy loading, proper dimensions)
+- [ ] Images optimized (WebP/AVIF, lazy loading, responsive srcset, proper dimensions)
 - [ ] No render-blocking resources above fold
-- [ ] Mobile responsive (content parity with desktop)
+- [ ] Mobile responsive (content parity with desktop, 70%+ traffic is mobile)
+- [ ] Tap targets minimum 48x48px on mobile
+- [ ] No intrusive interstitials (pop-ups blocking content)
 - [ ] Font loading strategy set
 
 ### On-Page SEO
-- [ ] Meta title: exists, unique, 50-60 chars, keyword front-loaded
-- [ ] Meta description: exists, unique, 140-160 chars, includes CTA
+- [ ] Meta title: exists, unique, 50-60 chars, keyword front-loaded (20-50% CTR improvement)
+- [ ] Meta description: exists, unique, 150-160 chars, CTA in first 100 chars (Google rewrites 60-71%)
 - [ ] One H1 per page
-- [ ] Header hierarchy logical (H1 > H2 > H3), headings descriptive
+- [ ] Header hierarchy logical (H1 > H2 > H3, no skipped levels), headings descriptive
+- [ ] Question-formatted H2/H3s where appropriate (65% of snippets triggered by questions)
+- [ ] Answer blocks: 40-60 words after question headers, followed by list/table
 - [ ] URL slugs clean and readable (do NOT flag for missing keywords)
-- [ ] Image alt text descriptive
-- [ ] Internal links with descriptive anchor text (not "click here")
-- [ ] External links to authoritative sources
+- [ ] Image alt text descriptive (≤125 chars, keyword front-loaded if natural)
+- [ ] Internal links with descriptive anchor text (3-8 words, not "click here")
+- [ ] External links to authoritative sources (E-E-A-T trust signal)
+- [ ] Semantic keyword coverage (related terms/entities, not keyword density)
+- [ ] Content scannable (short paragraphs, 60-70 Flesch Reading Ease)
 
 ### E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness)
 - [ ] Author byline on content (not anonymous)
