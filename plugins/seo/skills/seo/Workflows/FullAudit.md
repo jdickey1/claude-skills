@@ -7,22 +7,23 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 1. Indexation check — `site:domain.com`, robots.txt, sitemap.xml
 2. Homepage audit — meta tags, H1, speed, phone/address, schema
 3. Service page audit — keyword targeting, content quality, CTAs, internal links
-4. GBP review (local) — search for business, check listing completeness
-5. Technical scan — mobile, HTTPS, redirects, 404s, Core Web Vitals
-6. Content analysis — keyword cannibalization, thin pages, buyer vs browser intent
-7. Citation check (local) — Bing, Yelp, BBB, YellowPages, Chamber
-8. Schema validation — structured data presence and accuracy
-9. AI readiness — content structure, extractability, brand signals
-10. Link profile — internal linking, anchor text, homepage link ratio
-11. Competitor comparison — category matching, keyword gaps
-12. Report generation — compile findings, prioritize, provide action plan
+4. E-E-A-T check — author attribution, credentials, experience signals
+5. GBP review (local) — search for business, check listing completeness
+6. Technical scan — mobile, HTTPS, redirects, 404s, Core Web Vitals
+7. Content analysis — keyword cannibalization, thin pages, buyer vs browser intent, freshness
+8. Citation check (local) — Bing, Apple Maps, Yelp, BBB, YellowPages, Chamber
+9. Schema validation — structured data presence and accuracy
+10. AI readiness — content structure, extractability, citation optimization
+11. Link profile — internal linking, anchor text, homepage link ratio
+12. Competitor comparison — category matching, keyword gaps
+13. Report generation — compile findings, prioritize, provide action plan
 
 ## Tier 1: Critical
 
 ### Indexation & Crawlability
 - [ ] Site indexed (`site:domain.com`)
 - [ ] robots.txt not blocking important pages
-- [ ] XML sitemap accessible at `/sitemap.xml`
+- [ ] XML sitemap accessible at `/sitemap.xml` (only canonical, 200-status, indexable URLs)
 - [ ] Sitemap referenced in robots.txt
 - [ ] No accidental `noindex` on important pages
 - [ ] Canonical tags present and correct
@@ -30,24 +31,36 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] HTTPS enforced
 - [ ] No 404 errors on linked pages
 - [ ] No redirect chains > 2 hops
+- [ ] Important pages within 3-4 clicks of homepage
 
 ### Page Speed & Core Web Vitals
-- [ ] Page loads under 3 seconds
+- [ ] LCP under 2.5 seconds
+- [ ] INP under 200 milliseconds
+- [ ] CLS under 0.1
 - [ ] Images optimized (WebP/AVIF, lazy loading, proper dimensions)
 - [ ] No render-blocking resources above fold
-- [ ] Mobile responsive
-- [ ] No CLS from dynamic content
+- [ ] Mobile responsive (content parity with desktop)
 - [ ] Font loading strategy set
 
 ### On-Page SEO
-- [ ] Meta title: exists, unique, under 60 chars, keyword front-loaded
-- [ ] Meta description: exists, unique, 150-160 chars, includes CTA
+- [ ] Meta title: exists, unique, 50-60 chars, keyword front-loaded
+- [ ] Meta description: exists, unique, 140-160 chars, includes CTA
 - [ ] One H1 per page
-- [ ] Header hierarchy logical (H1 > H2 > H3)
+- [ ] Header hierarchy logical (H1 > H2 > H3), headings descriptive
 - [ ] URL slugs clean and readable (do NOT flag for missing keywords)
 - [ ] Image alt text descriptive
-- [ ] Internal links between related pages
+- [ ] Internal links with descriptive anchor text (not "click here")
 - [ ] External links to authoritative sources
+
+### E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness)
+- [ ] Author byline on content (not anonymous)
+- [ ] Author page with credentials, bio, photo
+- [ ] Author schema (Person with jobTitle, sameAs links)
+- [ ] First-hand experience demonstrated (not generic advice)
+- [ ] About page with company credentials, team, history
+- [ ] Trust signals visible (certifications, awards, memberships)
+- [ ] Claims backed by data or citations
+- [ ] Consistent identity across website and external profiles
 
 ### Contact & Conversion
 - [ ] Clear CTAs on every service page
@@ -74,60 +87,72 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] Products/Services section filled
 - [ ] Q&A section populated
 - [ ] Photos uploaded weekly
-- [ ] Posts include keyword + location
-- [ ] Reviews actively collected
+- [ ] Posts 2-3x/week with keyword + location
+- [ ] Reviews actively collected (systematized)
 - [ ] Reviews responded to within 24 hours
+- [ ] Review velocity maintained (live ranking signal)
 - [ ] Attributes filled out
 
-### Structured Data / Schema
-- [ ] LocalBusiness or Organization schema on homepage
+#### Service Area Businesses
+- [ ] Service areas precisely defined
+- [ ] Address hidden if home-based
+- [ ] Unique content per service area page
+
+### Structured Data / Schema (JSON-LD)
+- [ ] LocalBusiness/Organization schema (specific subtype)
 - [ ] Schema includes name, address, phone, hours, geo
+- [ ] Person schema for authors (jobTitle, sameAs)
 - [ ] BreadcrumbList schema
 - [ ] Service schema on service pages
 - [ ] FAQ schema where applicable
+- [ ] Article schema with author, dates
 - [ ] Review/AggregateRating schema
 - [ ] Schema validates in Rich Results Test
 
 ### Citations & Directories (Local Business)
-- [ ] Bing Places (critical — LLMs pull from Bing)
+- [ ] Bing Places (critical for ChatGPT visibility)
+- [ ] Apple Business Connect (critical for Siri)
 - [ ] Yelp complete
 - [ ] BBB listed
 - [ ] YellowPages listed
-- [ ] Apple Maps listed
 - [ ] Local Chamber of Commerce
 - [ ] Industry-specific directories
+- [ ] "Best of" lists and awards pursued
 - [ ] NAP identical across all citations
 - [ ] No duplicate listings
 
 ### Content Strategy
 - [ ] Each service has dedicated page
-- [ ] Content is substantial (not thin)
+- [ ] Content is substantial (2,500+ words for depth)
 - [ ] No keyword cannibalization
 - [ ] Content targets buyers not browsers
 - [ ] Social proof on service pages
-- [ ] FAQ answers real customer questions
-- [ ] Content updated regularly
+- [ ] FAQ answers real customer questions (voice-search friendly)
+- [ ] Content updated meaningfully quarterly
+- [ ] First-hand experience demonstrated (E-E-A-T)
+- [ ] No thin city pages with keyword swaps (spam target)
 
 ## Tier 3: AI Search (AEO/GEO)
 
 ### AI Search Readiness
-- [ ] Content in clear, extractable blocks
+- [ ] Answer-first layout (direct answer in first 40-60 words)
+- [ ] Self-contained answer blocks (134-167 words)
+- [ ] Clear, extractable content blocks
 - [ ] Headings mirror real questions
-- [ ] Q&A uses natural language
-- [ ] Key facts in lists, tables, or definitions
+- [ ] Tables and comparison matrices (2.5-2.8x citation boost)
+- [ ] Numbered/bulleted lists (50% of top AI citations)
 - [ ] Content states: who, what problem, why better
-- [ ] Comparison content exists
-- [ ] Front-loaded important info
+- [ ] Original data/statistics (4.1x citation boost)
 - [ ] Modular, independently citable blocks
+- [ ] Strongest content in first 30% of page
 
 ### Generative Engine Optimization
-- [ ] Brand mentions on third-party sites
+- [ ] Brand on third-party sites
+- [ ] Review profiles on Trustpilot/G2/Capterra/Yelp (3x citation boost)
 - [ ] Expert reviews or press mentions
-- [ ] Verified reviews with volume
 - [ ] Consistent brand voice
-- [ ] No unverifiable claims
-- [ ] Credentials displayed
-- [ ] Author attribution on content
+- [ ] Author attribution with credentials
+- [ ] Definitive language (not tentative)
 
 ### Technical AI Accessibility
 - [ ] Content in HTML (not JS-only)
@@ -135,6 +160,13 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] Semantic HTML elements
 - [ ] SSR/SSG for key content
 - [ ] Descriptive image alt text
+- [ ] AI crawler governance in robots.txt (GPTBot, ClaudeBot, PerplexityBot)
+
+### Multi-Platform AI Visibility
+- [ ] Bing optimized (ChatGPT's index)
+- [ ] Sitemap freshness (lastmod, changefreq)
+- [ ] Voice-search friendly content (conversational Q&A)
+- [ ] Video content (YouTube = 25% of AI citations)
 
 ## Tier 4: Links & Authority
 
@@ -142,14 +174,24 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] 80-90% of links to homepage
 - [ ] Branded anchor text primary
 - [ ] No spammy backlinks
-- [ ] Internal linking connects service → homepage
+- [ ] Internal linking with descriptive anchors
+- [ ] High-value links near top of content
 - [ ] Competitor backlink opportunities identified
 - [ ] No anchor text over-optimization
+- [ ] Original research/data as link magnets
+
+### Local Link Building
+- [ ] Sponsorships (events, sports teams, nonprofits)
+- [ ] Local media outreach (newsworthy angles)
+- [ ] Business partnerships (complementary businesses)
+- [ ] Chamber/association memberships
+- [ ] Community involvement documented
 
 ### Brand Signals
 - [ ] Brand searches exist/growing
 - [ ] Social profiles link to website
 - [ ] Consistent brand across platforms
+- [ ] Entity consistency (same identifiers everywhere)
 
 ## Keyword Validation (For New Page Recommendations)
 
@@ -165,7 +207,7 @@ Before recommending a new page, validate the keyword:
 
 After auditing, provide:
 
-1. **Overall Score** — X/100 with breakdown (Technical /25, On-Page /25, Local-GBP /25, Content-Authority /15, AI-Readiness /10)
+1. **Overall Score** — X/100 with breakdown (Technical /20, On-Page /20, E-E-A-T-Authority /15, Local-GBP /20, Content-Freshness /15, AI-Readiness /10)
 2. **Critical fixes** — items blocking ranking (indexing, 404s, duplicate pages)
 3. **Quick wins** — fixable in under an hour
 4. **High-priority items** — fix within 1 week
