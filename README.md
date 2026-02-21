@@ -14,14 +14,19 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 
 **Comprehensive SEO audit, optimization, and automation.** Combines a 4-tier audit framework with a full DIY automation system that replaces the core deliverables of a $1,500/month agency.
 
-- 4-tier audit checklist (~80 items): indexation, on-page, local SEO, AI search readiness (AEO/GEO), link building
-- Local business SEO as progressively disclosed subset — GBP optimization, citations, NAP consistency, review management
-- Evidence-based ranking factor priorities with severity calibration
+- **4-tier audit checklist (~180 items):** indexation, Core Web Vitals, on-page optimization, E-E-A-T, schema markup, local SEO (GBP, citations, SABs), AI search readiness (AEO/GEO), content strategy, link building
+- **On-page SEO** with structured subsections: title tags, meta descriptions, headers, URLs, images, internal linking, semantic optimization
+- **E-E-A-T framework** organized by priority: Trust (foundation), Experience (hardest to fake), Expertise, Authoritativeness — with YMYL guidance and entity SEO signals
+- **Schema markup** covering JSON-LD best practices, FAQ/Article/LocalBusiness/Person types, deprecated types (Jan 2026), dual validation workflow
+- **AI search optimization (AEO/GEO)** with platform-specific citation data for Google AI Overviews, ChatGPT, Perplexity, and Copilot — including defensive AI SEO and multimodal content metrics
+- **Content strategy** with topic clusters, content pruning, internal linking architecture, video optimization, and social proof integration
+- **Link building** with prioritized tactics (Digital PR, HARO, guest posting), anchor text distribution, link velocity guidance, and content types that earn links
+- **Local business SEO** as progressively disclosed subset — GBP optimization, citations (quality hierarchy), NAP consistency, review management, SAB content strategy, Google spam warnings
 - 6 workflows: full audit, GBP optimization, weekly maintenance, automation setup, content briefs, report analysis
 - Automation scripts for keyword research, backlink intelligence, Google Search Console monitoring, content briefs, and outreach
 - Keyword validation framework (SERP test, PAA check, competitor check, AI query alignment)
 
-The automation tools in `seo/Tools/` are production Node.js scripts that integrate with Keywords Everywhere, DataForSEO, Serper, and Google Search Console APIs.
+All findings are data-backed with current statistics and ranking factor research. The automation tools in `seo/Tools/` are production Node.js scripts that integrate with Keywords Everywhere, DataForSEO, Serper, and Google Search Console APIs.
 
 ### security-audit
 
@@ -47,6 +52,10 @@ The automation tools in `seo/Tools/` are production Node.js scripts that integra
 
 **Clean web page content extraction.** Fetches any URL and returns it as structured markdown for analysis. Simple, reliable, and useful as a building block for other workflows.
 
+### x-digest
+
+**X/Twitter content analysis and capture.** Fetches posts, analyzes content, saves to Obsidian, and recommends actionable uses including content ideas, action items, and project connections.
+
 ---
 
 ## Installation
@@ -64,6 +73,7 @@ The automation tools in `seo/Tools/` are production Node.js scripts that integra
 /plugins install security-audit@claude-skills
 /plugins install writing@claude-skills
 /plugins install web-reader@claude-skills
+/plugins install x-digest@claude-skills
 ```
 
 Or browse with `/plugins` > **Discover** to see all available plugins.
