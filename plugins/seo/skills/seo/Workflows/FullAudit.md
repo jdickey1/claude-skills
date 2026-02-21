@@ -73,6 +73,7 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] NAP consistent across all pages
 - [ ] H1 = keyword + city
 - [ ] Content targets "service + city" not "how to"
+- [ ] Business name is clean (no keyword stuffing — suspension risk)
 
 ## Tier 2: High Priority
 
@@ -90,13 +91,17 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] Posts 2-3x/week with keyword + location
 - [ ] Reviews actively collected (systematized)
 - [ ] Reviews responded to within 24 hours
-- [ ] Review velocity maintained (live ranking signal)
+- [ ] Review velocity maintained (live ranking signal, ~20% of local pack weight)
+- [ ] Review text quality (mentions of services + locations carry ranking weight)
 - [ ] Attributes filled out
+- [ ] Behavioral signals (directions clicks, calls, messages = ranking factors)
 
 #### Service Area Businesses
-- [ ] Service areas precisely defined
+- [ ] Service areas precisely defined (Google verifies claims)
 - [ ] Address hidden if home-based
-- [ ] Unique content per service area page
+- [ ] No service area abuse (don't claim coverage you can't serve)
+- [ ] Unique content per service area page (H1, local testimonials, city-specific details, FAQ)
+- [ ] No city-name-swap pages (spam update target)
 
 ### Structured Data / Schema (JSON-LD)
 - [ ] LocalBusiness/Organization schema (specific subtype)
@@ -120,6 +125,7 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 - [ ] "Best of" lists and awards pursued
 - [ ] NAP identical across all citations
 - [ ] No duplicate listings
+- [ ] Citation quality prioritized (Tier 1: industry-specific + authoritative > Tier 2: local directories > Tier 3: auto-populated)
 
 ### Content Strategy
 - [ ] Each service has dedicated page
@@ -165,7 +171,7 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 ### Multi-Platform AI Visibility
 - [ ] Bing optimized (ChatGPT's index)
 - [ ] Sitemap freshness (lastmod, changefreq)
-- [ ] Voice-search friendly content (conversational Q&A)
+- [ ] Voice-search friendly content (50%+ local searches are voice; 58% use voice for local business info)
 - [ ] Video content (YouTube = 25% of AI citations)
 
 ## Tier 4: Links & Authority
