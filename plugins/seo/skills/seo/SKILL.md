@@ -100,7 +100,7 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - [ ] Sitemap contains only canonical, 200-status, indexable URLs (no redirects, soft-404s, or blocked URLs)
 - [ ] Sitemap is referenced in robots.txt
 - [ ] No accidental `noindex` tags on important pages
-- [ ] Canonical tags present and correct (no self-referencing errors)
+- [ ] Canonical tags present and correct — every page should have a **self-referencing canonical** (even without duplicates). Only one canonical per page (multiple tags cancel the signal). Paginated pages get their own canonical (don't point all to page 1). AI search engines use canonicals to identify authoritative version for citation.
 - [ ] No duplicate pages targeting the same keyword (Google will rank neither)
 - [ ] HTTPS enforced (HTTP redirects to HTTPS)
 - [ ] 404 errors checked (broken links, missing pages)
@@ -108,28 +108,49 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - [ ] All important pages within 3-4 clicks of homepage (crawl depth)
 
 #### A2 - Page Speed & Core Web Vitals
-- [ ] **LCP (Largest Contentful Paint)** under 2.5 seconds
+CWV accounts for ~10-15% of ranking signals. Only 47% of sites currently pass all three thresholds. 1-second delay = up to 7% conversion loss; 53% of mobile users abandon pages taking >3 seconds.
+
+- [ ] **LCP (Largest Contentful Paint)** under 2.5 seconds (≥75% of visits must meet threshold)
 - [ ] **INP (Interaction to Next Paint)** under 200 milliseconds (replaced FID in 2024)
 - [ ] **CLS (Cumulative Layout Shift)** under 0.1
-- [ ] Images are optimized (WebP/AVIF, lazy loading, proper dimensions)
+- [ ] Images are optimized — WebP (26% smaller than PNG) or AVIF (50% smaller than JPEG), lazy loading via `loading="lazy"`, proper dimensions set, responsive `srcset`
 - [ ] No render-blocking resources above the fold
-- [ ] Mobile responsive (viewport meta tag, responsive layout)
+- [ ] **Mobile responsive** — viewport meta tag, responsive layout, 70%+ of traffic is mobile
+- [ ] **Tap targets minimum 48x48px** on mobile (buttons, links)
+- [ ] **No intrusive interstitials** — pop-ups blocking main content penalized, especially on mobile. Cookie consent and age verification are acceptable.
 - [ ] Font loading strategy (font-display: swap or optional)
-- [ ] Content parity between mobile and desktop (Google indexes mobile version exclusively)
+- [ ] Content parity between mobile and desktop (Google mobile-first indexing fully rolled out Oct 2023)
 
 #### A3 - On-Page SEO Fundamentals
-- [ ] Meta title exists, unique per page, 50-60 characters
-- [ ] **Keyword is front-loaded in meta title** (most important word first)
-- [ ] Meta description exists, unique per page, 140-160 characters
-- [ ] Meta description includes a call to action or value proposition
+
+##### Title Tags
+- [ ] Meta title exists, unique per page, **50-60 characters** (Google truncates ~61% of titles exceeding this)
+- [ ] **Keyword is front-loaded** (within first 5-10 words — users scan the first few words of search results; immediate keyword confirmation increases CTR)
+- [ ] Title reads as a marketing message, not keyword stuffing — well-optimized titles drive **20-50% CTR improvements**
+- [ ] Power words and modifiers where appropriate (numbers, "Best", "Complete Guide", "2026", outcome words)
+
+##### Meta Descriptions
+- [ ] Meta description exists, unique per page, **150-160 characters** (put benefit/CTA in first 100 characters before likely truncation)
+- [ ] Meta description includes a call to action or value proposition — pages with optimized descriptions see **20-30% CTR improvement**; pages without see 10-15% lower CTR
+- [ ] Description matches page content closely — Google rewrites **60-71% of meta descriptions** when they don't match search intent well. Accurate descriptions are more likely to be kept.
+
+##### Headers & Content Structure
 - [ ] One H1 tag per page (not zero, not multiple)
-- [ ] Header hierarchy is logical (H1 > H2 > H3, no skipped levels)
+- [ ] Header hierarchy is logical (H1 > H2 > H3, no skipped levels — breaks screen reader navigation)
 - [ ] Headings are descriptive (not vague labels like "Introduction")
-- [ ] **URL slugs are clean and readable** (human trust and CTR, not keyword stuffing — Google's John Mueller confirms keywords in URLs are a "very lightweight" factor; Backlinko data shows near-zero ranking correlation)
-- [ ] **Do NOT recommend URL restructuring for keyword placement** — the redirect risk and broken link cost outweigh the negligible ranking benefit. Only flag URLs that are genuinely unreadable (random IDs, `/page-3` style)
-- [ ] Image alt text is descriptive (not empty, not keyword-stuffed)
+- [ ] **Question-formatted H2/H3s** where appropriate — mirror real search queries to win featured snippets and AI citations. 65% of featured snippets triggered by question formats.
+- [ ] **Answer blocks after question headers** — 40-60 words, direct and concise. Follow with bulleted list, numbered process, or compact table to maximize AI/snippet extraction surface.
+- [ ] Content is scannable — short paragraphs (3-5 sentences), white space, logical transitions. Target **60-70 Flesch Reading Ease** for general audiences (not a direct ranking factor but improves engagement signals).
+
+##### URLs
+- [ ] **URL slugs are clean and readable** (human trust and CTR, not keyword stuffing — Google's John Mueller confirms keywords in URLs are a "very lightweight" factor; Backlinko data shows near-zero ranking correlation). Aim for 3-5 meaningful words.
+- [ ] **Do NOT recommend URL restructuring for keyword placement** — the redirect risk and broken link cost outweigh the negligible ranking benefit. Only flag URLs that are genuinely unreadable (random IDs, `/page-3` style).
+
+##### Images, Links & Semantic Optimization
+- [ ] Image alt text is descriptive (not empty, not keyword-stuffed) — **≤125 characters**, keyword front-loaded if natural. Directly impacts image SEO and accessibility.
 - [ ] Internal linking between related pages with descriptive anchor text (3-8 words, not "click here")
-- [ ] External links to authoritative sources where relevant
+- [ ] External links to authoritative sources where relevant — not a direct ranking factor per Google, but supports E-E-A-T trust signals and helps search engines understand topical fit
+- [ ] **Semantic keyword coverage** — use related terms and entities naturally throughout content. Entity-based optimization outperforms keyword density (which is not a ranking factor). Semantic SEO yields 20-30% traffic gains. TF-IDF analysis useful for identifying gaps vs competitors.
 
 #### A4 - E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness)
 - [ ] **Author attribution** on content (byline with name, not anonymous)
