@@ -128,7 +128,7 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - [ ] **URL slugs are clean and readable** (human trust and CTR, not keyword stuffing — Google's John Mueller confirms keywords in URLs are a "very lightweight" factor; Backlinko data shows near-zero ranking correlation)
 - [ ] **Do NOT recommend URL restructuring for keyword placement** — the redirect risk and broken link cost outweigh the negligible ranking benefit. Only flag URLs that are genuinely unreadable (random IDs, `/page-3` style)
 - [ ] Image alt text is descriptive (not empty, not keyword-stuffed)
-- [ ] Internal linking between related pages with descriptive anchor text (not "click here")
+- [ ] Internal linking between related pages with descriptive anchor text (3-8 words, not "click here")
 - [ ] External links to authoritative sources where relevant
 
 #### A4 - E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness)
@@ -228,19 +228,44 @@ Citations have shifted from "ranking fuel" to **verification layer** — busines
 - **Tier 3 (lower value):** Auto-populated directories, low-authority or spam directories (avoid these)
 
 #### B4 - Content Strategy
+
+##### Content Depth & Quality
 - [ ] Each service has its own dedicated page
-- [ ] Service pages have unique, substantial content (2,500+ words outranks thin competitors)
-- [ ] **No two pages target the same keyword** (cannibalization check)
-- [ ] Content speaks to buyers, not browsers
-- [ ] Testimonials/social proof on service pages
-- [ ] Case studies or portfolio examples where applicable
+- [ ] Service pages have substantial content — **match or exceed top-10 competitors' word count** for target keyword. 1,500-2,500 words is typical for competitive topics, but comprehensiveness matters more than word count (Google confirms word count is not a ranking factor).
+- [ ] **Content demonstrates first-hand experience** (E-E-A-T "Experience" — unique insights, case studies, specific examples, not generic advice). Show expertise through detailed explanations, not assertions.
+- [ ] **Original research, proprietary data, or unique insights** — the only durable competitive advantage in an AI-content-saturated landscape. 50% of business content is now AI-generated (Gartner 2025); differentiation comes from what competitors can't replicate.
+
+##### Content Organization & Cannibalization
+- [ ] **No two pages target the same keyword** (cannibalization check) — multiple pages competing for the same intent fragment ranking power across all of them
+- [ ] **Topic cluster architecture** — hub-and-spoke model where pillar pages cover the main topic comprehensively, with cluster pages exploring subtopics in depth. Content organized into clusters drives ~30% more organic traffic and holds rankings 2.5x longer than standalone pieces.
+- [ ] One-intent-one-URL rule enforced — each subtopic maps to a single page
+- [ ] **Content pruning performed** — evaluate underperforming pages: update (refresh stats, links), merge (consolidate same-topic pages), or delete (remove low-value content). One site deleted 127 posts and saw 34% traffic increase in 3 months. Pruning before publishing new content on bloated sites.
+
+##### Social Proof & Conversion
+- [ ] Testimonials/social proof on service pages — 3-5 testimonials on homepage (credibility without cognitive overload); 100+ in library correlates with 37% higher conversions
+- [ ] **Video testimonials where possible** — 80% conversion increase vs text testimonials
+- [ ] Case studies with quantifiable results (ROI metrics, before/after data, specific outcomes)
+- [ ] User-generated content integrated (reviews, Q&A sections) — sites with UGC see 29% higher conversion rates; 88% of consumers trust peer recommendations
+
+##### Content Freshness & Updates
+- [ ] **Content updated meaningfully when new information exists** — new data, examples, rewritten sections, revised recommendations. Timestamp-only updates provide minimal benefit (+12%); meaningful updates provide +71% citation lift. Update driven by substance, not calendar.
 - [ ] FAQ content answers real customer questions (natural language for voice search)
-- [ ] **Content updated meaningfully on a quarterly cycle** — new data, examples, insights. Timestamp-only updates provide minimal benefit (+12%); meaningful updates provide +71% citation lift.
-- [ ] **Content demonstrates first-hand experience** (E-E-A-T "Experience" — unique insights, not generic advice)
+
+##### Internal Linking
+- [ ] **Hub-and-spoke internal links** — hub pages link to 2-3+ related spokes, spokes link back to hub and cross-link to related spokes
+- [ ] **3-10 contextual internal links per page** depending on content length
+- [ ] Anchor text: descriptive, 3-8 words, ~30% exact-match / 30-40% partial variations / 20-30% natural contextual. Never "click here."
+- [ ] **Link from high-authority pages to new/underperforming content** to accelerate discovery and pass authority
+- [ ] High-value internal links placed near top of content (higher on page = more likely clicked)
+
+##### Video & Multi-Format
+- [ ] **Embedded video on key pages** — pages with embedded YouTube video rank first-page keywords 2x more frequently. Video snippets appear in 25%+ of Google results.
+- [ ] Video schema (VideoObject) with chapter timestamps for AI extraction
+- [ ] **Content repurposing pipeline** — video-first approach where 1 hour of content generates 15-30 repurposed pieces (blog post, social clips, podcast, quote graphics, email sequences). 400% more engagement from repurposed clips vs full-episode-only.
 
 ##### Local Business
 - [ ] **Service pages target "service + city" keywords** (not "how to" keywords)
-- [ ] **No generic blog posts** unless they target buyer intent
+- [ ] **No generic blog posts** unless they target buyer intent — informational content supports commercial content but has lower direct conversion value
 - [ ] **No thin city pages** with keyword swaps (Google spam updates target these)
 - [ ] Service area pages have unique content per location (local testimonials, city-specific details, local photos)
 
@@ -294,8 +319,7 @@ AI Overviews now appear in 16% of Google desktop searches. 65%+ of searches end 
 - [ ] **Homepage receives 80-90% of inbound links** (foundation first)
 - [ ] **Branded anchor text** is primary (safest, most effective)
 - [ ] No spammy or irrelevant backlinks
-- [ ] Internal linking strategy connects service pages to homepage (descriptive anchor text, not "click here")
-- [ ] High-value internal links placed near top of content (higher on page = more likely clicked)
+- [ ] Internal linking strategy connects service pages to homepage (see B4 Internal Linking for detailed checklist)
 - [ ] Broken link opportunities identified (Check My Links method)
 - [ ] Competitor backlink sources identified for prospecting
 - [ ] No exact-match anchor text over-optimization
