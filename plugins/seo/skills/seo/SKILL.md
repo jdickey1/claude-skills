@@ -1,11 +1,11 @@
 ---
-name: seo-review
-description: Comprehensive website SEO review and audit. USE WHEN reviewing a website for search visibility, local SEO, technical SEO, on-page optimization, Google Business Profile, link building, AI search readiness, or content strategy. Covers local business SEO, technical foundations, and modern AI search optimization.
+name: seo
+description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
 ---
 
-# SEO Review - Website Search Visibility Audit
+# SEO - Website Audit, Optimization & Automation
 
-**Performs comprehensive SEO audits** combining local business fundamentals, technical SEO, on-page optimization, AI search readiness (AEO/GEO), and content strategy. This audit inspects live pages using Playwright, checks source code, and evaluates against modern search best practices.
+Comprehensive SEO framework covering technical foundations, on-page optimization, local business SEO, AI search readiness (AEO/GEO), content strategy, link building, and a full DIY automation system. Inspects live pages using Playwright, checks source code, and evaluates against modern search best practices.
 
 ---
 
@@ -21,9 +21,39 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 
 ---
 
+## Reference Files
+
+- **`AutomationSystem.md`** - Full DIY automation system with prompts and templates. Keyword research, backlink recon, GSC monitoring, content briefs, and outreach automation. ~$75/month replaces ~$1,500/month agency.
+- **`Tools/`** - Production-ready scripts with error handling, retry logic, JSON output, and logging. See `Tools/.env.example` for configuration.
+
+## Workflow Routing
+
+| Workflow | Trigger | File |
+|----------|---------|------|
+| **FullAudit** | "audit SEO for [site]", "full SEO check" | `Workflows/FullAudit.md` |
+| **GBPOptimize** | "check my GBP", "optimize Google Business Profile" | `Workflows/GBPOptimize.md` |
+| **WeeklyMaintenance** | "weekly SEO tasks", "SEO maintenance" | `Workflows/WeeklyMaintenance.md` |
+| **AutomationSetup** | "set up SEO automation", "replace SEO agency", "DIY SEO scripts" | `Workflows/AutomationSetup.md` |
+| **ContentBrief** | "create content brief for [keyword]", "brief me on [topic]" | `Workflows/ContentBrief.md` |
+| **ReportAnalysis** | "analyze SEO report", "review keyword data", "review GSC data" | `Workflows/ReportAnalysis.md` |
+
+## Tools
+
+Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY-MM-DD/`.
+
+| Script | Purpose | Schedule |
+|--------|---------|----------|
+| `keyword-research.mjs` | Expand seed keywords with volume/CPC data | Monday 9 AM |
+| `competitor-backlinks.mjs` | Scan competitor backlinks for opportunities | Wednesday 9 AM |
+| `gsc-report.mjs` | GSC data pull with period comparison | Monday 9 AM |
+| `content-brief.mjs` | Fetch SERP data and generate brief prompt | On demand |
+| `backlink-outreach.mjs` | Generate outreach queue (dry-run by default) | Wed + Fri 10 AM |
+
+---
+
 ## Audit Execution
 
-### How to Run This Audit
+### How to Run an Audit
 
 1. **Get the target URL** from the user (homepage or specific pages)
 2. **Use Playwright** to load and inspect pages (snapshot, screenshot, evaluate DOM)
@@ -33,16 +63,31 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 6. **Check Google Business Profile** if applicable (search for business name)
 7. **Compile findings** using the output format below
 
-### Tools to Use
+### Audit Tools
 
 - **Playwright browser tools** - Navigate, snapshot, screenshot, evaluate JavaScript on pages
 - **web-reader** - Extract page content as markdown for analysis
 - **WebSearch** - Check indexation (`site:domain.com`), search for business name, check competitors
 - **WebFetch** - Fetch robots.txt, sitemap.xml, specific URLs
 
+### Audit Execution Order
+
+1. **Indexation check** - `site:domain.com`, robots.txt, sitemap.xml
+2. **Homepage audit** - Meta tags, H1, speed, phone/address visibility, schema
+3. **Service page audit** - Keyword targeting, content quality, CTAs, internal links
+4. **GBP review** (local business) - Search for business, check listing completeness
+5. **Technical scan** - Mobile, HTTPS, redirects, 404s, Core Web Vitals
+6. **Content analysis** - Keyword cannibalization, thin pages, buyer vs browser intent
+7. **Citation check** (local business) - Bing, Yelp, BBB, YellowPages, Chamber
+8. **Schema validation** - Structured data presence and accuracy
+9. **AI readiness** - Content structure, extractability, brand signals
+10. **Link profile** - Internal linking, anchor text, homepage link ratio
+11. **Competitor comparison** - Category matching, keyword gaps
+12. **Report generation** - Compile findings, prioritize, provide action plan
+
 ---
 
-## Audit Scope & Checklist
+## Audit Checklist
 
 ### TIER 1: CRITICAL (Audit First)
 
@@ -72,7 +117,6 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 - [ ] Meta description exists, unique per page, 150-160 characters
 - [ ] Meta description includes a call to action or value proposition
 - [ ] One H1 tag per page (not zero, not multiple)
-- [ ] **H1 includes primary keyword AND city/location** (for local businesses)
 - [ ] Header hierarchy is logical (H1 > H2 > H3, no skipped levels)
 - [ ] **URL slugs are clean and readable** (human trust and CTR, not keyword stuffing — Google's John Mueller confirms keywords in URLs are a "very lightweight" factor; Backlinko data shows near-zero ranking correlation)
 - [ ] **Do NOT recommend URL restructuring for keyword placement** — the redirect risk and broken link cost outweigh the negligible ranking benefit. Only flag URLs that are genuinely unreadable (random IDs, `/page-3` style)
@@ -80,18 +124,22 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 - [ ] Internal linking between related pages
 - [ ] External links to authoritative sources where relevant
 
-#### A4 - Contact & Conversion (Local Business Critical)
+#### A4 - Contact & Conversion
+- [ ] Clear calls-to-action on every service page
+- [ ] Contact page exists with full business information
+- [ ] Contact form works and is easy to find
+
+##### Local Business
 - [ ] **Phone number visible above the fold** (no scrolling required)
 - [ ] Phone number is clickable (`tel:` link) on mobile
 - [ ] **Physical address in website footer** on every page
 - [ ] NAP (Name, Address, Phone) is consistent across all pages
-- [ ] Contact page exists with full business information
-- [ ] Clear calls-to-action on every service page
-- [ ] Contact form works and is easy to find
+- [ ] **H1 includes primary keyword AND city/location**
+- [ ] Content targets "service + city" keywords, not informational "how to" queries
 
 ### TIER 2: HIGH PRIORITY
 
-#### B1 - Google Business Profile (Local SEO)
+#### B1 - Google Business Profile (Local Business)
 - [ ] GBP exists and is claimed/verified
 - [ ] Business name matches website exactly (no keyword stuffing in business name)
 - [ ] **Business category matches top 3 competitors ranking above you**
@@ -118,7 +166,7 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 - [ ] Article schema (for blog/content pages)
 - [ ] Schema validates in Google Rich Results Test
 
-#### B3 - Citations & Directory Listings
+#### B3 - Citations & Directory Listings (Local Business)
 - [ ] **Listed on Bing Places** (LLMs pull from Bing - this is critical now)
 - [ ] Listed on Yelp with complete profile
 - [ ] Listed on BBB (Better Business Bureau)
@@ -131,16 +179,19 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 - [ ] No duplicate listings on any platform
 
 #### B4 - Content Strategy
-- [ ] **Service pages target "service + city" keywords** (not "how to" keywords)
 - [ ] Each service has its own dedicated page
 - [ ] Service pages have unique, substantial content (not thin/duplicate)
 - [ ] **No two pages target the same keyword** (cannibalization check)
 - [ ] Content speaks to buyers, not browsers
 - [ ] Testimonials/social proof on service pages
 - [ ] Case studies or portfolio examples where applicable
-- [ ] **No generic blog posts** for local businesses (unless they target buyer intent)
 - [ ] FAQ content answers real customer questions
 - [ ] Content updated regularly (freshness signals)
+
+##### Local Business
+- [ ] **Service pages target "service + city" keywords** (not "how to" keywords)
+- [ ] **No generic blog posts** unless they target buyer intent
+- [ ] **Stop writing "how to" blog posts** — service and location pages attract buyer intent, blog posts attract browsers
 
 ### TIER 3: AI SEARCH OPTIMIZATION (AEO/GEO)
 
@@ -195,7 +246,7 @@ description: Comprehensive website SEO review and audit. USE WHEN reviewing a we
 
 ## Ranking Factor Priority (Evidence-Based)
 
-When prioritizing findings, weight recommendations by actual ranking impact. Many commonly recommended SEO changes have minimal effect. Focus effort where data confirms it matters.
+When prioritizing findings, weight recommendations by actual ranking impact. Focus effort where data confirms it matters.
 
 ### High-Impact Factors (prioritize these)
 
@@ -217,6 +268,18 @@ When prioritizing findings, weight recommendations by actual ranking impact. Man
 ### Severity Calibration
 
 When assigning severity ratings, a missing title tag keyword is HIGH. A URL without keywords is INFO at most. Do not assign MEDIUM or HIGH to URL slug recommendations — the data does not support it.
+
+---
+
+## Keyword Validation
+
+When recommending new pages or content during an audit, validate that the target keyword matches real search behavior before recommending it:
+
+- [ ] **SERP test** - Search the exact keyword in Google. Results dominated by local competitors and directories = valid. Results showing DIY sites, forms, or unrelated content = weak keyword.
+- [ ] **People Also Ask check** - PAA questions should align with the service being offered. If PAA is all DIY/informational, the keyword attracts researchers not buyers.
+- [ ] **Competitor page check** - Do 3+ local competitors have a dedicated page for this keyword? If yes, validated. If zero, it's either a gap or nobody searches for it — investigate which.
+- [ ] **AI query alignment** - Would someone ask ChatGPT or Google AI this question? If yes, FAQ sections can capture AI-generated answer traffic.
+- [ ] **Recommend fold vs. standalone** - If a keyword fails validation, recommend folding that content into a stronger parent page as a section rather than creating a standalone page nobody will find.
 
 ---
 
@@ -274,47 +337,20 @@ What's wrong and why it matters for rankings/visibility.
 
 ---
 
-## Audit Execution Order
+## Ongoing Habits (Local Business)
 
-1. **Indexation check** - `site:domain.com`, robots.txt, sitemap.xml
-2. **Homepage audit** - Meta tags, H1, speed, phone/address visibility, schema
-3. **Service page audit** - Keyword targeting, content quality, CTAs, internal links
-4. **GBP review** - Search for business, check listing completeness
-5. **Technical scan** - Mobile, HTTPS, redirects, 404s, Core Web Vitals
-6. **Content analysis** - Keyword cannibalization, thin pages, buyer vs browser intent
-7. **Citation check** - Bing, Yelp, BBB, YellowPages, Chamber
-8. **Schema validation** - Structured data presence and accuracy
-9. **AI readiness** - Content structure, extractability, brand signals
-10. **Link profile** - Internal linking, anchor text, homepage link ratio
-11. **Competitor comparison** - Category matching, keyword gaps
-12. **Report generation** - Compile findings, prioritize, provide action plan
+These aren't one-time fixes. They need to happen consistently:
 
----
+| Task | Frequency |
+|------|-----------|
+| Upload new GBP photo | Weekly |
+| Post GBP update (keyword + location) | Weekly |
+| Respond to reviews | Within 24 hours |
+| Ask customers for reviews | Every single one |
+| Check for 404 errors | Weekly |
+| Verify indexing | Monthly |
 
-## Local SEO Golden Rules
-
-These are non-negotiable for any local business:
-
-1. **Address in the footer of every page.** Not just the contact page.
-2. **GBP links to your location page, not your homepage.** The location page has your NAP and services for that area.
-3. **Front-load your keyword in your meta title.** "Plumbing Repair Austin TX | ABC Plumbing" not "ABC Plumbing | Your Trusted Partner"
-4. **H1 = keyword + city.** "Emergency Plumbing Repair in Austin, TX" not "Welcome to Our Website"
-5. **URLs should be readable, not keyword-stuffed.** `/plumbing-repair` not `/services/page-3`. Don't waste effort adding city names or extra keywords to slugs — it's a near-zero ranking factor per Google's own statements and independent studies. Focus effort on title tags and H1s instead.
-6. **Stop writing "how to" blog posts.** Target "service + city" keywords. You want buyers, not browsers.
-7. **Phone number above the fold.** Visible without scrolling on both desktop and mobile.
-8. **New GBP photo every week.** Activity signals matter.
-9. **Respond to every review within 24 hours.** Every. Single. One.
-10. **Fill out GBP Products section.** Even for service businesses. List your services here.
-11. **Match your GBP category to your top competitors.** Check who ranks above you and match.
-12. **Include keyword + location in every GBP post.** Not just updates - strategic posts.
-13. **Ask every customer for a review.** Every single one. No exceptions.
-14. **No duplicate keyword targeting.** One page per keyword. Period.
-15. **Get on Bing.** LLMs are pulling from Bing. This is no longer optional.
-16. **Build citations everywhere.** Yelp, BBB, YellowPages, Uber, Chamber of Commerce.
-17. **Branded anchor text for links.** Safest and most effective form of link building.
-18. **80-90% of links to homepage.** Build your domain authority foundation first.
-19. **Check for 404 errors weekly.** Broken pages kill crawl budget and user trust.
-20. **Consistency for 6 months.** Do all of this consistently and you will not recognize your business.
+Do all of this consistently for **6 months** and you will not recognize your business. There are no shortcuts. Consistency is the strategy.
 
 ---
 
