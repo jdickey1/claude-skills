@@ -153,15 +153,38 @@ CWV accounts for ~10-15% of ranking signals. Only 47% of sites currently pass al
 - [ ] **Semantic keyword coverage** — use related terms and entities naturally throughout content. Entity-based optimization outperforms keyword density (which is not a ranking factor). Semantic SEO yields 20-30% traffic gains. TF-IDF analysis useful for identifying gaps vs competitors.
 
 #### A4 - E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness)
-- [ ] **Author attribution** on content (byline with name, not anonymous)
-- [ ] **Author page** exists with credentials, bio, photo, and links to other work
-- [ ] Author schema (`Person` type with `jobTitle`, `sameAs` links to profiles)
-- [ ] **First-hand experience** demonstrated in content (not generic advice)
-- [ ] Clear "About" page with company credentials, history, team
-- [ ] **Trust signals visible** — certifications, awards, professional memberships, years in business
-- [ ] Transparent sourcing — claims backed by data, citations, or attributable expertise
+E-E-A-T is not a direct ranking factor but the framework that informs Google's algorithm development. Trust is the foundation — untrustworthy pages rate low regardless of other signals. December 2025 core update explicitly targeted AI content quality and E-E-A-T compliance: sites with genuine expertise gained 23% traffic; AI content without expert oversight saw 87% negative impact.
+
+##### Trustworthiness (Most Important — Check First)
+- [ ] **HTTPS/SSL** implemented (baseline requirement, not advantage)
+- [ ] **Privacy policy** exists and is accessible
+- [ ] **Terms of service** exists
+- [ ] **Contact page** with multiple methods (email, phone, form, physical address if applicable)
+- [ ] **Transparent sourcing** — claims backed by data, citations, or attributable expertise
 - [ ] No exaggerated or unverifiable claims
+- [ ] **Affiliate/sponsorship disclosure** — financial relationships clearly marked. Sponsored content labeled.
+- [ ] **AI content disclosure** when AI is substantially used in content creation (2025 transparency requirement)
+
+##### Experience (Hardest to Fake — High Differentiation Value)
+- [ ] **First-hand experience** demonstrated in content — not generic advice but "I did this, here's what happened." Personal anecdotes with specific, verifiable details.
+- [ ] **Original photos/videos** — not stock images. Real product use, real location visits, real project results. Critical for reviews and case studies.
+- [ ] **Case studies with measurable outcomes** — before/after data, specific results, real client examples
+- [ ] **Honest about challenges** — acknowledges failures, learning curves, limitations. Polished-only content signals AI or inexperience.
+- [ ] **Process documentation** — detailed walkthroughs showing insider knowledge only practitioners would have
+
+##### Expertise
+- [ ] **Author attribution** on all content (byline with name, not anonymous). Missing author bylines are a HIGH severity E-E-A-T failure.
+- [ ] **Author page** exists with: professional photo (not stock), bio (50-100 words), credentials, education, years of experience, published works, speaking engagements, social profile links
+- [ ] **Author schema** (`Person` type with `jobTitle`, `description`, `knowsAbout`, `sameAs` links to LinkedIn/profiles, `worksFor`, `image`)
+- [ ] **Content demonstrates deep knowledge** through structure and substance — nuanced explanations, edge cases, competing perspectives, complexity acknowledgment. Show expertise, don't just claim it.
+- [ ] **YMYL content has formal credentials** — health, finance, legal, safety, and civic content require degrees, licenses, or certifications. Everyday topics accept practical expertise.
+
+##### Authoritativeness
+- [ ] Clear **"About" page** with: company name, founded year, location, mission, team bios with photos and LinkedIn links, notable projects/clients, awards, industry memberships, media coverage. About page is now a significant trust signal (Dec 2025 update).
 - [ ] **Consistent author/brand identity** across website, LinkedIn, social profiles, directories
+- [ ] **Entity signals** — consistent naming across all web properties. `sameAs` schema linking to LinkedIn, social profiles, Wikidata, Crunchbase. Google uses Knowledge Graph to map entity identity.
+- [ ] **Third-party recognition** — backlinks from relevant publications, press mentions, speaking engagements, industry awards, "Best of" list inclusions
+- [ ] **Topical authority** — deep coverage of subject area through interconnected content clusters. Focused niche authority beats broad mediocrity (Dec 2025 finding: smaller expert blogs outranked enterprise sites lacking clear attribution).
 
 #### A5 - Contact & Conversion
 - [ ] Clear calls-to-action on every service page
@@ -393,7 +416,7 @@ When prioritizing findings, weight recommendations by actual ranking impact. Foc
 ### High-Impact Factors (prioritize these)
 
 1. **Google Business Profile optimization** — Category, reviews, posting frequency, completeness. Drives the local map 3-pack more than any website change. Primary category is the #1 local ranking factor. Note: proximity now contributes only ~15% to local rankings (down from 25-30% in 2020); prominence and relevance signals (~60%) now dominate, meaning a further business with stronger signals outranks a closer one with weaker signals.
-2. **E-E-A-T signals** — r=0.81 correlation with AI citations. Stronger predictor than domain authority. 96% of Google AI Overview content comes from verified E-E-A-T sources. Pages ranked #6-#10 with strong E-E-A-T are cited 2.3x more than #1-ranked pages with weak authority.
+2. **E-E-A-T signals** — r=0.81 correlation with AI citations. Stronger predictor than domain authority. 96% of Google AI Overview content comes from verified E-E-A-T sources. Pages ranked #6-#10 with strong E-E-A-T are cited 2.3x more than #1-ranked pages with weak authority. Dec 2025 core update: sites with genuine expertise gained 23% traffic; AI content without expert oversight saw 87% negative impact; smaller expert blogs outranked enterprise sites lacking clear attribution.
 3. **Title tags with location + service keywords** — Front-loaded, 50-60 characters. Highest-impact on-page element.
 4. **H1 tags matching search intent** — H1 = keyword + city for local businesses.
 5. **Content depth with original insights** — Pages with 2,500+ words consistently outrank thin competitors. Original data earns 4.1x more AI citations.
