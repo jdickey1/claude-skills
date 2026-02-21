@@ -22,6 +22,7 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 - **Content strategy** with topic clusters, content pruning, internal linking architecture, video optimization, and social proof integration
 - **Link building** with prioritized tactics (Digital PR, HARO, guest posting), anchor text distribution, link velocity guidance, and content types that earn links
 - **Local business SEO** as progressively disclosed subset — GBP optimization, citations (quality hierarchy), NAP consistency, review management, SAB content strategy, Google spam warnings
+- **Built-in verification protocol** to prevent false findings from content extractors — requires raw HTML confirmation before marking structural findings as confirmed
 - 6 workflows: full audit, GBP optimization, weekly maintenance, automation setup, content briefs, report analysis
 - Automation scripts for keyword research, backlink intelligence, Google Search Console monitoring, content briefs, and outreach
 - Keyword validation framework (SERP test, PAA check, competitor check, AI query alignment)
