@@ -10,17 +10,18 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 
 ## What's Included
 
-### LocalSEO
+### seo
 
-**Full local SEO system for service businesses.** Replaces the core deliverables of a $1,500/month SEO agency with Claude Code automation.
+**Comprehensive SEO audit, optimization, and automation.** Combines a 4-tier audit framework with a full DIY automation system that replaces the core deliverables of a $1,500/month agency.
 
-- 21 battle-tested local SEO rules (keyword placement, GBP optimization, citation strategy)
-- Complete audit workflows: technical SEO, content gaps, competitor analysis
+- 4-tier audit checklist (~80 items): indexation, on-page, local SEO, AI search readiness (AEO/GEO), link building
+- Local business SEO as progressively disclosed subset — GBP optimization, citations, NAP consistency, review management
+- Evidence-based ranking factor priorities with severity calibration
+- 6 workflows: full audit, GBP optimization, weekly maintenance, automation setup, content briefs, report analysis
 - Automation scripts for keyword research, backlink intelligence, Google Search Console monitoring, content briefs, and outreach
-- GBP optimization playbook with category strategy and review management
-- Weekly/monthly maintenance cadences
+- Keyword validation framework (SERP test, PAA check, competitor check, AI query alignment)
 
-The automation tools in `LocalSEO/Tools/` are production Node.js scripts that integrate with Keywords Everywhere, DataForSEO, Serper, and Google Search Console APIs.
+The automation tools in `seo/Tools/` are production Node.js scripts that integrate with Keywords Everywhere, DataForSEO, Serper, and Google Search Console APIs.
 
 ### security-audit
 
@@ -31,17 +32,6 @@ The automation tools in `LocalSEO/Tools/` are production Node.js scripts that in
 - Covers authentication, authorization, injection, cryptography, API security, infrastructure hardening
 - Structured severity ratings (Critical/High/Medium/Low/Info) with remediation guidance
 - Designed for web applications, APIs, and supporting infrastructure
-
-### seo-review
-
-**Comprehensive website SEO audit** that inspects live pages using Playwright, checks source code, and evaluates against modern search best practices.
-
-- Technical SEO: indexation, crawlability, page speed, Core Web Vitals
-- On-page: title tags, meta descriptions, heading structure, internal linking
-- Local business: NAP consistency, Google Business Profile, citations, reviews
-- Structured data and schema markup validation
-- AI search readiness (AEO/GEO) — optimizing for AI-generated answers
-- Content strategy and link building assessment
 
 ### writing
 
@@ -70,9 +60,8 @@ The automation tools in `LocalSEO/Tools/` are production Node.js scripts that in
 ### 2. Install the plugins you want
 
 ```
-/plugins install LocalSEO@claude-skills
+/plugins install seo@claude-skills
 /plugins install security-audit@claude-skills
-/plugins install seo-review@claude-skills
 /plugins install writing@claude-skills
 /plugins install web-reader@claude-skills
 ```
@@ -84,7 +73,7 @@ Or browse with `/plugins` > **Discover** to see all available plugins.
 Skills activate automatically based on context. Ask Claude Code to:
 
 - "Run a security audit on this app"
-- "Do an SEO review of example.com"
+- "Do an SEO audit of example.com"
 - "Create a content brief for [keyword]"
 - "Audit my Google Business Profile"
 - "Write a LinkedIn post about [topic]"
@@ -97,12 +86,12 @@ Marketplace plugins update automatically when Claude Code syncs. You can also ma
 
 ---
 
-## LocalSEO Automation Setup
+## SEO Automation Setup
 
-The LocalSEO plugin includes 5 Node.js automation scripts that connect to external APIs. To use them:
+The SEO plugin includes 5 Node.js automation scripts that connect to external APIs. To use them:
 
 1. Get API keys from [Keywords Everywhere](https://keywordseverywhere.com/), [DataForSEO](https://dataforseo.com/), [Serper](https://serper.dev/), and [Google Search Console](https://search.google.com/search-console)
-2. Create a `.env` file with your keys (see `LocalSEO/Tools/.env.example`)
+2. Create a `.env` file with your keys (see `seo/Tools/.env.example`)
 3. Ask Claude Code to run the tools — it knows how to use them
 
 Total cost for all APIs: roughly $75/month for a typical small business.
@@ -112,8 +101,8 @@ Total cost for all APIs: roughly $75/month for a typical small business.
 ## Requirements
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
-- Playwright plugin (for seo-review live page inspection)
-- Node.js 18+ (for LocalSEO automation tools)
+- Playwright plugin (for seo live page inspection)
+- Node.js 18+ (for SEO automation tools)
 
 ---
 
