@@ -188,27 +188,30 @@ Comprehensive audit covering all 4 tiers. For each item, report: PASS, FAIL, or 
 ## Tier 4: Links & Authority
 
 ### Link Profile
-- [ ] 80-90% of links to homepage
-- [ ] Branded anchor text primary
-- [ ] No spammy backlinks
-- [ ] Internal linking with descriptive anchors
-- [ ] High-value links near top of content
-- [ ] Competitor backlink opportunities identified
-- [ ] No anchor text over-optimization
-- [ ] Original research/data as link magnets
+- [ ] Balanced homepage vs deep page links (not heavily concentrated on homepage)
+- [ ] Anchor text safe (30-50% branded, 20-30% partial, <10% exact-match)
+- [ ] No spammy backlinks (PBNs, paid links, link exchanges)
+- [ ] Link reclamation done (broken backlinks → 301 redirects, unlinked mentions → links)
+- [ ] Competitor backlink sources identified (Link Intersect analysis)
+- [ ] Link velocity natural (5-10/month new sites, +5-14.5% monthly established)
+- [ ] Original research/data-driven content as link magnets (8x more links)
+- [ ] Digital PR or HARO/Connectively for editorial links
+- [ ] Nofollow/sponsored/UGC attributes correct on outbound links
 
 ### Local Link Building
 - [ ] Sponsorships (events, sports teams, nonprofits)
-- [ ] Local media outreach (newsworthy angles)
+- [ ] Local media outreach (newsworthy angles: community initiatives, awards, free services)
 - [ ] Business partnerships (complementary businesses)
 - [ ] Chamber/association memberships
 - [ ] Community involvement documented
+- [ ] Event hosting (workshops, webinars)
 
 ### Brand Signals
-- [ ] Brand searches exist/growing
+- [ ] Brand searches exist/growing (strongest AI citation predictor, r=0.334)
 - [ ] Social profiles link to website
 - [ ] Consistent brand across platforms
 - [ ] Entity consistency (same identifiers everywhere)
+- [ ] Third-party presence (press mentions, expert-curated lists, industry publications)
 
 ## Keyword Validation (For New Page Recommendations)
 
