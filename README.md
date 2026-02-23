@@ -53,9 +53,9 @@ All findings are data-backed with current statistics and ranking factor research
 
 **Clean web page content extraction.** Fetches any URL and returns it as structured markdown for analysis. Simple, reliable, and useful as a building block for other workflows.
 
-### x-digest
+### digest
 
-**X/Twitter content analysis and capture.** Fetches posts, analyzes content, saves to Obsidian, and recommends actionable uses including content ideas, action items, and project connections.
+**Universal web content analysis and capture.** Fetches any URL — articles, blog posts, documentation, X/Twitter posts — analyzes the content, saves structured analysis to Obsidian, and recommends actionable uses including content ideas, action items, and project connections. X/Twitter links get specialized 3-tier fetch logic; all other URLs use clean markdown extraction.
 
 ---
 
@@ -74,7 +74,7 @@ All findings are data-backed with current statistics and ranking factor research
 /plugins install security-audit@claude-skills
 /plugins install writing@claude-skills
 /plugins install web-reader@claude-skills
-/plugins install x-digest@claude-skills
+/plugins install digest@claude-skills
 ```
 
 Or browse with `/plugins` > **Discover** to see all available plugins.
@@ -90,6 +90,8 @@ Skills activate automatically based on context. Ask Claude Code to:
 - "Write a LinkedIn post about [topic]"
 - "Review this copy for AI tells"
 - "Read this page and summarize it"
+- Paste any URL to auto-analyze and save to Obsidian
+- `/digest https://example.com/article`
 
 ### Updating
 
