@@ -55,7 +55,7 @@ All findings are data-backed with current statistics and ranking factor research
 
 ### digest
 
-**Universal web content analysis and capture.** Fetches any URL — articles, blog posts, documentation, X/Twitter posts — analyzes the content, saves structured analysis to Obsidian, and recommends actionable uses including content ideas, action items, and project connections. X/Twitter links get specialized 3-tier fetch logic; all other URLs use clean markdown extraction.
+**Universal web content analysis and capture.** Fetches any URL — articles, blog posts, documentation, X/Twitter posts — analyzes the content, saves structured analysis to Obsidian, and recommends actionable uses including content ideas, action items, and project connections. X/Twitter links get specialized 3-tier fetch logic; all other URLs use clean markdown extraction. **Video support:** X/Twitter posts with native video are automatically downloaded and transcribed using faster-whisper (CPU-optimized, capped at 80% CPU usage).
 
 ---
 
