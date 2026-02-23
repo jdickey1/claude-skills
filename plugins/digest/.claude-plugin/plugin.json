@@ -1,0 +1,8 @@
+{
+  "name": "digest",
+  "description": "Fetches any web page or X/Twitter post, saves structured analysis to Obsidian, and recommends actionable ways to use the information.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}

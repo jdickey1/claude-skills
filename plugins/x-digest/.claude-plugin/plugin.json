@@ -1,8 +1,0 @@
-{
-  "name": "x-digest",
-  "description": "Fetches X/Twitter posts, saves structured analysis to Obsidian, and recommends actionable ways to use the information.",
-  "author": {
-    "name": "James Dickey",
-    "url": "https://github.com/jdickey1"
-  }
-}
