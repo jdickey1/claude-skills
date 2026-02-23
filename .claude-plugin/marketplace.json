@@ -36,9 +36,9 @@
       "homepage": "https://github.com/jdickey1/claude-skills"
     },
     {
-      "name": "x-digest",
-      "description": "Fetches X/Twitter posts, analyzes content, saves to Obsidian, and recommends actionable uses including content ideas, action items, and project connections.",
-      "source": "./plugins/x-digest",
+      "name": "digest",
+      "description": "Fetches any web page or X/Twitter post, analyzes content, saves structured analysis to Obsidian, and recommends actionable uses including content ideas, action items, and project connections.",
+      "source": "./plugins/digest",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
     }
