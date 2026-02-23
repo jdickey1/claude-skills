@@ -98,7 +98,8 @@ rm /tmp/digest-video.mp4
 ```
 
 **Important notes:**
-- The `transcribe` script outputs timestamped segments. Use the full transcript as the primary content for analysis — it replaces the tweet text as the "raw content."
+- The `transcribe` script auto-limits CPU to 80% via cpulimit and uses 2 threads to avoid overloading the shared VPS. Transcription takes longer but won't spike CPU.
+- The script outputs timestamped segments. Use the full transcript as the primary content for analysis — it replaces the tweet text as the "raw content."
 - Include the original tweet text as context alongside the transcript.
 - For videos over 60 minutes, use the `tiny` model instead of `base` to reduce processing time.
 - If transcription fails, fall back to analyzing only the tweet text and note that the video could not be transcribed.
