@@ -1,7 +1,7 @@
 ---
 name: digest
 description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link), says "digest this", "analyze this link", "read this page", "save this article", or when a URL appears in conversation context. Also triggers on /digest command. Handles all URL types — X/Twitter posts get specialized fetch logic, everything else uses web-reader.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Digest
@@ -78,13 +78,41 @@ Fall back to the WebFetch tool with a prompt asking for the full page content as
 
 If both tiers fail, report the failure to the user.
 
+## 3b. Video Content Handling
+
+For X/Twitter posts, check the syndication API response for video content: look for `mediaDetails` entries with `"type": "video"` and a `video_info` object containing `variants`.
+
+**Detection:** If the syndication response contains `video_info.variants`, the post has video. Extract the highest-bitrate MP4 URL from `video_info.variants` (filter for `content_type: "video/mp4"`, pick the highest `bitrate`).
+
+**Download and Transcribe:**
+
+```bash
+# Download the video
+curl -L -o /tmp/digest-video.mp4 "{MP4_URL}"
+
+# Transcribe using faster-whisper (base model, CPU)
+/home/nonrootadmin/.local/bin/transcribe /tmp/digest-video.mp4 base > /tmp/digest-transcript.txt
+
+# Clean up video after transcription
+rm /tmp/digest-video.mp4
+```
+
+**Important notes:**
+- The `transcribe` script outputs timestamped segments. Use the full transcript as the primary content for analysis — it replaces the tweet text as the "raw content."
+- Include the original tweet text as context alongside the transcript.
+- For videos over 60 minutes, use the `tiny` model instead of `base` to reduce processing time.
+- If transcription fails, fall back to analyzing only the tweet text and note that the video could not be transcribed.
+- Set `source_type` to `X Video` instead of `X Post` when video is present.
+
+**For non-X URLs with embedded video:** Video transcription is currently supported only for X/Twitter native video. For YouTube links or other video platforms, note the video URL in the analysis and suggest the user provide a transcript.
+
 ## 4. Metadata Extraction
 
 After fetching, extract metadata for the output template:
 
 **For X/Twitter URLs:**
 - `source_label`: `@{username}` (lowercase)
-- `source_type`: `X Post`
+- `source_type`: `X Post` (or `X Video` if video content was transcribed)
 
 **For Web URLs:**
 - `source_label`: Page title if available, otherwise the domain name
