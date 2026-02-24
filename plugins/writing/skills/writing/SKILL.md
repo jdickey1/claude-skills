@@ -1,11 +1,24 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
+version: 2.0.0
 ---
 
 # Writing
 
-Universal writing standards for all content. Format-specific guidance in references/.
+Universal writing standards for all content. Format-specific guidance in references/. Use slash commands for specific tasks.
+
+## Commands
+
+| Command | What it does |
+|---------|-------------|
+| `/write-x <topic>` | Write an X/Twitter post |
+| `/write-linkedin <topic>` | Write a LinkedIn post |
+| `/write-web <topic>` | Write website copy or blog post |
+| `/write-headline <topic>` | Generate 5+ headline candidates |
+| `/write-newsletter <topic>` | Write email/newsletter content |
+| `/write-review <content>` | Review/edit content for AI tells |
+| `/teach-writing` | Write voice/brand context to CLAUDE.md |
 
 ## Universal Rules (ALL Content Must Follow)
 
@@ -133,6 +146,7 @@ Read the appropriate reference before writing:
 - **LinkedIn posts & articles**: See [references/linkedin.md](references/linkedin.md)
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)
 - **Persuasion frameworks**: See [references/persuasion-frameworks.md](references/persuasion-frameworks.md)
+- **Interview scripts**: See [references/interview-scripts.md](references/interview-scripts.md)
 
 ## Pre-Publish Checklist
 

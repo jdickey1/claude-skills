@@ -1,6 +1,10 @@
-# Weekly SEO Maintenance
+---
+description: Run weekly recurring SEO maintenance tasks
+---
 
-Recurring tasks to maintain and improve local search rankings. Do these consistently for 6 months and you will not recognize your business.
+**First**: Use the `seo` skill for core philosophy and ongoing habit principles.
+
+Run the weekly SEO maintenance checklist. Consult `${CLAUDE_PLUGIN_ROOT}/skills/seo/reference/local-seo.md` for GBP-specific guidance.
 
 ## Weekly Checklist
 
@@ -36,3 +40,5 @@ Keep a simple log:
 |------|--------|---------|---------------|------------------|------------|-------------|
 | W1   |        |         |               |                  |            |             |
 | W2   |        |         |               |                  |            |             |
+
+Do all of this consistently for **6 months** and you will not recognize your business. There are no shortcuts. Consistency is the strategy.
