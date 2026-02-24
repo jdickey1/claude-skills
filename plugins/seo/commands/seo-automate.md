@@ -1,8 +1,10 @@
-# SEO Automation Setup
+---
+description: Set up DIY SEO automation scripts to replace agency work
+---
 
-Step-by-step guide to replace agency SEO work with automated scripts.
+**First**: Use the `seo` skill for core philosophy.
 
-Refer to `AutomationSystem.md` for full scripts, prompts, and templates.
+Set up the DIY SEO automation system. Read `${CLAUDE_PLUGIN_ROOT}/skills/seo/reference/automation.md` for full scripts, prompts, and templates.
 
 ## Prerequisites
 
@@ -19,22 +21,13 @@ Refer to `AutomationSystem.md` for full scripts, prompts, and templates.
 | Serper | serper.dev | $10-50/mo | SERP data for content briefs |
 | Google Search Console | search.google.com/search-console | Free | Performance monitoring |
 
-Store credentials as environment variables:
-```bash
-export KEYWORDS_EVERYWHERE_API_KEY="your-key"
-export DATAFORSEO_AUTH="base64-encoded-login:password"
-export SERPER_API_KEY="your-key"
-```
+Store credentials as environment variables (see `${CLAUDE_PLUGIN_ROOT}/skills/seo/Tools/.env.example`).
 
 ## Step 2: Deploy Scripts
 
-1. Copy scripts from `AutomationSystem.md` to your server
+1. Copy scripts from `${CLAUDE_PLUGIN_ROOT}/skills/seo/Tools/` to your server
 2. Test each one manually first
-3. Customize:
-   - `SEED_KEYWORDS` - your service + city keywords
-   - `COMPETITORS` - your top 5 competitors
-   - `SITE_URL` - your GSC property
-   - Email template - your company details and stats
+3. Customize: `SEED_KEYWORDS`, `COMPETITORS`, `SITE_URL`, email template
 
 ## Step 3: Set Up Cron Schedule
 
@@ -50,19 +43,15 @@ crontab -e
 
 ## Step 4: Set Up Output Delivery
 
-Options:
-- **Email digest** - Pipe script output to email
-- **Slack webhook** - Post results to a channel
-- **File output** - Save to a shared folder for review
-- **Dashboard** - Build a simple web UI (overkill for most)
+Options: email digest, Slack webhook, file output, or dashboard.
 
 ## Step 5: Weekly Review Ritual
 
 Every Monday, review:
-1. Keyword research output - any new opportunities?
-2. GSC report - winners, losers, quick wins
-3. Backlink opportunities - who to pitch this week
-4. Generate content briefs for priority keywords
+1. Keyword research output — any new opportunities?
+2. GSC report — winners, losers, quick wins
+3. Backlink opportunities — who to pitch this week
+4. Generate content briefs for priority keywords (use `/seo-brief`)
 
 ## Validation Checklist
 
