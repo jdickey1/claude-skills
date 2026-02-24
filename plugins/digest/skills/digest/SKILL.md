@@ -91,7 +91,7 @@ For X/Twitter posts, check the syndication API response for video content: look 
 curl -L -o /tmp/digest-video.mp4 "{MP4_URL}"
 
 # Transcribe using faster-whisper (base model, CPU)
-/home/nonrootadmin/.local/bin/transcribe /tmp/digest-video.mp4 base > /tmp/digest-transcript.txt
+transcribe /tmp/digest-video.mp4 base > /tmp/digest-transcript.txt
 
 # Clean up video after transcription
 rm /tmp/digest-video.mp4
