@@ -1,7 +1,7 @@
 ---
 name: digest
 description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link), says "digest this", "analyze this link", "read this page", "save this article", or when a URL appears in conversation context. Also triggers on /digest command. Handles all URL types — X/Twitter posts get specialized fetch logic, everything else uses web-reader.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Digest
@@ -80,32 +80,56 @@ If both tiers fail, report the failure to the user.
 
 ## 3b. Video Content Handling
 
-For X/Twitter posts, check the syndication API response for video content: look for `mediaDetails` entries with `"type": "video"` and a `video_info` object containing `variants`.
+Video transcription is supported for **any URL** — X/Twitter native video, YouTube, and generic web pages with embedded video.
 
-**Detection:** If the syndication response contains `video_info.variants`, the post has video. Extract the highest-bitrate MP4 URL from `video_info.variants` (filter for `content_type: "video/mp4"`, pick the highest `bitrate`).
+### Detection
 
-**Download and Transcribe:**
+**X/Twitter:** Check the syndication API response for `mediaDetails` entries with `"type": "video"` and a `video_info` object containing `variants`.
+
+**General web pages:** After fetching page content, look for signs of embedded video:
+- Page text is minimal but mentions a video player, "Video Player is loading", or duration timestamps
+- The page title or URL suggests video content (e.g., "open_meeting", "webcast", "recording")
+- The fetched content contains `<video>` references or known video platform embeds
+
+When video is detected (or suspected), attempt to download and transcribe it.
+
+### Download
+
+**X/Twitter video** — extract the highest-bitrate MP4 URL from `video_info.variants` (filter for `content_type: "video/mp4"`, pick the highest `bitrate`):
 
 ```bash
-# Download the video
 curl -L -o /tmp/digest-video.mp4 "{MP4_URL}"
-
-# Transcribe using faster-whisper (base model, CPU)
-transcribe /tmp/digest-video.mp4 base > /tmp/digest-transcript.txt
-
-# Clean up video after transcription
-rm /tmp/digest-video.mp4
 ```
 
-**Important notes:**
-- The `transcribe` script auto-limits CPU to 80% via cpulimit and uses 2 threads to avoid overloading the shared VPS. Transcription takes longer but won't spike CPU.
-- The script outputs timestamped segments. Use the full transcript as the primary content for analysis — it replaces the tweet text as the "raw content."
-- Include the original tweet text as context alongside the transcript.
-- For videos over 60 minutes, use the `tiny` model instead of `base` to reduce processing time.
-- If transcription fails, fall back to analyzing only the tweet text and note that the video could not be transcribed.
-- Set `source_type` to `X Video` instead of `X Post` when video is present.
+**All other video** — use `yt-dlp` which handles YouTube, HTML5 video, and most embedded players:
 
-**For non-X URLs with embedded video:** Video transcription is currently supported only for X/Twitter native video. For YouTube links or other video platforms, note the video URL in the analysis and suggest the user provide a transcript.
+```bash
+# Download audio only (much faster and smaller than full video)
+yt-dlp -x --audio-format wav --audio-quality 0 -o "/tmp/digest-audio.%(ext)s" "URL_HERE"
+```
+
+If `yt-dlp` fails (some custom players are unsupported), try using Playwright to find the direct video/audio source URL from the page, then download with `curl -L`.
+
+### Transcribe
+
+```bash
+# For files under 60 minutes — use base model
+transcribe /tmp/digest-audio.wav base
+
+# For files over 60 minutes — use tiny model (faster, less accurate)
+transcribe /tmp/digest-audio.wav tiny
+
+# Clean up after transcription
+rm /tmp/digest-audio.wav /tmp/digest-video.mp4 2>/dev/null
+```
+
+### Important notes
+- `transcribe` is at `/usr/local/bin/transcribe` — available to all VPS users.
+- The script auto-limits CPU to 80% via cpulimit and uses 2 threads to avoid overloading the shared VPS.
+- The script outputs timestamped segments. Use the full transcript as the primary content for analysis — it replaces the page text as the "raw content."
+- Include any original page text as context alongside the transcript.
+- If transcription fails, fall back to analyzing only the page text and note that the video could not be transcribed.
+- Set `source_type` to include `Video` when video content was transcribed (e.g., `X Video`, `Meeting Video`, `Webcast`).
 
 ## 4. Metadata Extraction
 
