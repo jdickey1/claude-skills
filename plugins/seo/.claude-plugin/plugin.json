@@ -1,6 +1,6 @@
 {
   "name": "seo",
-  "description": "Comprehensive SEO audit, optimization, and automation. Covers technical SEO, on-page optimization, local business SEO, Google Business Profile, AI search readiness, content strategy, link building, and a full DIY automation system.",
+  "description": "Comprehensive SEO audit, optimization, and automation. 4-tier audit checklist, local SEO/GBP, AI search readiness (AEO/GEO), content strategy, link building, and DIY automation. Slash commands: /seo-audit, /seo-brief, /seo-gbp, /seo-weekly, /seo-report, /seo-automate, /teach-seo.",
   "author": {
     "name": "James Dickey",
     "url": "https://github.com/jdickey1"
