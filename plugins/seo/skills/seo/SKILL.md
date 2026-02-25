@@ -1,7 +1,7 @@
 ---
 name: seo
-description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
-version: 2.0.0
+description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR AEO OR answer engine optimization OR AI visibility OR AI citations OR ChatGPT ranking OR Perplexity optimization OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
+version: 2.1.0
 ---
 
 # SEO - Website Audit, Optimization & Automation
@@ -33,6 +33,7 @@ Comprehensive SEO framework covering technical foundations, on-page optimization
 | `/seo-weekly` | Weekly recurring SEO tasks |
 | `/seo-report` | Analyze GSC/keyword data |
 | `/seo-automate` | Set up DIY automation scripts |
+| `/seo-aeo <url>` | Dedicated AEO audit — AI visibility across ChatGPT, Perplexity, Claude, Gemini, Google AI Overviews |
 | `/teach-seo` | Write SEO context to project CLAUDE.md |
 
 ## Reference Files
@@ -44,6 +45,7 @@ Deep-dive references loaded on demand by commands:
 | `reference/audit-checklist.md` | Full 4-tier audit checklist (~180 items) |
 | `reference/ranking-factors.md` | Evidence-based ranking factor priorities, severity calibration, keyword validation |
 | `reference/ai-search.md` | AEO/GEO optimization, platform-specific citation data, AI accessibility |
+| `reference/aeo.md` | Full AEO audit framework: 4-section scoring, Answer Intent Mapping, trust signals, service business adaptations, maintenance loop |
 | `reference/local-seo.md` | GBP, citations, NAP, reviews, SABs, Google spam warnings |
 | `reference/link-building.md` | Link profile, tactics, local link building, brand signals |
 | `reference/automation.md` | Full DIY automation system (~$75/mo replaces ~$1,500/mo agency) |
@@ -178,7 +180,7 @@ For the full checklist with ~180 items, see `reference/audit-checklist.md`.
 | **AEO** | Descriptive clarity | Make content machine-readable, structured, extractable |
 | **GEO** | Justification & trust | Build authority signals AI systems can verify and cite |
 
-SEO is the foundation. AEO drives understanding. GEO drives confidence. You need all three to be recommended by AI search. See `reference/ai-search.md` for full details.
+SEO is the foundation. AEO drives understanding. GEO drives confidence. You need all three to be recommended by AI search. See `reference/ai-search.md` for citation data and `reference/aeo.md` for the full AEO audit framework.
 
 ---
 

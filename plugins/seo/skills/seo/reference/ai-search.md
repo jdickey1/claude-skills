@@ -1,5 +1,7 @@
 # AI Search Optimization (AEO/GEO)
 
+> **For the full AEO audit framework** (scoring, Answer Intent Mapping, trust signals, service business adaptations, implementation roadmap), see `reference/aeo.md`. This file covers citation data, content formatting, and platform-specific stats.
+
 AI Overviews appear in ~16-60% of Google searches (varies by query type; peaked at 60% in Nov 2025). 58-60% of searches end without a click. Organic CTR drops 61% when AI Overviews appear (from 1.76% to 0.61%). Being cited in AI answers is the counter-strategy: cited brands recover +35% organic CTR and +91% paid CTR vs uncited.
 
 **AEO vs GEO distinction:** AEO (Answer Engine Optimization) = be the direct answer (featured snippets, voice, position zero). GEO (Generative Engine Optimization) = be the source AI synthesizes from (ChatGPT, Perplexity, Claude, Copilot). AEO originated in Google-focused SEO; GEO emerged with LLMs. Optimize for both.
