@@ -1,7 +1,7 @@
 ---
 name: digest
-description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link), says "digest this", "analyze this link", "read this page", "save this article", or when a URL appears in conversation context. Also triggers on /digest command. Handles all URL types — X/Twitter posts get specialized fetch logic, everything else uses web-reader.
-version: 1.2.0
+description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", or when a URL appears in conversation context. Also triggers on /digest command. Handles all URL types — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, everything else uses web-reader.
+version: 1.3.0
 ---
 
 # Digest
@@ -20,6 +20,15 @@ Determine the URL type to select the right fetch strategy and file naming.
 - `https://x.com/{user}/status/{id}`
 - `https://x.com/{user}/status/{id}?s=46`
 - `https://twitter.com/{user}/status/{id}`
+
+**GitHub Repo URLs** match these patterns:
+- `https://github.com/{owner}/{repo}`
+- `https://github.com/{owner}/{repo}.git`
+- `https://github.com/{owner}/{repo}/tree/{branch}`
+
+Do NOT match GitHub issue, PR, or file URLs (those use general web fetch):
+- `https://github.com/{owner}/{repo}/issues/{id}` → general web
+- `https://github.com/{owner}/{repo}/pull/{id}` → general web
 
 **All other URLs** are treated as general web content (articles, blog posts, docs, etc.).
 
@@ -77,6 +86,63 @@ Use this output if it returns meaningful page content (headings, paragraphs, bod
 Fall back to the WebFetch tool with a prompt asking for the full page content as structured markdown.
 
 If both tiers fail, report the failure to the user.
+
+### For GitHub Repo URLs
+
+Extract `owner` and `repo` from the URL:
+
+```bash
+OWNER=$(echo "$URL" | grep -oP '(?<=github\.com/)[^/]+')
+REPO=$(echo "$URL" | grep -oP '(?<=github\.com/[^/]+/)[^/.]+')
+```
+
+**Step 1: Repo metadata** — use `gh` CLI (authenticated, no token needed):
+
+```bash
+gh repo view "$OWNER/$REPO" --json name,description,owner,primaryLanguage,languages,stargazerCount,forkCount,licenseInfo,latestRelease,createdAt,updatedAt,isArchived,defaultBranchRef
+```
+
+**Step 2: Clone to temp dir** (shallow clone for speed):
+
+```bash
+TMPDIR=$(mktemp -d /tmp/digest-repo-XXXXXX)
+git clone --depth 1 "https://github.com/$OWNER/$REPO.git" "$TMPDIR/$REPO"
+```
+
+**Step 3: Read README** — look for `README.md`, `README.rst`, `readme.md`, or similar at the repo root.
+
+**Step 4: Evaluate code structure** — map the project layout:
+
+```bash
+# Directory tree (2 levels deep, ignore .git)
+find "$TMPDIR/$REPO" -maxdepth 2 -not -path '*/.git/*' | head -80
+```
+
+Read key files to understand the project:
+- Package manifest (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, etc.)
+- Entry points (`src/index.*`, `main.*`, `app.*`)
+- Config files (`tsconfig.json`, `.env.example`, `docker-compose.yml`, etc.)
+- Any `CLAUDE.md`, `.cursorrules`, or similar AI context files
+
+**Step 5: Security scan** — this is critical. Check for:
+
+| Risk | What to look for |
+|------|-----------------|
+| Hardcoded secrets | API keys, tokens, passwords in source (not `.example` files) |
+| Dependency risks | Known vulnerable packages, unpinned versions, excessive deps |
+| Injection vectors | Unsanitized user input in SQL, shell commands, HTML rendering |
+| Auth weaknesses | Missing auth on routes, weak token validation, exposed admin endpoints |
+| Unsafe patterns | `eval()`, `dangerouslySetInnerHTML`, `shell=True`, `--no-verify`, `chmod 777` |
+| Supply chain | Postinstall scripts, obfuscated code, unusual build steps |
+| Data exposure | Logging sensitive data, verbose error messages, open CORS |
+
+Read any files that look suspicious. This is not a full audit — it's a quick scan to flag obvious risks before we consider using the code.
+
+**Step 6: Clean up**
+
+```bash
+rm -rf "$TMPDIR"
+```
 
 ## 3b. Video Content Handling
 
@@ -139,6 +205,12 @@ After fetching, extract metadata for the output template:
 - `source_label`: `@{username}` (lowercase)
 - `source_type`: `X Post` (or `X Video` if video content was transcribed)
 
+**For GitHub Repo URLs:**
+- `source_label`: `{owner}/{repo}`
+- `source_type`: `GitHub Repo`
+- `primary_language`: From repo metadata
+- `license`: From repo metadata (flag if missing — could be a risk)
+
 **For Web URLs:**
 - `source_label`: Page title if available, otherwise the domain name
 - `source_type`: Infer from content — `Article`, `Blog Post`, `Documentation`, `News`, `Report`, `Thread`, etc.
@@ -154,6 +226,34 @@ Analyze the fetched content and produce all of the following:
 **Key Claims**: Bulleted list of specific assertions, data points, or statements made.
 
 **Sentiment**: Brief assessment of tone and intent (e.g., promotional, critical, informational, provocative).
+
+**For GitHub Repos, replace Summary/Key Claims/Sentiment with these sections:**
+
+**What It Does**: One paragraph explaining the repo's purpose, target audience, and core functionality.
+
+**Code Evaluation**:
+- **Stack**: Languages, frameworks, key dependencies
+- **Architecture**: How the code is organized (monorepo, MVC, serverless, etc.)
+- **Quality signals**: Tests present? CI/CD? Types? Linting? Documentation quality?
+- **Maturity**: Stars, recent commits, release cadence, open issues vs. closed
+
+**Security Assessment** (from the scan in Step 5):
+- **Risk level**: `Low` / `Medium` / `High` / `Critical`
+- **Findings**: Bulleted list of specific issues found (with file paths)
+- **Missing protections**: What security measures are absent that should be present
+- If no issues found, say so explicitly — don't invent problems
+
+**Recommendations** (for repos):
+
+- **How We Could Use It**: Specific ways this repo could benefit our projects. Be concrete — name the project, describe the integration, explain the value. Consider whether to use as-is, fork and modify, or just borrow patterns/ideas.
+
+- **Adoption Risks**: What could go wrong — maintenance burden, breaking changes, vendor lock-in, missing features we'd need to build.
+
+- **Action Items**: Concrete next steps if we decide to use it.
+
+- **Project Connections**: Map to relevant projects (same project list as below — only list genuine connections).
+
+**For all other URL types, use the standard analysis sections above, plus:**
 
 **Recommendations**:
 
@@ -176,7 +276,73 @@ Analyze the fetched content and produce all of the following:
 
 ## 6. Output Template
 
-Fill in this exact template:
+Fill in the appropriate template based on URL type.
+
+**For GitHub Repos:**
+
+````markdown
+# Digest: {owner}/{repo}
+
+**Source**: {url}
+**Type**: GitHub Repo
+**Language**: {primary_language}
+**License**: {license}
+**Stars**: {stars} | **Forks**: {forks}
+**Analyzed**: {YYYY-MM-DD HH:MM}
+**Tags**: #{category}
+
+---
+
+## What It Does
+{one paragraph}
+
+## Code Evaluation
+
+### Stack
+{languages, frameworks, key dependencies}
+
+### Architecture
+{code organization, patterns}
+
+### Quality Signals
+{tests, CI, types, linting, docs}
+
+### Maturity
+{stars, activity, releases, issues}
+
+## Security Assessment
+**Risk Level**: {Low/Medium/High/Critical}
+
+{bulleted findings with file paths, or "No issues found"}
+
+## Recommendations
+
+### How We Could Use It
+- {specific integration ideas per project}
+
+### Adoption Risks
+- {maintenance, breaking changes, missing features}
+
+### Action Items
+- {next steps}
+
+### Project Connections
+- {mapping to user's projects}
+
+---
+
+## README
+```
+{README content}
+```
+
+## Project Structure
+```
+{directory tree}
+```
+````
+
+**For all other URL types:**
 
 ````markdown
 # Digest: {source_label}
@@ -229,6 +395,7 @@ Save to:
 **File naming by URL type:**
 
 - **X/Twitter**: `YYYY-MM-DD-{username}-{tweet_id}.md` (e.g., `2026-02-23-elonmusk-1234567890.md`)
+- **GitHub Repos**: `YYYY-MM-DD-gh-{owner}-{repo}.md` (e.g., `2026-02-27-gh-jjenglert1-gtm-engineer-starter-kit.md`)
 - **Web pages**: `YYYY-MM-DD-{domain}-{path-slug}.md` (e.g., `2026-02-23-techcrunch-com-ai-startup-raises.md`)
 
 **Slug rules:**
