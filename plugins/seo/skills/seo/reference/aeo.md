@@ -67,6 +67,35 @@ AI models extract answers from the first 30% of content 44% of the time. Structu
 - [ ] **Updated within 6 months** — 53% of ChatGPT citations are content updated within 6 months. 23% of AI Overview featured content is <30 days old.
 - [ ] **Current-year citations** — Pages citing current-year sources appear in positions 3-5 vs older references in positions 6-8.
 
+### Passage-Level Citability Scoring
+
+Score every substantive content block on the page (paragraphs between headings, list sections, table sections) on a 0-100 citability scale. This measures how likely AI models are to extract and quote each passage.
+
+**Optimal passage length:** 134-167 words. Research shows this is the sweet spot for AI citation — long enough for substance, short enough to quote verbatim.
+
+**5 Scoring Dimensions:**
+
+| Dimension | Weight | What to Evaluate |
+|-----------|--------|-----------------|
+| Answer Block Quality | 30% | Does it directly answer a question in 1-3 sentences? Contains definition patterns ("X is...", "X refers to...")? Answer appears in first 60 words? Has a question-based heading? Contains quotable, verifiable claims? |
+| Self-Containment | 25% | Understandable without surrounding context? Low pronoun density (fewer "it", "they", "this", "that")? Contains named entities and proper nouns instead of references? No dangling references to other sections? |
+| Structural Readability | 20% | Average sentence length 10-20 words? Mix of sentence lengths? Contains list-like structures (first/second/third, numbered items)? Clear paragraph breaks? |
+| Statistical Density | 15% | Contains percentages, dollar amounts, specific numbers with context? Year references for timeliness? Named sources or attributions ("according to", "per Gartner")? |
+| Uniqueness Signals | 10% | Contains original data ("our research found", "we analyzed")? Case studies or real-world examples? Specific tool/product mentions showing practical experience? |
+
+**Scoring each block:**
+1. Read each content block between headings
+2. Score 0-100 per dimension based on criteria above
+3. Calculate weighted total
+4. Grade: A (80+) Highly Citable, B (65-79) Good, C (50-64) Moderate, D (35-49) Low, F (<35) Poor
+
+**Page Citability Score** = average of top 5 scoring blocks (rewards pages with at least some strong passages).
+
+**Output in audit:**
+- Page Citability Score with grade
+- Top 3 most citable passages (with scores and why they work)
+- Bottom 3 passages needing improvement (with specific fixes: "add a statistic", "remove pronoun references", "shorten to 134-167 words", "lead with the answer")
+
 ---
 
 ## Section 3: Schema & Machine-Readable Data (0-25 pts)
@@ -99,18 +128,71 @@ Schema markup boosts AI citations 2.3-2.5x. All schema must be JSON-LD format (G
 
 These are direct signals to AI agents — structured data they can consume without scraping.
 
-- [ ] **`/llms.txt` file** — Markdown file at domain root describing your business, key pages, and resources for AI consumption. Increasingly adopted standard. Format:
-  ```
-  # [Company Name]
-  > Brief description of business/purpose
-  ## Key Resources
-  - [Service Page](url)
-  - [Case Studies](url)
-  - [Pricing](url)
-  ```
+- [ ] **`/llms.txt` file** — See llms.txt Audit & Generation subsection below.
 - [ ] **Brand-Facts page** (`/about/facts` or `/brand-facts`) — Wikipedia-style neutral facts page: one-sentence TL;DR, key facts table (founded, category, pricing, certifications, guarantees), links to external profiles (Wikidata, Crunchbase, social, press). This gets crawled by AI bots more than marketing pages.
 - [ ] **`/.well-known/brand-facts.json`** (ecommerce/product businesses) — Machine-readable JSON with brand name, category, price range, top SKUs with specs, certifications, policies, `lastUpdated` timestamp. Welcome mat for AI agents.
 - [ ] **Structured product feeds** (ecommerce) — Google Merchant Center with GTINs, front-loaded titles with specs, complete attributes, 1200px+ images, 50+ reviews at 4.2+ stars. Required for GPT Shopping.
+
+### llms.txt Audit & Generation
+
+The `llms.txt` standard is an emerging specification that helps AI crawlers understand your site structure and find your most important content. It lives at the domain root (`/llms.txt`) with an optional extended version (`/llms-full.txt`).
+
+**Audit steps:**
+
+1. **Fetch `/llms.txt`** — check if it exists (200 vs 404)
+2. **Fetch `/llms-full.txt`** — check if extended version exists
+3. **Validate format** if present:
+   - First line must be `# Site Name` (H1 title)
+   - Blockquote description: `> Brief description of what this site/business does`
+   - Sections organized by `## Heading` (e.g., `## Products`, `## Resources`, `## Company`)
+   - Links in markdown format: `- [Page Title](url): Optional description`
+   - At least 5 page links across at least 2 sections
+
+**llms.txt Score (contributes to Section 3 total):**
+
+| Score | Criteria |
+|-------|----------|
+| 0 | File absent |
+| 30 | Present but malformed (missing title, no sections, broken links) |
+| 50 | Valid format but minimal (fewer than 5 links or 2 sections) |
+| 70 | Valid format, covers primary content areas, 10+ links |
+| 90-100 | Comprehensive with `/llms-full.txt` also available, descriptions on links |
+
+**Generation (when absent or malformed):**
+
+Generate a ready-to-deploy `llms.txt` by analyzing the site:
+
+1. **Extract site name** from `<title>` tag (before any `|` or `-` separator)
+2. **Extract description** from `<meta name="description">` content
+3. **Crawl internal links** from homepage + sitemap.xml (up to 30 pages)
+4. **Categorize pages** into sections:
+
+| Section | URL path signals |
+|---------|-----------------|
+| Main Pages | `/`, `/home`, uncategorized top-level pages |
+| Products & Services | `/pricing`, `/features`, `/product`, `/solutions`, `/demo`, `/services` |
+| Resources & Blog | `/blog`, `/article`, `/resource`, `/guide`, `/learn`, `/docs` |
+| Company | `/about`, `/team`, `/career`, `/contact`, `/press`, `/partner` |
+| Support | `/help`, `/support`, `/faq`, `/status` |
+
+5. **Output format:**
+```
+# [Site Name]
+> [Meta description or "Official website of [Site Name]"]
+
+## [Section Name]
+- [Page Title](url)
+- [Page Title](url)
+
+## Contact
+- Website: [base URL]
+- Email: contact@[domain]
+```
+
+6. **Also generate `llms-full.txt`** — same structure but with descriptions on each link pulled from each page's meta description:
+   `- [Page Title](url): [meta description]`
+
+Present both files in the audit output, ready for the site owner to deploy.
 
 ---
 
@@ -296,6 +378,22 @@ AI-driven sessions grew 527% YoY in early 2025. ChatGPT referrals went from ~600
 - Content Structure & Extractability: [X/25]
 - Schema & Machine-Readable Data: [X/25]
 - Authority & Trust Signals: [X/30]
+
+## Citability Analysis
+**Page Citability Score: [X/100] — [Grade]**
+
+Top citable passages:
+1. [Passage heading/preview] — [Score]/100 (strengths: [why it works])
+2. [Passage heading/preview] — [Score]/100
+3. [Passage heading/preview] — [Score]/100
+
+Passages needing improvement:
+1. [Passage heading/preview] — [Score]/100 (fix: [specific action])
+2. [Passage heading/preview] — [Score]/100 (fix: [specific action])
+
+## llms.txt Status
+**Status:** [Present/Absent] | **Score:** [X/100]
+[If present: validation results. If absent: generated llms.txt + llms-full.txt included below]
 
 ## AI Visibility Baseline
 [Results from Answer Intent Map — how many target queries mention the brand]
