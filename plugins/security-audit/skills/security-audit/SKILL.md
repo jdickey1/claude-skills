@@ -90,11 +90,14 @@ description: Comprehensive cybersecurity audit for web applications. USE WHEN re
 - [ ] RSS/feed/webhook URLs that could target internal networks
 
 #### B4 - Security Misconfiguration
-- [ ] Security headers (CSP, X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy)
+
+**Automated baseline:** Run `/quick-security-scan {project}` first for instant header checks.
+
+- [ ] Security headers (CSP, X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy) — `/quick-security-scan` covers these
 - [ ] Directory listing enabled
 - [ ] Default credentials or debug modes in production
 - [ ] Unnecessary HTTP methods enabled
-- [ ] Source maps exposed in production
+- [ ] Source maps exposed in production (`curl https://{domain}/_next/static/*.js.map`)
 - [ ] Next.js specific: _next/data routes exposing server data
 - [ ] PM2/process manager exposing management interfaces
 
@@ -116,11 +119,19 @@ description: Comprehensive cybersecurity audit for web applications. USE WHEN re
 - [ ] Rate/plan enforcement gaps (accessing premium features on free tier)
 
 #### C3 - Infrastructure & Deployment
+
+**Delegate to vps-ops tools for automated checks:**
+- `/post-deploy-verify {project}` — PM2 health, port binding, public URL, logs
+- `/quick-security-scan {project}` — security headers across all projects
+- `/email-security-audit {project}` — SPF/DKIM/DMARC/CAA verification (uses MCP tools)
+- `dns_check_propagation({domain}, "CAA")` — verify CAA records for cert issuance
+
+**Manual checks (not yet automated):**
 - [ ] File permissions on sensitive files (.env, deploy scripts, SSH keys)
 - [ ] Process running as root unnecessarily
 - [ ] Database user privilege scope (principle of least privilege)
-- [ ] Firewall rules / exposed ports
-- [ ] SSL/TLS configuration
+- [ ] Firewall rules / exposed ports (`ss -tlnp` + compare to port-check.sh)
+- [ ] SSL/TLS configuration (cert expiry, protocol versions)
 - [ ] Backup encryption and access controls
 
 ---
@@ -168,13 +179,30 @@ Step-by-step exploitation path.
 
 ## Audit Execution Order
 
+**Phase 0 (Quick Baseline — run first, 30 seconds):**
+```
+/quick-security-scan {project}
+```
+Gets instant security header status. Identifies obvious misconfigurations before deep audit.
+
+**Parallelizable phases (launch as subagents for 3-4x speedup):**
+
+| Subagent | Phases | Tools |
+|----------|--------|-------|
+| Infrastructure | 7 (infra) | `/post-deploy-verify`, `/email-security-audit`, MCP tools |
+| Dependencies | 6 (deps) | `npm audit`, lock file check |
+| Secrets | 5 (secrets) | grep patterns across codebase |
+| App Security | 1-4, 8 (main audit) | Code review, input tracing |
+
+**Sequential execution (if not parallelizing):**
+
 1. **Reconnaissance** - Map all routes, endpoints, middleware, and data flows
 2. **Authentication audit** - Review every auth mechanism and session handler
 3. **Input tracing** - Follow every user input from request to database/output
 4. **Authorization testing** - Verify access controls on every protected resource
 5. **Secrets scan** - Check for leaked credentials, keys, tokens in code and config
 6. **Dependency review** - Assess third-party package risk
-7. **Infrastructure check** - Review deployment, permissions, and configuration
+7. **Infrastructure check** - Review deployment, permissions, and configuration (delegate to vps-ops where possible)
 8. **Business logic** - Analyze payment flows, state machines, and race conditions
 9. **Report generation** - Compile findings with severity, evidence, and remediation
 
