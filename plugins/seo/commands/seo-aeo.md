@@ -19,14 +19,20 @@ Run a dedicated AEO audit on the provided URL (`$ARGUMENTS`). If no URL is provi
 4. Run an **Answer Intent Map** — test 15-20 category queries in ChatGPT and Perplexity to establish the brand's current AI visibility baseline
 5. Generate scored report with prioritized implementation roadmap
 
-## Answer Intent Mapping
+## Answer Intent Mapping + Visibility Scorecard
 
 This is what makes the AEO audit actionable. For the target business:
 
-1. Generate 15-20 query variations buyers would ask AI (category + location + use case + brand vs competitor)
-2. Test each in ChatGPT and Perplexity (use WebSearch to simulate — note which brands/sites appear in search results as a proxy)
-3. Log: query, which brands appear, whether target brand is mentioned, position
-4. Summarize as visibility score: X out of Y queries mention the brand
+1. Generate 15-20 query variations buyers would ask AI (category + location + use case + brand vs competitor). Follow the query generation guidance in `aeo.md`.
+2. Test each via WebSearch — note which brands/sites appear in search results as a proxy for AI engine responses
+3. For each query, log: query text, brand mentioned (yes/no), prominence (high/medium/low), competitors that appeared
+4. Calculate the **Visibility Score** using the formula in `aeo.md` (Quantitative Visibility Scorecard section):
+   - Mention Rate (% of queries where brand appears)
+   - Prominence Rate (% of mentions at high/medium prominence)
+   - Composite Score = (Mention Rate x 0.6) + (Prominence Rate x 0.4)
+5. Build the **Competitor Frequency Table** — rank all competitors by appearance count
+6. Identify **high-value gaps** — queries where 2+ competitors appear but target brand does not
+7. Include **historical tracking row** if this is a repeat audit
 
 ## Adapt to Business Type
 
@@ -46,7 +52,9 @@ This is what makes the AEO audit actionable. For the target business:
 ## Output
 
 Use the AEO Audit Output Format from `aeo.md`. Score out of 100 with 4-section breakdown. Include:
-- AI visibility baseline (Answer Intent Map results)
+- **Visibility Scorecard** — Mention Rate, Prominence Rate, composite Visibility Score (0-100 scale), competitor frequency table, gap analysis
+- **Answer Intent Map** — full per-query results table
 - Per-finding format matching the main SEO audit style (SEVERITY, Category, Page, Confidence, Issue, Recommendation, Impact)
-- 4-week prioritized implementation roadmap
+- 4-week prioritized implementation roadmap (gap analysis queries should directly inform Week 2 content targets)
+- Historical tracking row for trend monitoring
 - Weekly maintenance loop setup instructions
