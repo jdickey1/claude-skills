@@ -266,6 +266,59 @@ Before optimizing anything, you need to know what AI is currently saying about y
 
 This map drives every other optimization. Update it monthly during the maintenance loop.
 
+### Quantitative Visibility Scorecard
+
+After running the Answer Intent Map, produce a structured scorecard that enables run-over-run comparison.
+
+**Per-Query Scoring:**
+
+For each query tested, log:
+
+| Field | Values | Description |
+|-------|--------|-------------|
+| Query | text | The search query tested |
+| Brand Mentioned | yes/no | Whether target brand appears in results |
+| Prominence | high/medium/low/none | high = top 3 results or first mention, medium = page 1, low = deep in results |
+| Competitor Count | 0-N | How many competitors appeared for this query |
+| Top Competitors | names | Which competitors appeared (up to 3) |
+
+**Visibility Score Formula:**
+
+```
+Mention Rate    = (queries where brand mentioned) / (total queries) x 100
+Prominence Rate = (queries with high/medium prominence) / (queries where mentioned) x 100
+Visibility Score = (Mention Rate x 0.6) + (Prominence Rate x 0.4)
+```
+
+A score of 0-20 = invisible, 20-40 = weak, 40-60 = emerging, 60-80 = competitive, 80-100 = dominant.
+
+**Competitor Frequency Table:**
+
+Rank all brands/competitors by how often they appear across all tested queries:
+
+| Rank | Competitor | Appearances | % of Queries | Avg Prominence |
+|------|-----------|-------------|--------------|----------------|
+| 1 | [name] | X/Y | Z% | high/medium/low |
+| 2 | [name] | X/Y | Z% | high/medium/low |
+| ... | ... | ... | ... | ... |
+| ? | **[Target Brand]** | X/Y | Z% | high/medium/low |
+
+This shows exactly where the brand stands relative to its competitive set.
+
+**Gap Analysis:**
+
+Identify the highest-value gaps — queries where 2+ competitors appear but the target brand does not. These are the priority content targets for the implementation roadmap.
+
+**Historical Tracking:**
+
+After each audit run, append a summary row to enable trend monitoring:
+
+```
+| Date | Queries Tested | Mention Rate | Prominence Rate | Visibility Score | Top Competitor | Notes |
+```
+
+Store this in the audit report. When running subsequent audits for the same business, include the trend line showing score movement over time.
+
 ---
 
 ## Service Business Adaptations
@@ -395,11 +448,33 @@ Passages needing improvement:
 **Status:** [Present/Absent] | **Score:** [X/100]
 [If present: validation results. If absent: generated llms.txt + llms-full.txt included below]
 
-## AI Visibility Baseline
-[Results from Answer Intent Map — how many target queries mention the brand]
+## Visibility Scorecard
+**Mention Rate:** [X]% ([N] of [Y] queries)
+**Prominence Rate:** [X]% ([N] high/medium of [M] mentions)
+**Visibility Score:** [X]/100 — [invisible/weak/emerging/competitive/dominant]
+
+### Competitor Frequency
+| Rank | Competitor | Appearances | % of Queries | Avg Prominence |
+|------|-----------|-------------|--------------|----------------|
+| 1 | [name] | X/Y | Z% | high/medium/low |
+| ... | ... | ... | ... | ... |
+| ? | **[Target Brand]** | X/Y | Z% | high/medium/low |
+
+### High-Value Gaps
+[Queries where 2+ competitors appear but target brand does not — these are priority content targets]
+
+### Answer Intent Map
+| Query | Brand Found | Prominence | Top Competitors | Gap? |
+|-------|------------|------------|-----------------|------|
+| [query] | yes/no | high/med/low/none | [names] | yes/no |
+
+### Historical Trend
+| Date | Queries | Mention Rate | Prominence Rate | Visibility Score | Top Competitor |
+|------|---------|-------------|-----------------|-----------------|----------------|
+| [date] | [N] | [X]% | [X]% | [X]/100 | [name] |
 
 ## Top Priority Findings
-[Ranked by impact on AI citations]
+[Ranked by impact on AI citations — gap analysis queries inform content priorities]
 
 ## Implementation Roadmap
 - Week 1: [highest-impact quick wins]
