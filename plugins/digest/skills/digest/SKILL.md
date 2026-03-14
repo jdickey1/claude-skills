@@ -274,6 +274,8 @@ Analyze the fetched content and produce all of the following:
 
   Only list projects with a genuine connection. Explain how the content maps to each.
 
+  **Structured connections:** When generating Project Connections, also prepare structured `connections:` entries for the output template's YAML frontmatter. Use `action-pending` as the default type since the recommendation has not been acted on yet. Only include connections where the recommendation is specific enough to be actionable — not every project mention warrants a frontmatter connection. The target must be a specific `.md` file path (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`), not a directory.
+
 ## 6. Output Template
 
 Fill in the appropriate template based on URL type.
@@ -281,6 +283,14 @@ Fill in the appropriate template based on URL type.
 **For GitHub Repos:**
 
 ````markdown
+---
+connections:
+{for each project mentioned in Project Connections with a specific, actionable recommendation:}
+  - target: "{relative path to project's main doc in 01-Projects/}"
+    type: action-pending
+    context: "{one-line recommendation from the Project Connections analysis}"
+---
+
 # Digest: {owner}/{repo}
 
 **Source**: {url}
@@ -345,6 +355,14 @@ Fill in the appropriate template based on URL type.
 **For all other URL types:**
 
 ````markdown
+---
+connections:
+{for each project mentioned in Project Connections with a specific, actionable recommendation:}
+  - target: "{relative path to project's main doc in 01-Projects/}"
+    type: action-pending
+    context: "{one-line recommendation from the Project Connections analysis}"
+---
+
 # Digest: {source_label}
 
 **Source**: {url}
