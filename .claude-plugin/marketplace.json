@@ -41,6 +41,13 @@
       "source": "./plugins/digest",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "skill-creator",
+      "description": "Create, test, harden, and continuously improve Claude Code skills. Unified workflow combining eval infrastructure, TDD methodology, and self-improving learning loops.",
+      "source": "./plugins/skill-creator",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
     }
   ]
 }
