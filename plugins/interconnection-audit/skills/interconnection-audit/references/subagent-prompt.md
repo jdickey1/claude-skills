@@ -53,11 +53,34 @@ Check these signals in priority order for each note:
 
 ### Rules
 
-- SKIP same-directory connections (except `supersedes` between date-versioned files)
+- **Targets must be files** — always point to a specific `.md` file path from the registry, never a directory (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`, not `01-Projects/Hyperscale/`). If a project is mentioned but no specific file is obvious, pick the most relevant file from that project in the registry.
+- SKIP same-directory connections (except `supersedes` between date-versioned files in the same directory)
 - SKIP connections that already exist in the note's `existing_connections`
 - Every connection MUST have a one-sentence `context` explaining why it matters
 - Only propose connections where the context line would help an LLM decide whether to follow the link
 - No "vaguely related" connections — when in doubt, skip it
+- For reverse link expectations, consult `references/connection-schema.md` (informs↔source-for, contradicts↔contradicts, supersedes↔superseded-by)
+
+### Supersession Rules
+
+Supersession (`supersedes`) applies ONLY when:
+1. Both files are in the **same directory**
+2. Filenames contain dates showing a clear time sequence (e.g., `analytics-monthly-2026-01.md` → `analytics-monthly-2026-02.md`)
+3. The newer file covers the same scope as the older one (e.g., both are monthly reports, both are weekly digests for sequential periods)
+
+The **newer** file is the source, the **older** file is the target: `newer supersedes older`.
+
+### Topical Similarity — When to Skip
+
+Only propose topical connections when there is a **specific, actionable relationship** — not just shared themes. Examples of connections to REJECT:
+
+- "Both discuss AI tools" — too broad, no actionable link
+- "Both are about SEO" — shared domain is not a connection
+- "Similar time period" — temporal proximity alone is not a connection
+
+Examples of connections to ACCEPT:
+- "Note A describes a specific technique that Note B's project could implement" — actionable
+- "Note A's findings directly contradict Note B's assumptions" — important to surface
 
 ### Output Format
 
