@@ -4,10 +4,10 @@
 
 | Agent | Scope (deep analysis) | Default Read Depth |
 |-------|----------------------|-------------------|
-| 1 | `01-Projects/` (~100 notes) | Frontmatter + 30 lines |
-| 2 | `web-analyses/` + `x-analyses/` (~128 notes) | Full read |
-| 3 | `02-Areas/` + `03-Resources/` (~30 notes) | Frontmatter + 20 lines |
-| 4 | `project-status/` + `00-Inbox/` + `04-Journal/` (~48 notes) | Frontmatter + 30 lines |
+| 1 | `01-Projects/` | Frontmatter + 30 lines |
+| 2 | `web-analyses/` + `x-analyses/` | Full read |
+| 3 | `02-Areas/` + `03-Resources/` | Frontmatter + 20 lines |
+| 4 | `project-status/` + `00-Inbox/` + `04-Journal/` | Frontmatter + 30 lines |
 
 ### Read Depth Overrides
 
@@ -59,7 +59,12 @@ Check these signals in priority order for each note:
 - Every connection MUST have a one-sentence `context` explaining why it matters
 - Only propose connections where the context line would help an LLM decide whether to follow the link
 - No "vaguely related" connections — when in doubt, skip it
-- For reverse link expectations, consult `references/connection-schema.md` (informs↔source-for, contradicts↔contradicts, supersedes↔superseded-by)
+- **Reverse link pairs** (propose both directions when applicable):
+  - `informs` ↔ `source-for`
+  - `contradicts` ↔ `contradicts` (symmetric)
+  - `supersedes` ↔ `superseded-by`
+  - `extends` and `blocks` do not have automatic reverses
+  - `action-pending` does not have a reverse
 
 ### Supersession Rules
 
