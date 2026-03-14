@@ -1,0 +1,8 @@
+{
+  "name": "skill-creator",
+  "description": "Create, test, harden, and continuously improve Claude Code skills. Unified workflow combining eval infrastructure, TDD methodology, and self-improving learning loops. Use when creating a skill from scratch, improving an existing skill, running evals, benchmarking performance, optimizing descriptions, or setting up learning instrumentation.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
