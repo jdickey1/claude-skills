@@ -81,6 +81,15 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 
 **Universal web content analysis and capture.** Fetches any URL — articles, blog posts, documentation, X/Twitter posts — analyzes the content, saves structured analysis to Obsidian, and recommends actionable uses including content ideas, action items, and project connections. X/Twitter links get specialized 3-tier fetch logic; all other URLs use clean markdown extraction. **Video support:** X/Twitter posts with native video are automatically downloaded and transcribed using faster-whisper (CPU-optimized, capped at 80% CPU usage).
 
+### skill-creator
+
+**Create, test, harden, and continuously improve Claude Code skills.** A unified workflow that combines eval infrastructure, TDD methodology, and self-improving learning loops.
+
+- 7-phase lifecycle: capture intent → draft → RED/GREEN test → REFACTOR/harden → learning instrumentation → description optimization → package
+- Eval system with HTML viewer, benchmarking, and blind A/B comparison
+- Self-improving learning loops: skills emit structured events, accumulate patterns, and propose their own improvements
+- Built on [Anthropic's skill-creator](https://github.com/anthropics/claude-plugins-official) eval infrastructure and [superpowers](https://github.com/obra/superpowers) TDD methodology (MIT)
+
 ---
 
 ## Installation
@@ -99,6 +108,7 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 /plugins install writing@claude-skills
 /plugins install web-reader@claude-skills
 /plugins install digest@claude-skills
+/plugins install skill-creator@claude-skills
 ```
 
 Or browse with `/plugins` > **Discover** to see all available plugins.
