@@ -1,0 +1,8 @@
+{
+  "name": "interconnection-audit",
+  "description": "Audits Obsidian vault for missing cross-note connections, proposes typed frontmatter connections with context lines for LLM efficiency, scores vault interconnection health, and applies approved connections in batch.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
