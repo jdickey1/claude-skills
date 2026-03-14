@@ -125,8 +125,9 @@ Report: notes updated, connections written, any errors.
 ## Constraints
 
 - **No auto-apply** — all connections require user approval
-- **No same-directory links** — except `supersedes` between date-versioned files
+- **No same-directory links** — except `supersedes` between date-versioned files in the same directory
 - **Context required** — every connection needs a meaningful one-sentence context
+- **Targets must be files** — always point to a specific `.md` file, never a directory (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`, not `01-Projects/Hyperscale/`)
 - **Paths not wikilinks** — relative paths from vault root
 - **Non-destructive** — only modify frontmatter, never touch note body
 - **Idempotent** — running twice yields same proposals minus already-applied ones
