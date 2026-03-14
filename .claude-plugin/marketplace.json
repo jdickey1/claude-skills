@@ -48,6 +48,13 @@
       "source": "./plugins/skill-creator",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "interconnection-audit",
+      "description": "Audits Obsidian vault for missing cross-note connections. Scans all notes, discovers relationships using typed signals, scores vault interconnection health, and proposes frontmatter connections with context lines optimized for LLM efficiency.",
+      "source": "./plugins/interconnection-audit",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
     }
   ]
 }
