@@ -132,6 +132,17 @@ Report: notes updated, connections written, any errors.
 - **Non-destructive** — only modify frontmatter, never touch note body
 - **Idempotent** — running twice yields same proposals minus already-applied ones
 
+## Learning
+
+After each audit run, capture these events for future skill improvement:
+
+- **Rejected proposals** — if user skips specific connections, note the type and signal that produced them. Pattern: certain signals producing low-value proposals consistently → adjust signal weight.
+- **Missing connections** — if user manually identifies connections the audit missed, note what signal should have caught them.
+- **Type distribution** — track which connection types dominate. If 90% are `informs`, the type vocabulary may need refinement.
+- **Score calibration** — if the health score doesn't match the user's sense of vault health, note the discrepancy for formula tuning.
+
+Save observations to `{vault_root}/project-status/interconnection-audit-learnings.md` as a running log with dates.
+
 ## References
 
 - Read `references/connection-schema.md` for full type definitions, reverse pairs, and action-pending lifecycle
