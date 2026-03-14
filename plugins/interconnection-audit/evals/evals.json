@@ -1,0 +1,23 @@
+{
+  "skill_name": "interconnection-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run an interconnection audit on my Obsidian vault at ~/Projects/obsidian/automation-vault-local/",
+      "expected_output": "Produces a vault registry with project names and note inventory, discovers connections across sections via parallel subagents, generates scored report with proposals grouped by priority (action-pending, supersession, missing reverse links, topical), saves report to project-status/interconnection-audit-YYYY-MM-DD.md, presents health score and asks user which connections to apply",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I just added 25 new web analyses to my vault. Check if any of them connect to my existing projects.",
+      "expected_output": "Scans web-analyses/ with full reads, identifies project name mentions in recommendations and action items, proposes action-pending connections to relevant project docs in 01-Projects/, reports orphan notes, generates health score",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Apply all the action-pending connections from the latest interconnection audit",
+      "expected_output": "Finds most recent interconnection-audit-*.md in project-status/, identifies action-pending proposals, writes connections to YAML frontmatter of source notes without modifying note body content, applies reverse links to target notes, reports count of notes updated and connections written",
+      "files": []
+    }
+  ]
+}
