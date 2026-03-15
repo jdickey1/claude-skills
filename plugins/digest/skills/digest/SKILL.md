@@ -1,7 +1,7 @@
 ---
 name: digest
 description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", or when a URL appears in conversation context. Also triggers on /digest command. Handles all URL types — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, everything else uses web-reader.
-version: 1.3.0
+version: 1.4.0
 ---
 
 # Digest
@@ -274,7 +274,21 @@ Analyze the fetched content and produce all of the following:
 
   Only list projects with a genuine connection. Explain how the content maps to each.
 
-  **Structured connections:** When generating Project Connections, also prepare structured `connections:` entries for the output template's YAML frontmatter. Use `action-pending` as the default type since the recommendation has not been acted on yet. Only include connections where the recommendation is specific enough to be actionable — not every project mention warrants a frontmatter connection. The target must be a specific `.md` file path (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`), not a directory.
+  **Structured connections:** When generating Project Connections, prepare structured `connections:` entries for the output template's YAML frontmatter. Choose the connection type based on the relationship:
+
+  | Situation | Type | Example |
+  |-----------|------|---------|
+  | Content contains a recommendation the project should act on | `action-pending` | "Consider adopting this caching pattern for API responses" |
+  | Content directly informs or provides context for a project | `informs` | "Market data relevant to Hyperscale newsletter coverage" |
+  | Content is raw material that could be used to produce project output | `source-for` | "Interview quotes usable for Winning on Issues episode" |
+
+  `action-pending` is the default when unsure. Only include connections where the recommendation is specific enough to be actionable — not every project mention warrants a frontmatter connection.
+
+  **Connection rules:**
+  - Target must be a specific `.md` file path (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`), never a directory
+  - Context must be a specific, actionable one-sentence explanation (not "Related to this project")
+  - No same-directory connections (digest files are all in `web-analyses/`, so never link to other `web-analyses/` files)
+  - Consider reverse links: if this digest `informs` a project doc, that project doc could get a `source-for` back to this digest during the next `/interconnection-audit` run
 
 ## 6. Output Template
 
@@ -287,8 +301,8 @@ Fill in the appropriate template based on URL type.
 connections:
 {for each project mentioned in Project Connections with a specific, actionable recommendation:}
   - target: "{relative path to project's main doc in 01-Projects/}"
-    type: action-pending
-    context: "{one-line recommendation from the Project Connections analysis}"
+    type: {action-pending | informs | source-for}
+    context: "{specific, actionable one-sentence explanation of the connection}"
 ---
 
 # Digest: {owner}/{repo}
@@ -359,8 +373,8 @@ connections:
 connections:
 {for each project mentioned in Project Connections with a specific, actionable recommendation:}
   - target: "{relative path to project's main doc in 01-Projects/}"
-    type: action-pending
-    context: "{one-line recommendation from the Project Connections analysis}"
+    type: {action-pending | informs | source-for}
+    context: "{specific, actionable one-sentence explanation of the connection}"
 ---
 
 # Digest: {source_label}
@@ -404,11 +418,13 @@ Choose a concise `{category}` tag based on the content topic (e.g., `ai-policy`,
 
 ## 7. Save Instructions
 
-Save to:
+Save to the vault's `web-analyses/` directory (external content analysis, not PARA-categorized):
 
 ```
 /home/obsidian/automation-vault/web-analyses/YYYY-MM-DD-{slug}.md
 ```
+
+**Remote access:** If not running on the VPS, use SSH: `ssh nonrootadmin` with `sudo -u obsidian` for file writes.
 
 **File naming by URL type:**
 
