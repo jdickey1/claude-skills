@@ -46,6 +46,7 @@ Deep-dive references loaded on demand by commands:
 | `reference/ranking-factors.md` | Evidence-based ranking factor priorities, severity calibration, keyword validation |
 | `reference/ai-search.md` | AEO/GEO optimization, platform-specific citation data, AI accessibility |
 | `reference/aeo.md` | Full AEO audit framework: 4-section scoring, Answer Intent Mapping, trust signals, service business adaptations, maintenance loop |
+| `reference/fan-out-queries.md` | Fan-out query optimization: how AI models decompose queries and use `site:` searches, content depth strategy, audit methodology |
 | `reference/local-seo.md` | GBP, citations, NAP, reviews, SABs, Google spam warnings |
 | `reference/link-building.md` | Link profile, tactics, local link building, brand signals |
 | `reference/automation.md` | Full DIY automation system (~$75/mo replaces ~$1,500/mo agency) |
@@ -118,7 +119,7 @@ curl -s <url> | sed -n '/<head/,/<\/head>/p' | grep -i 'hreflang\|canonical\|og:
 7. **Content analysis** — Keyword cannibalization, thin pages, buyer vs browser intent, freshness
 8. **Citation check** (local business) — Bing, Apple Maps, Yelp, BBB, YellowPages, Chamber
 9. **Schema validation** — Structured data presence and accuracy
-10. **AI readiness** — Content structure, extractability, citation optimization
+10. **AI readiness** — Content structure, extractability, citation optimization, fan-out query coverage
 11. **Link profile** — Internal linking, anchor text, homepage link ratio
 12. **Competitor comparison** — Category matching, keyword gaps
 13. **Report generation** — Compile findings, prioritize, provide action plan
