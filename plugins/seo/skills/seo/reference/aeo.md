@@ -6,7 +6,7 @@ For foundational AI search data (citation stats, platform comparison, content fo
 
 ---
 
-## AEO Audit Scoring (0-100)
+## AEO Audit Scoring (0-125)
 
 | Section | Points | What It Measures |
 |---------|--------|-----------------|
@@ -14,6 +14,7 @@ For foundational AI search data (citation stats, platform comparison, content fo
 | Content Structure & Extractability | 0-25 | Is content formatted for AI citation? |
 | Schema & Machine-Readable Data | 0-25 | Structured data AI agents can consume directly |
 | Authority & Trust Signals | 0-30 | Why should AI recommend YOU over competitors? |
+| Fan-Out Query Readiness | 0-25 | Does on-site content depth match AI sub-query patterns? (See `reference/fan-out-queries.md`) |
 
 ---
 
@@ -241,6 +242,16 @@ This separates brands that KIND OF show up in AI from brands that show up CONSIS
 
 Before optimizing anything, you need to know what AI is currently saying about your category and brand. This is competitive intelligence most businesses have never looked at.
 
+### Fan-Out Query Awareness
+
+AI models (GPT 5.4+) don't make a single search per user query. They decompose it into **10-15 fan-out sub-queries**, including `site:domain.com` searches against individual domains. This means:
+
+1. **Phase 1 (Discovery):** Broad queries identify which domains are relevant
+2. **Phase 2 (Site-specific):** `site:yoursite.com [topic]` queries extract detailed content from each trusted domain
+3. **Phase 3 (Validation):** `site:g2.com [brand] reviews` type queries cross-reference via third parties
+
+Your Answer Intent Map must account for all three phases. See `reference/fan-out-queries.md` for the full fan-out optimization framework, content depth strategy, and fan-out coverage audit methodology.
+
 ### How to Run an Answer Intent Audit
 
 1. **Generate 30-50 query variations** for your category:
@@ -387,8 +398,9 @@ After initial optimization, maintain AI visibility with this weekly routine:
 2. **Content refresh (30 min)** — Update your Answer Hub/Authority Page TL;DR with any new data points, citations, or competitive changes. Add one new FAQ or comparison section.
 3. **Schema & feed health (15 min)** — Fix any schema validation errors. For ecommerce: clear Merchant Center warnings, push 10+ new reviews to weakest product.
 4. **Citation building (25 min)** — One outreach action: pitch a review site, engage on Reddit/Quora, publish a comparison page, or update an external directory listing.
+5. **Fan-out coverage check (15 min)** — Run `site:yoursite.com` with 5 predicted fan-out terms in Google. Score each 0/1/2. Track coverage score over time. Identify and prioritize content gaps.
 
-**Monthly:** Refresh `brand-facts.json` / `llms.txt`, validate all PDP schema, update policy changes, re-run full Answer Intent Map audit.
+**Monthly:** Refresh `brand-facts.json` / `llms.txt`, validate all PDP schema, update policy changes, re-run full Answer Intent Map audit. Run full Fan-Out Query Audit (see `reference/fan-out-queries.md`).
 
 **Track these KPIs:**
 - Number of target queries where you're #1 recommendation
@@ -431,6 +443,7 @@ AI-driven sessions grew 527% YoY in early 2025. ChatGPT referrals went from ~600
 - Content Structure & Extractability: [X/25]
 - Schema & Machine-Readable Data: [X/25]
 - Authority & Trust Signals: [X/30]
+- Fan-Out Query Readiness: [X/25]
 
 ## Citability Analysis
 **Page Citability Score: [X/100] — [Grade]**
@@ -472,6 +485,23 @@ Passages needing improvement:
 | Date | Queries | Mention Rate | Prominence Rate | Visibility Score | Top Competitor |
 |------|---------|-------------|-----------------|-----------------|----------------|
 | [date] | [N] | [X]% | [X]% | [X]/100 | [name] |
+
+## Fan-Out Query Readiness: [X/25]
+**Fan-Out Coverage Score:** [X]%
+
+### Site-Search Results
+| Fan-Out Term | `site:` Result | Score (0/1/2) | Gap? |
+|-------------|---------------|---------------|------|
+| [feature/topic] | [page found or "no result"] | [0/1/2] | [yes/no] |
+
+### Content Gaps (Priority Targets)
+[Fan-out terms that returned 0 or 1 — these need dedicated pages]
+
+### Third-Party Validation
+| Review Site | Profile Status | Recent Reviews | Rating |
+|------------|---------------|----------------|--------|
+| G2 | [complete/partial/absent] | [count in last 90 days] | [X/5] |
+| Capterra | ... | ... | ... |
 
 ## Top Priority Findings
 [Ranked by impact on AI citations — gap analysis queries inform content priorities]
