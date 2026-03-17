@@ -269,6 +269,28 @@ python -m scripts.package_skill <path/to/skill-folder>
 
 Present the `.skill` file to the user with a summary of what was built and eval results. Commit the skill to git if appropriate.
 
+### Marketplace Sync (required for marketplace-hosted plugins)
+
+If the skill lives inside a plugin that is registered in a marketplace repo (has a `.claude-plugin/marketplace.json`), you MUST verify the marketplace manifest is in sync after any of these operations:
+
+- **Creating a new plugin** → add an entry to `marketplace.json` with name, description, source path, category, and homepage
+- **Renaming a plugin** → update the `name` and `source` path in `marketplace.json` to match the new directory name
+- **Changing a plugin description** → update the `description` in `marketplace.json` to match `plugin.json`
+- **Deleting a plugin** → remove its entry from `marketplace.json`
+
+**Why this matters:** The marketplace loader resolves plugins by the `source` path in `marketplace.json`. If the path doesn't match the actual directory, the plugin silently disappears from the marketplace with no error.
+
+**Verification step:**
+```bash
+# From the marketplace repo root, check for mismatches
+for dir in plugins/*/; do
+  name=$(basename "$dir")
+  grep -q "\"./plugins/$name\"" .claude-plugin/marketplace.json || echo "MISSING from marketplace.json: $name"
+done
+```
+
+Include the `marketplace.json` update in the same commit as the plugin change — never split them across commits.
+
 ---
 
 ## Improving an Existing Skill
