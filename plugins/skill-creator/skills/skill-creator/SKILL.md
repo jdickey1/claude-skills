@@ -7,7 +7,7 @@ description: Create, test, harden, and continuously improve skills. Use when cre
 
 Create skills and iteratively improve them through test-driven development with learning loops.
 
-**The lifecycle:** Capture Intent → Draft → Test (RED/GREEN) → Harden (REFACTOR) → Instrument → Optimize Description → Deploy → Learn → Repeat
+**The lifecycle:** Capture Intent → Draft → Test (RED/GREEN) → Harden (REFACTOR) or Autoresearch → Instrument → Optimize Description → Deploy → Learn → Repeat
 
 Your job is to figure out where the user is in this lifecycle and jump in. Maybe they want to create from scratch, or they have an existing skill that needs better testing, or they just want to optimize a description. Be flexible — if the user says "just vibe with me," skip the formal process.
 
@@ -202,6 +202,66 @@ Keep going until: user is happy, feedback is all empty, or you're not making mea
 
 ---
 
+## Phase 4b: AUTORESEARCH — Autonomous Skill Optimization
+
+**When to use this instead of Phase 4:** Use when the user says "run autoresearch", "optimize this skill", "improve this skill autonomously", or when the user wants hands-off improvement. Phase 4 (manual REFACTOR) is for human-guided iteration. Phase 4b is for autonomous iteration.
+
+**Prerequisites:** The skill must already exist (at least a draft from Phase 2). The user must provide test inputs and eval criteria.
+
+### Setup
+
+**STOP. Do not run any experiments until all fields below are confirmed with the user.**
+
+1. **Target skill** — Which skill to optimize? (exact path to SKILL.md)
+2. **Test inputs** — 3-5 different prompts/scenarios covering different use cases
+3. **Eval criteria** — 3-6 binary yes/no checks defining good output (see [references/eval-guide.md](references/eval-guide.md) for how to write good evals)
+4. **Runs per experiment** — Default: 5
+5. **Budget cap** — Optional max experiments. Default: no cap (runs until stopped or hits ceiling)
+6. **Guard assertions** — Optional pass/fail checks that must always hold (e.g., "output under 500 words")
+7. **Version name** — What to call the optimized copy (e.g., "my-skill-v2")
+
+### Execution
+
+1. **Read the target skill completely** — including all referenced files in `references/`
+2. **Create working directory:** `autoresearch-[skill-name]/` inside the skill's folder
+3. **Copy original** to `[version-name].md` (the working copy) and `SKILL.md.baseline` (the safety net)
+4. **Build eval suite** from user's criteria using the format in [references/eval-guide.md](references/eval-guide.md)
+5. **Generate the live dashboard** using `scripts/generate_dashboard.py` — open it immediately in the browser
+6. **Establish baseline** (Experiment 0): run the skill as-is, score all outputs, record in results.tsv
+7. **Confirm baseline score with user** — if already 90%+, ask if they still want to continue
+8. **Enter the autoresearch loop** — follow the protocol in [references/autoresearch.md](references/autoresearch.md)
+9. **After each experiment:** update results.tsv, results.json, changelog.md, and learnings.md
+10. **When loop ends:** present results summary (baseline → final, experiments run, top changes, remaining failures)
+
+### Key Rules
+
+- **ONE change per iteration.** Never combine mutations.
+- **Binary evals ONLY.** No scales, no vibes.
+- **NEVER modify the original SKILL.md.** All mutations on the working copy.
+- **NEVER stop to ask the user** between experiments. Run autonomously.
+- **Update the dashboard** after every experiment so the user can watch progress.
+- **Log everything** — the changelog is the most valuable artifact.
+
+### Output
+
+The skill produces these files in `autoresearch-[skill-name]/`:
+
+```
+autoresearch-[skill-name]/
+├── [version-name].md        # improved working copy
+├── SKILL.md.baseline        # original (untouched)
+├── dashboard.html           # live browser dashboard
+├── results.json             # dashboard data
+├── results.tsv              # experiment log
+├── changelog.md             # detailed mutation log
+└── learnings.md             # accumulated insights
+```
+
+See [references/autoresearch.md](references/autoresearch.md) for complete protocol details.
+See [references/schemas.md](references/schemas.md) for data format specifications.
+
+---
+
 ## Phase 5: Learning Instrumentation
 
 Before deploying, add a learning section so the skill improves itself over time.
@@ -348,6 +408,8 @@ All features work: subagents for parallel eval runs, browser-based viewer, descr
 | `references/cso-guide.md` | Description optimization for triggering accuracy (CSO) |
 | `references/bulletproofing.md` | Testing methodology, pressure scenarios, rationalization defense |
 | `references/learning-loops.md` | Self-improving feedback loop system and event schemas |
+| `references/eval-guide.md` | How to write binary yes/no eval criteria for skill optimization |
+| `references/autoresearch.md` | Autonomous hill-climbing loop protocol |
 | `agents/grader.md` | How to evaluate assertions against outputs |
 | `agents/comparator.md` | Blind A/B comparison between two outputs |
 | `agents/analyzer.md` | Deep analysis of benchmark results and version differences |

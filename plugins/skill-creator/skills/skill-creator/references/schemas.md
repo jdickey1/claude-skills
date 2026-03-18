@@ -454,3 +454,93 @@ Event types:
 - `assertion_drift` — eval assertion that changed pass/fail status over time
 - `recommendation_completed` — a skill recommendation that was actually implemented
 - `recommendation_ignored` — a recommendation consistently skipped
+
+---
+
+## Autoresearch Schemas
+
+### Binary Eval Definition
+
+Used by the autoresearch loop (Phase 4b). Each eval is a binary yes/no check.
+
+```json
+{
+  "evals": [
+    {
+      "id": 1,
+      "name": "Text legibility",
+      "question": "Is all text fully legible with no truncated or overlapping words?",
+      "pass": "Every word is complete and readable",
+      "fail": "Any word is partially hidden or cut off"
+    }
+  ]
+}
+```
+
+### results.tsv
+
+Tab-separated experiment log. One row per experiment.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| experiment | int | Sequential counter starting at 0 (baseline) |
+| score | int | Number of evals passed across all runs |
+| max_score | int | Maximum possible score (num_evals × runs_per_experiment) |
+| pass_rate | string | Percentage with % suffix (e.g., "70.0%") |
+| status | enum | `baseline`, `keep`, or `discard` |
+| description | string | One-sentence description of the mutation |
+
+### results.json
+
+Powers the live dashboard. Updated after each experiment.
+
+```json
+{
+  "skill_name": "string",
+  "status": "running | complete",
+  "current_experiment": 0,
+  "baseline_score": 0.0,
+  "best_score": 0.0,
+  "experiments": [
+    {
+      "id": 0,
+      "score": 14,
+      "max_score": 20,
+      "pass_rate": 70.0,
+      "status": "baseline | keep | discard",
+      "description": "string"
+    }
+  ],
+  "eval_breakdown": [
+    {
+      "name": "string",
+      "pass_count": 0,
+      "total": 0
+    }
+  ],
+  "guards": [
+    {
+      "name": "string",
+      "status": "pass | fail"
+    }
+  ]
+}
+```
+
+### Guard Assertion Definition
+
+Optional regression-prevention checks.
+
+```json
+{
+  "guards": [
+    {
+      "id": 1,
+      "name": "Token budget",
+      "question": "Does the skill execution use fewer than 50,000 tokens total?",
+      "threshold": 50000,
+      "metric": "total_tokens"
+    }
+  ]
+}
+```
