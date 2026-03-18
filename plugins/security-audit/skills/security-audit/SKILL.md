@@ -148,6 +148,23 @@ description: Comprehensive cybersecurity audit for web applications. USE WHEN re
 
 ---
 
+## Confidence Levels
+
+Every finding MUST include a confidence level:
+
+| Level | Definition | Evidence Required |
+|-------|-----------|-------------------|
+| **CONFIRMED** | Attack chain traced end-to-end; exploitable | Code path shown, input→output demonstrated |
+| **LIKELY** | Vulnerable pattern detected but not exhaustively traced | Code pattern identified, similar to known CVE |
+| **POSSIBLE** | Suspicious pattern, may be false positive | Pattern match only, needs manual verification |
+
+**Rules:**
+- CRITICAL severity requires CONFIRMED or LIKELY confidence — never POSSIBLE
+- POSSIBLE findings are capped at MEDIUM severity
+- If you can't demonstrate the attack chain, downgrade confidence
+
+---
+
 ## Output Format
 
 For each finding, report:
@@ -174,6 +191,35 @@ Step-by-step exploitation path.
 **References:**
 - OWASP/CWE/CVE link if applicable
 ```
+
+---
+
+## Binary Audit Checks
+
+**EVAL 1: Evidence-backed findings**
+Question: Does every finding include file:line evidence?
+Pass: All findings point to specific code locations with line numbers
+Fail: Any finding is theoretical without code evidence
+
+**EVAL 2: Confidence assigned**
+Question: Does every finding include a confidence level (CONFIRMED/LIKELY/POSSIBLE)?
+Pass: All findings explicitly state confidence
+Fail: Any finding lacks confidence level
+
+**EVAL 3: Attack chain described**
+Question: Does every HIGH+ finding describe the attack chain?
+Pass: CRITICAL and HIGH findings show input→vulnerability→impact
+Fail: Any HIGH+ finding just names the vulnerability without showing exploitation path
+
+**EVAL 4: Remediation specific**
+Question: Does every finding include a specific fix?
+Pass: All findings have code-level remediation ("change X to Y on line Z")
+Fail: Any finding says "fix this" without showing how
+
+**EVAL 5: No phantom findings**
+Question: Are all findings verified against actual code, not assumptions?
+Pass: Every finding references code that exists in the codebase
+Fail: Any finding references code patterns that don't exist
 
 ---
 
@@ -230,3 +276,20 @@ Gets instant security header status. Identifies obvious misconfigurations before
 - **CWE Top 25:** https://cwe.mitre.org/top25/
 - **NIST 800-53 Rev 5:** Security and Privacy Controls
 - **Node.js Security Checklist:** https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
+
+---
+
+## Learning
+
+When this skill runs, append observations to `.learnings.jsonl`:
+
+```json
+{"timestamp": "ISO-8601", "skill": "security-audit", "event_type": "user_correction", "context": "Finding rated CRITICAL was actually mitigated by WAF — downgraded to INFO"}
+{"timestamp": "ISO-8601", "skill": "security-audit", "event_type": "edge_case", "context": "SQL injection in ORM-wrapped query — pattern matched but not exploitable"}
+```
+
+Track these patterns:
+- False positive rate by confidence level (especially POSSIBLE findings)
+- Which checklist items produce the most actionable findings?
+- OWASP category distribution — are reports over-weighted toward certain categories?
+- How often does the user override severity or confidence ratings?
