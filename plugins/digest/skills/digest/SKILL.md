@@ -290,6 +290,45 @@ Analyze the fetched content and produce all of the following:
   - No same-directory connections (digest files are all in `web-analyses/`, so never link to other `web-analyses/` files)
   - Consider reverse links: if this digest `informs` a project doc, that project doc could get a `source-for` back to this digest during the next `/interconnection-audit` run
 
+## Binary Quality Checks
+
+When evaluating digest output quality, use these binary checks:
+
+**EVAL 1: URL correctly classified**
+Question: Was the URL type (X/Twitter, GitHub Repo, General Web) correctly identified?
+Pass: Fetch strategy matches URL pattern
+Fail: Wrong strategy used (e.g., X fetch for a blog URL)
+
+**EVAL 2: Content successfully fetched**
+Question: Did the fetch return meaningful content (not a login wall, cookie prompt, or empty page)?
+Pass: Raw content section contains actual page/post text
+Fail: Raw content is empty, contains "JavaScript is not available", or is a login prompt
+
+**EVAL 3: Actionable recommendations**
+Question: Do all recommendations reference specific projects and describe concrete next steps?
+Pass: Every recommendation names a project and explains the integration/action
+Fail: Any recommendation is generic ("could be useful for marketing")
+
+**EVAL 4: Project connections are genuine**
+Question: Are all listed project connections actually relevant (not forced)?
+Pass: Each connection has a specific, actionable context sentence
+Fail: Any connection is vague or the project link is a stretch
+
+**EVAL 5: Frontmatter connections valid**
+Question: Do all YAML frontmatter connections point to real files with valid types?
+Pass: All targets are specific .md file paths; all types are action-pending/informs/source-for
+Fail: Any target is a directory, any type is invalid, or any context is generic
+
+## Anti-Patterns
+
+| Banned Pattern | Why | Instead Do |
+|----------------|-----|-----------|
+| Invent security findings without code evidence | False security claims erode trust | Only flag issues found in actual source code |
+| Write connections to files outside 01-Projects/ | Violates vault structure conventions | Target must be a specific .md in 01-Projects/ |
+| Recommend adoption without considering maintenance burden | Uncritical adoption leads to tech debt | Always include "Adoption Risks" for repos |
+| Use generic connection context ("Related to this project") | Unactionable connections add noise | Context must be a specific, actionable sentence |
+| Same-directory connections | Digest files are all in web-analyses/ | Never link to other web-analyses/ files |
+
 ## 6. Output Template
 
 Fill in the appropriate template based on URL type.
@@ -458,3 +497,18 @@ If multiple URLs are detected in the current context, process each one sequentia
 |--------|------|--------------------|------------|
 | @user1 | X Post | {brief rec} | /path/to/file.md |
 | techcrunch.com | Article | {brief rec} | /path/to/file.md |
+
+## Learning
+
+When this skill runs, append observations to `.learnings.jsonl`:
+
+```json
+{"timestamp": "ISO-8601", "skill": "digest", "event_type": "edge_case", "context": "Tier 1 fetch failed on paywalled article — fell back to Tier 2 successfully"}
+{"timestamp": "ISO-8601", "skill": "digest", "event_type": "user_correction", "context": "User removed project connection to DLG — content wasn't actually relevant to legal work"}
+```
+
+Track these patterns:
+- Tier 1 vs Tier 2 fallback ratio (how often does playbooks fail?)
+- Which project connections get removed by users? (signals forced connections)
+- Security assessment accuracy for GitHub repos (did flagged issues matter?)
+- Video transcription success rate
