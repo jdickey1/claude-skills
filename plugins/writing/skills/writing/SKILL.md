@@ -168,7 +168,7 @@ End strong too. The last line triggers shares and reposts. Don't bury your best 
 Read the appropriate reference before writing:
 
 - **Headlines & titles (START HERE)**: See [references/headlines.md](references/headlines.md)
-- **X/Twitter posts**: See [references/x-posts.md](references/x-posts.md)
+- **X/Twitter posts**: See [references/x-posts.md](references/x-posts.md) (algorithm & strategy) and [references/x-writing-craft.md](references/x-writing-craft.md) (quality & voice)
 - **X Articles (long-form)**: See [references/x-articles.md](references/x-articles.md)
 - **LinkedIn posts & articles**: See [references/linkedin.md](references/linkedin.md)
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)

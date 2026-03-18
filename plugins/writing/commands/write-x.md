@@ -9,11 +9,12 @@ Write an X/Twitter post about the provided topic (`$ARGUMENTS`). If no topic is 
 
 ## Process
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/x-posts.md` for X-specific optimization
-2. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/headlines.md` for hook formulas
-3. Write 3+ draft variations with different hook patterns
-4. Apply the pre-publish checklist from the writing skill
-5. Present the best options with rationale
+1. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/x-posts.md` for X algorithm and posting strategy
+2. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/x-writing-craft.md` for quality tests, voice, and engagement templates
+3. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/headlines.md` for hook formulas
+4. Write 3+ draft variations with different hook patterns
+5. Apply the pre-publish checklist from the writing skill
+6. Present the best options with rationale
 
 ## Key Rules
 
