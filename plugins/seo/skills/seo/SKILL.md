@@ -85,6 +85,19 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 - **DON'T flag exact-match anchor text as positive** — branded is safer
 - **DON'T recommend blog content for local businesses** unless it targets buyer intent
 
+## Anti-Patterns
+
+These are explicitly banned behaviors. If you catch yourself doing any of these, stop and correct:
+
+| Banned Pattern | Why | Instead Do |
+|----------------|-----|-----------|
+| Conclude missing elements from content extractors alone | Extractors strip JS-rendered content, structured data, meta tags | Verify via `curl -s URL \| grep` or view-source |
+| Recommend URL restructuring | URL changes break existing backlinks and rankings | Optimize on-page content, not URL slugs |
+| Flag exact-match anchor text as positive | Over-optimized anchors are a spam signal | Note as potential risk, not a win |
+| Over-prioritize URL slugs | Minimal ranking impact vs. content quality | Focus on title tags, H1s, content depth |
+| Report findings without page URLs | Abstract advice is unactionable | Always include the specific page affected |
+| Skip structured data verification | Schema markup is invisible to extractors | Check via Google Rich Results Test or raw HTML |
+
 ---
 
 ## Verification Rules (CRITICAL — Prevents False Findings)
@@ -105,6 +118,35 @@ curl -s <url> | sed -n '/<head/,/<\/head>/p' | grep -i 'hreflang\|canonical\|og:
 - **CONFIRMED** = Verified via raw HTML source. Only use when you have directly seen the presence or absence.
 - **LIKELY** = Inferred from content extraction tools but NOT verified in raw HTML. Default for content extractor findings.
 - **NEEDS VERIFICATION** = Conflicting signals or unable to check raw HTML.
+
+## Binary Audit Checks
+
+When evaluating SEO audit quality (for autoresearch or review), use these binary checks:
+
+**EVAL 1: All findings include specific URLs**
+Question: Does every finding reference a specific page URL?
+Pass: Every recommendation points to a concrete page
+Fail: Any finding is abstract without a URL target
+
+**EVAL 2: Verification rule compliance**
+Question: Were all findings verified against raw HTML, not just content extractors?
+Pass: No finding relies solely on extracted content — all checked via curl/view-source
+Fail: Any finding based only on content extractor output without HTML verification
+
+**EVAL 3: Severity matches ranking-factors guidance**
+Question: Are severity levels (CRITICAL/HIGH/MEDIUM/LOW) consistent with the ranking-factors reference?
+Pass: All severity assignments follow the documented criteria
+Fail: Any severity over- or under-rated vs. reference guidance
+
+**EVAL 4: Confidence stated**
+Question: Does every finding include a confidence level (CONFIRMED/LIKELY/NEEDS VERIFICATION)?
+Pass: All findings explicitly state confidence
+Fail: Any finding lacks confidence level
+
+**EVAL 5: Actionable recommendations**
+Question: Does every finding include a specific remediation step?
+Pass: All findings have concrete "do this" instructions
+Fail: Any finding says "fix this" without explaining how
 
 ---
 
@@ -197,3 +239,20 @@ SEO is the foundation. AEO drives understanding. GEO drives confidence. You need
 - **Apple Business Connect:** https://businessconnect.apple.com
 - **PageSpeed Insights:** https://pagespeed.web.dev
 - **Whitespark Local Ranking Factors:** https://whitespark.ca/local-search-ranking-factors/
+
+---
+
+## Learning
+
+When this skill runs, append observations to `.learnings.jsonl`:
+
+```json
+{"timestamp": "ISO-8601", "skill": "seo", "event_type": "edge_case", "context": "Content extractor missed schema markup — caught by HTML verification"}
+{"timestamp": "ISO-8601", "skill": "seo", "event_type": "user_correction", "context": "Severity was HIGH but user downgraded to MEDIUM — ranking factor less impactful than rated"}
+```
+
+Track these patterns:
+- Which verification rules catch the most false findings?
+- Which checklist items produce the most actionable vs. noise findings?
+- Are certain OWASP/ranking-factor categories over-represented in reports?
+- How often does the user override severity ratings?
