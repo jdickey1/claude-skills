@@ -1,11 +1,6 @@
 ---
 name: plan-review
-description: |
-  Review a plan thoroughly before implementation. Two depths: standard (4-section)
-  and mega (10-section exhaustive). Challenges scope, reviews architecture/code
-  quality/tests/performance, walks through issues interactively with opinionated
-  recommendations. Use when reviewing implementation plans, design docs, or
-  feature specs before writing code.
+description: Use when reviewing an implementation plan, design doc, or feature spec before writing code — especially "review this plan", "check my approach", "does this design make sense", or "critique this spec". Two depths available: standard (4-section) and mega (10-section exhaustive).
 version: 1.1.0
 allowed-tools:
   - Read
