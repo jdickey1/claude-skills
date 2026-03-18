@@ -21,6 +21,15 @@ Backlinks remain a core ranking factor but the game has shifted: **topical relev
 3. **Guest posting** — quality over quantity. Strategic placement on topically relevant, authoritative sites. $150-$400 per editorial placement.
 4. **Broken link building** — find broken outbound links on relevant sites, offer your content as replacement.
 5. **Resource page outreach** — works best in niche industries with curated resource lists.
+6. **GSC "Export and Expand" prospecting** — use Google Search Console's Links report (free) as a backlink intelligence source. Workflow: export your linking domains → categorize by type (blogs, resource pages, directories, news) → search Google for similar sites in each category → build outreach list from results. This is free competitor backlink research without paid tools.
+
+## Free Prospecting Tools ($0)
+
+Before committing to paid APIs, these free tools cover core backlink research:
+
+- **Google Search Console Links report** — shows who links to you, your top linked pages, and top linking sites. Use the export-and-expand workflow above to turn existing backlinks into prospecting lists.
+- **Ahrefs Free Backlink Checker** (ahrefs.com/backlink-checker) — 100 backlink lookups per day per domain, no account required. Use it for quick competitor top-page analysis, broken link discovery, and content gap identification. Not automatable at scale, but effective for manual research.
+- **Google Search operators** — `"resource page" + [your niche]`, `"add a link" + [topic]`, `intitle:"useful links" + [industry]` to find link placement opportunities directly.
 
 ## Content Types That Earn Links
 
