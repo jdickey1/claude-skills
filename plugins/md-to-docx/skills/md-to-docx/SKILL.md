@@ -52,3 +52,25 @@ pandoc -s /path/to/file.md -o /path/to/file.docx
 - Images with relative paths will be embedded if they exist at the referenced location
 - Tables, code blocks, and lists convert cleanly
 - If the markdown uses LaTeX math, add `--mathjax` or pandoc handles it natively for docx
+
+## Guard Assertions
+
+Before converting, verify:
+- Input file exists: `test -f "$INPUT"` or error with "File not found"
+- pandoc is available: `command -v pandoc` or error with install instructions (`sudo apt-get install -y pandoc`)
+- Output directory is writable
+- If output file already exists, warn the user before overwriting
+
+After converting, verify:
+- Output file exists and is non-zero bytes
+- Output file is valid (not corrupted)
+
+## Learning
+
+When this skill runs, append to `.learnings.jsonl`:
+
+```json
+{"timestamp": "ISO-8601", "skill": "md-to-docx", "event_type": "edge_case", "context": "YAML frontmatter leaked into docx body — needed --from=markdown+yaml_metadata_block"}
+```
+
+Track: Which markdown features cause conversion failures? (tables, LaTeX, custom syntax, images)
