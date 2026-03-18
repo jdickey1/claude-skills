@@ -1,6 +1,7 @@
 ---
 name: skill-creator
 description: Create, test, harden, and continuously improve skills. Use when creating a skill from scratch, updating or optimizing an existing skill, running evals to test a skill, benchmarking performance, optimizing a skill's description for triggering accuracy, or instrumenting a skill for self-improvement via learning loops.
+version: 1.0.0
 ---
 
 # Skill Creator
@@ -423,3 +424,45 @@ Capture → Draft → Test → Harden → Instrument → Optimize → Deploy →
 Every pass through this loop makes the skill more robust. The first iteration catches obvious issues. The second catches subtle rationalizations. By the third, the skill should be solid — but the learning loops keep improving it in production.
 
 Figure out where the user is. Jump in. Help them move forward.
+
+## Escalation Protocol
+
+**STOP and ask the user before proceeding when:**
+- Phase 4b (Autoresearch) baseline score is already 90%+ — confirm whether optimization is worthwhile
+- Eval criteria are ambiguous or subjective — refine before running experiments
+- A mutation causes a regression on guard assertions — stop the loop and report
+- The skill's description optimization changes trigger behavior significantly (>20% delta on should-not-trigger queries)
+- About to overwrite the original SKILL.md (autoresearch should only modify the working copy)
+- Marketplace manifest update is needed and the repo has uncommitted changes
+
+**Do NOT escalate (handle autonomously):**
+- Running RED/GREEN eval cycles with parallel subagents
+- Drafting and running assertions
+- Launching the eval viewer
+- Iterating through REFACTOR improvements based on feedback
+- Packaging and deploying skills
+
+## Completion Status
+
+When the skill creation/improvement is complete, report:
+
+```
+SKILL: {skill-name}
+═══════════════════════════
+Phase completed: {1-7 or specific phase name}
+Eval results: {pass rate}% ({N}/{total} assertions passing)
+Iterations: {count} (baseline → final)
+Delta: {baseline score}% → {final score}%
+Description optimized: {yes/no — train/test scores}
+Deployed: {yes/no — packaged as .skill}
+Marketplace: {in sync / needs update / N/A}
+═══════════════════════════
+```
+
+## Verification of Claims
+
+- **Eval pass rates must cite actual grading.json results**, not estimated from output review.
+- **"Skill improved" must show before/after benchmark comparison**, not just the final score.
+- **Description optimization scores must report both train AND test set performance** to show no overfitting.
+- **Timing data (tokens, duration) must come from subagent completion notifications**, not estimates.
+- **Marketplace sync claims must show the verification command output** (grep for the plugin name in marketplace.json).

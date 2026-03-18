@@ -6,7 +6,7 @@ description: |
   quality/tests/performance, walks through issues interactively with opinionated
   recommendations. Use when reviewing implementation plans, design docs, or
   feature specs before writing code.
-version: 1.0.0
+version: 1.1.0
 allowed-tools:
   - Read
   - Grep
@@ -141,6 +141,46 @@ Fail: Missing registry or incomplete coverage
 Question: Are there zero cases where HANDLED=N, TEST=N, USER SEES=Silent?
 Pass: All silent failure modes are flagged for remediation
 Fail: Any silent unhandled failure mode is accepted
+
+## Escalation Protocol
+
+**STOP and ask the user before proceeding when:**
+- Step 0 scope challenge identifies more than 3 items that could be deferred — get alignment before deep review
+- A CRITICAL GAP is found in the failure modes registry (unhandled + untested + silent failure)
+- The plan touches more than 8 files or introduces more than 2 new abstractions — confirm scope mode
+- Review uncovers a fundamental architectural concern that would require rewriting the plan
+- Unresolved decisions accumulate — pause after 3 unanswered questions rather than assuming defaults
+
+**Do NOT escalate (handle autonomously):**
+- Running all review sections for the selected mode (standard or mega)
+- Numbering issues and providing lettered options with recommendations
+- Building the failure modes registry
+- Identifying stale diagrams in affected files
+
+## Completion Status
+
+When the review is complete, report:
+
+```
+PLAN REVIEW: {plan title}
+═══════════════════════════
+Mode: {standard (4-section) / mega (10-section)}
+Scope: {confirmed / reduced — N items deferred}
+Issues found: {count} (with {count} recommended actions)
+Critical gaps: {count} from failure modes registry
+Diagrams: {count} existing checked, {count} updates needed
+Unresolved decisions: {count} (listed if any)
+TODOS.md entries: {count} deferred items written
+═══════════════════════════
+```
+
+## Verification of Claims
+
+- **Scope challenge must reference actual code** — "this already exists" claims must cite the file and function.
+- **Every issue must include file:line references**, not abstract concerns.
+- **Failure modes registry must be built from actual code paths**, not hypothetical scenarios.
+- **"Existing code handles this" must cite the specific handler** (file, function, line), not assume from file names.
+- **Diagram staleness claims must show what changed** vs. what the diagram depicts.
 
 ## Learning
 

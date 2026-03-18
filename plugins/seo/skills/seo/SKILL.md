@@ -1,7 +1,7 @@
 ---
 name: seo
 description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR AEO OR answer engine optimization OR AI visibility OR AI citations OR ChatGPT ranking OR Perplexity optimization OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
-version: 2.2.0
+version: 2.3.0
 ---
 
 # SEO - Website Audit, Optimization & Automation
@@ -239,6 +239,49 @@ SEO is the foundation. AEO drives understanding. GEO drives confidence. You need
 - **Apple Business Connect:** https://businessconnect.apple.com
 - **PageSpeed Insights:** https://pagespeed.web.dev
 - **Whitespark Local Ranking Factors:** https://whitespark.ca/local-search-ranking-factors/
+
+---
+
+## Escalation Protocol
+
+**STOP and ask the user before proceeding when:**
+- Findings contradict each other (e.g., good content signals but terrible technical SEO)
+- About to recommend URL restructuring, domain migration, or canonical tag changes (high-risk)
+- Audit score disagrees with the user's expectations by more than 20 points
+- Unable to verify a finding in raw HTML after content extractor flagged it
+- Discovering a penalty or manual action indicator (noindex on key pages, sudden deindexation)
+- Keyword validation fails for a recommended target (no search volume, wrong intent)
+
+**Do NOT escalate (handle autonomously):**
+- Running all 13 audit execution steps in sequence
+- Verifying findings against raw HTML (curl/grep)
+- Adjusting severity based on ranking-factors.md guidance
+- Generating the audit report with score breakdown
+
+## Completion Status
+
+When the audit is complete, report:
+
+```
+SEO AUDIT: {domain}
+═══════════════════════════
+Overall score: {X}/100
+Pages audited: {count}
+Findings: CRITICAL: {N}, HIGH: {N}, MEDIUM: {N}, LOW: {N}, INFO: {N}
+Top priority: {one-sentence summary of highest-impact finding}
+Verification: {count} findings HTML-verified, {count} extractor-only
+Score breakdown: Technical {X}/20, On-Page {X}/20, E-E-A-T {X}/15, Local {X}/20, Content {X}/15, AI {X}/10
+═══════════════════════════
+```
+
+## Verification of Claims
+
+- **Every finding must include a specific page URL** — no abstract recommendations without a target.
+- **Findings about head elements (meta tags, schema, canonical) must be verified via `curl | grep`**, not content extractors.
+- **Header/nav/footer findings must be verified in raw HTML** — extractors strip structural elements.
+- **Severity assignments must reference ranking-factors.md** — cite the ranking factor evidence for HIGH+ claims.
+- **"Missing" claims require negative evidence** — show the search command and empty result.
+- **Keyword recommendations must pass the 5-point validation** — never recommend a keyword without checking volume.
 
 ---
 
