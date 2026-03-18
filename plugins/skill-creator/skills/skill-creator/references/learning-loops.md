@@ -96,6 +96,43 @@ The `## Learning` section is advisory — Claude reads it and follows the instru
 
 ---
 
+## Narrative Accumulation (learnings.md)
+
+In addition to the structured `.learnings.jsonl` journal, autoresearch runs produce a `learnings.md` file — a prose document that accumulates insights across iterations.
+
+Unlike JSONL (which is data), `learnings.md` is understanding. It captures:
+
+- **Insights** — what mutation patterns work for this specific skill
+- **Dead ends** — approaches that were tried and failed, so future agents don't repeat them
+- **Patterns** — recurring observations about what makes this skill succeed or fail
+
+### Why both?
+
+`.learnings.jsonl` is machine-readable and feeds into `promote_learnings.py` for automated analysis. `learnings.md` is agent-readable and survives context compaction — when a fresh agent picks up an autoresearch run, it reads `learnings.md` to inherit the accumulated understanding without processing hundreds of JSONL entries.
+
+### Format
+
+```markdown
+# Autoresearch Learnings: [skill-name]
+
+## Insights
+
+- [Observation from experiment N → result]
+- [Pattern discovered across experiments]
+
+## Dead Ends
+
+- [Approach that consistently fails and why]
+
+## Patterns
+
+- [Meta-observations about what works for this skill type]
+```
+
+The agent appends to this file after each experiment. Keep entries concise — one line per insight.
+
+---
+
 ## Running the Promotion Script
 
 After a skill has accumulated events, run:
