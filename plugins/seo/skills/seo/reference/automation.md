@@ -1,6 +1,6 @@
 # DIY SEO Automation System
 
-Replace agency work with automated scripts. 5x the output at ~$75/month in API costs.
+Replace agency work with a DIY system. Start at $0 with free tools, scale to ~$75/month with paid APIs for 5x the output.
 
 ## Why Build This
 
@@ -10,7 +10,26 @@ Agencies have structural problems for SEO:
 - **The tool stack is hidden.** They use Ahrefs, Semrush, GSC—same tools you could use.
 - **Scope creep pricing.** Want to add a competitor? Change order.
 
-## The Five Components
+## Bootstrap Tier ($0/month)
+
+Before investing in paid APIs, you can run a meaningful link building operation with free tools only. This covers ~60% of what the paid stack does:
+
+| Activity | Tool | Cost | Cadence |
+|----------|------|------|---------|
+| Backlink intelligence | GSC Links report | Free | Weekly |
+| Competitor analysis | Ahrefs Free Backlink Checker | Free (100/day) | Weekly |
+| Keyword monitoring | GSC Performance report | Free | Weekly |
+| Prospect discovery | Google Search operators | Free | Weekly |
+
+**Bootstrap workflow:**
+1. **Monday** — Pull GSC Links report. Export top linking domains. Identify new/lost links since last week.
+2. **Tuesday** — Run 5-10 competitor domains through Ahrefs Free Backlink Checker. Note their top-linked pages and any broken link opportunities.
+3. **Wednesday** — Take linking domain patterns from step 1 (blogs, resource pages, niche directories). Search Google for similar sites: `"resources" + [your niche]`, `"best [your category]"`. Build outreach list.
+4. **Thursday/Friday** — Send 10-15 personalized outreach emails from the list.
+
+**Limitations:** No volume/CPC data for keywords, no automated backlink monitoring, manual process. When you're ready to scale, move to the paid tier below.
+
+## Paid Tier (~$75/month)
 
 | Component | Tool | Cost | Frequency |
 |-----------|------|------|-----------|
@@ -22,7 +41,9 @@ Agencies have structural problems for SEO:
 
 **Total: ~$75/month vs ~$1,500/month agency**
 
-## Component 1: Keyword Research Engine
+## Paid Tier Components
+
+### Component 1: Keyword Research Engine
 
 Takes 10-15 seed keywords, expands to 200-300 variations with volume, CPC, and competition data.
 
