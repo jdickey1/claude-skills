@@ -119,3 +119,35 @@ If any AskUserQuestion goes unanswered, note it. Never silently default. Display
 ## Retrospective Learning
 
 Check the git log for the branch. If prior commits suggest a previous review cycle (review-driven refactors, reverted changes), note what was changed and whether the current plan touches the same areas. Be more aggressive reviewing areas that were previously problematic.
+
+## Binary Quality Checks
+
+**EVAL 1: Step 0 scope challenge completed**
+Question: Was the scope explicitly challenged before reviewing implementation details?
+Pass: Review includes scope assessment with at least one item deferred or confirmed
+Fail: Review jumps straight to implementation without questioning scope
+
+**EVAL 2: All issues have options**
+Question: Does every raised issue include at least 2 numbered options with a recommendation?
+Pass: All issues follow the NUMBER + LETTER format with concrete alternatives
+Fail: Any issue is raised without options or recommendation
+
+**EVAL 3: Failure modes documented**
+Question: Is a failure modes registry included with HANDLED/TEST/USER SEES columns?
+Pass: Registry covers all identified code paths
+Fail: Missing registry or incomplete coverage
+
+**EVAL 4: No silent failures approved**
+Question: Are there zero cases where HANDLED=N, TEST=N, USER SEES=Silent?
+Pass: All silent failure modes are flagged for remediation
+Fail: Any silent unhandled failure mode is accepted
+
+## Learning
+
+When this skill runs, append to `.learnings.jsonl`:
+
+```json
+{"timestamp": "ISO-8601", "skill": "plan-review", "event_type": "edge_case", "context": "Plan had 12 files — scope challenge caught 4 that were unnecessary"}
+```
+
+Track: How often do scope challenges reduce file count? Which issue types recur across reviews?
