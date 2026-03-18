@@ -1,6 +1,7 @@
 ---
 name: interconnection-audit
 description: Use when auditing vault connections, checking vault health, finding orphan notes, discovering missing cross-note links, or improving interconnection between Obsidian vault notes. Also use after a batch of new content (20+ notes) or on a monthly cadence.
+version: 1.0.0
 ---
 
 # Interconnection Mapping Audit
@@ -177,6 +178,45 @@ When reviewing learning events, apply these thresholds:
 - **Low-value proposal**: A connection the user skips or explicitly rejects. If a signal type produces >30% rejections across 20+ proposals, deprecate or refine that signal.
 - **Target type distribution**: If any single connection type exceeds 70% of all proposals, the discovery logic is over-weighted. Rebalance signals.
 - **Score calibration tolerance**: ±15 points from user's perception. If users consistently feel the score is wrong by >15 points, recalibrate the formula weights.
+
+## Escalation Protocol
+
+**STOP and ask the user before proceeding when:**
+- More than 50 connections are proposed in a single audit — confirm batch size before applying
+- A proposed connection contradicts an existing one (conflicting relationship types)
+- Health score drops below 40 — may indicate a structural vault problem, not just missing links
+- Stale connections detected that reference deleted or moved files — confirm cleanup scope
+- The audit discovers notes that appear to be duplicates — flag for user consolidation decision
+
+**Do NOT escalate (handle autonomously):**
+- Running all 4 audit phases (inventory, discovery, review, apply)
+- Dispatching parallel subagents for connection discovery
+- Deduplicating proposals and checking reverse links
+- Generating the health score and report
+
+## Completion Status
+
+When the audit is complete, report:
+
+```
+INTERCONNECTION AUDIT: {date}
+═══════════════════════════
+Notes scanned: {total}
+Connections proposed: {count} ({by type breakdown})
+Orphan notes found: {count}
+Stale connections: {count}
+Health score: {X}/100 (prev: {prev_score}/100)
+Report saved: {path}
+═══════════════════════════
+```
+
+## Verification of Claims
+
+- **Every proposed connection target must be verified to exist** as a real .md file in the vault.
+- **Health score dimensions must cite the actual counts** used in calculation, not just the final weighted score.
+- **"No same-directory connections" must be enforced programmatically**, not just by convention.
+- **Connection context strings must be specific and actionable** — verify each answers "why would someone following this link benefit?"
+- **Orphan detection must exclude 99-System/templates/ and 00-Inbox/** as documented in constraints.
 
 ## References
 

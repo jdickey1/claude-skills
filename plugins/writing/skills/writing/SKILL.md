@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.0.0
+version: 2.1.0
 ---
 
 # Writing
@@ -103,12 +103,39 @@ David Ogilvy: "On the average, five times as many people read the headline as re
 
 **Full research and formulas**: See [references/headlines.md](references/headlines.md)
 
-### 10. Don't Referee Your Own Argument
+### 10. No Corrective Reframing (CRITICAL)
 
-Lines like "That's not a tagline" or "This isn't just marketing" are the writer stepping in front of the evidence. If the evidence is good, it doesn't need a narrator telling the reader it's good. One structural pivot per piece, maximum. Two is one too many.
+The "That's not X. That's Y." construction is an AI rhetorical crutch. It sounds like a TED talk punchline, not human writing. AI loves this move because it creates artificial drama without evidence. Kill it on sight.
 
-- Wrong: "That's not positioning. That's just what's true."
-- Right: Let the evidence land. Move on.
+**All of these are the same bad pattern:**
+
+- "That's not a tagline. That's a promise."
+- "This isn't marketing. This is reality."
+- "That's not positioning. That's just what's true."
+- "This isn't a challenge. It's an opportunity."
+- "That's not a bug. That's a feature."
+- "We don't sell insurance. We sell peace of mind."
+- "This isn't about technology. It's about people."
+
+**Also catch these softer variants:**
+
+- "More than just X, it's Y" / "It's not just X, it's Y"
+- "Less of an X and more of a Y"
+- "X? No. Y." (the dramatic question-then-correction)
+- "Call it X. What it really is: Y."
+- "Forget X. Think Y."
+- "Stop thinking of it as X. Start thinking of it as Y."
+
+**Why this is bad:** It's the writer stepping in front of the evidence to tell the reader how to interpret it. If your evidence is strong, the reframe is unnecessary. If your evidence is weak, the reframe won't save it. Either way, cut it.
+
+**What to do instead:** State the thing directly. Let evidence create the reframe in the reader's mind.
+
+- Wrong: "That's not a policy change. That's a market signal."
+- Right: "Three carriers pulled out of Florida in six months. The market noticed."
+- Wrong: "This isn't just a product update. It's a paradigm shift."
+- Right: "Processing time dropped from 3 hours to 11 seconds."
+
+**One structural pivot per piece, maximum.** If you absolutely must use a corrective reframe once for rhetorical impact, you get one. Two is one too many. Zero is ideal.
 
 ### 11. End in the Speaker's Voice, Not the Writer's
 
@@ -182,6 +209,11 @@ Question: Does the first sentence reference a specific time, place, number, or p
 Pass: Opening isn't generic
 Fail: Generic opening (e.g., "In today's world..." or "Communication is key...")
 
+**EVAL 7: No corrective reframing**
+Question: Does the output avoid the "That's not X. That's Y." pattern and its variants?
+Pass: Zero instances of corrective reframing (or at most one deliberate structural pivot)
+Fail: Any "That's not X. That's Y.", "This isn't X. It's Y.", "More than just X, it's Y.", "Forget X. Think Y.", or similar construct detected
+
 ## Guard Assertions
 
 When optimizing writing quality, these guards prevent regressions:
@@ -207,10 +239,48 @@ Before finalizing any content:
 - [ ] Specific numbers/names/examples (not abstractions)
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
-- [ ] No self-refereeing ("That's not just X, it's Y") more than once
+- [ ] Zero corrective reframes ("That's not X. That's Y." and all variants) — one max, zero ideal
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after
 - [ ] Achievements framed as earned, not just listed
+
+## Escalation Protocol
+
+**STOP and ask the user before proceeding when:**
+- The content's intended audience or voice is unclear (writing for the user vs. writing for a brand/client)
+- The topic requires domain expertise you're uncertain about (legal claims, medical advice, financial figures)
+- The user's requested format conflicts with quality rules (e.g., "write a 50-word blog post" — too short to be useful)
+- Content involves named individuals who haven't been consulted (quotes, attributions, testimonials)
+- A banned AI pattern is the most natural way to express something and removing it significantly weakens the piece
+
+**Do NOT escalate (handle autonomously):**
+- Applying all universal rules (no em dashes, no banned buzzwords, contractions, rhythm)
+- Generating 5+ headline candidates before selecting one
+- Running the pre-publish checklist before finalizing
+- Choosing format-specific guidance from references/
+
+## Completion Status
+
+When writing is complete, report:
+
+```
+CONTENT: {title or description}
+═══════════════════════════
+Format: {X post / LinkedIn / web copy / newsletter / etc.}
+Word count: {N}
+Headlines tested: {N} candidates → selected: "{winner}"
+Quality checks: {passed/failed count} of 7 binary evals
+Pre-publish checklist: {all passed / items failed}
+═══════════════════════════
+```
+
+## Verification of Claims
+
+- **"Zero em dashes" must be verified with a literal search**, not assumed from writing carefully.
+- **"No banned buzzwords" must be checked against the full banned list**, not just common ones.
+- **Headline selection must show all candidates**, not just the winner.
+- **Specific claims (numbers, dates, names) must be sourced** from the user's input or verified reference material. Never fabricate statistics.
+- **"Read aloud test" means actually evaluating rhythm and flow**, not just checking sentence length metrics.
 
 ## Learning
 

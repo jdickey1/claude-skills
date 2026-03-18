@@ -1,6 +1,7 @@
 ---
 name: web-reader
 description: This skill should be used when needing to "read a web page", "get page content", "fetch URL as markdown", "scrape page text", or any time web page content needs to be retrieved as text/markdown rather than viewed visually. Not suitable for visual inspection of pages.
+version: 1.0.0
 ---
 
 # Web Reader
@@ -40,3 +41,11 @@ npx playbooks get https://github.com/owner/repo
 - Pipe output or capture as needed for further processing.
 - If the command fails or the page requires JavaScript rendering, fall back to WebFetch or Playwright.
 - Works best for static content, documentation, articles, and markdown-friendly pages.
+
+## Escalation & Completion
+
+**Escalate when:** The page requires authentication, returns a CAPTCHA, or `npx playbooks get` and WebFetch both fail. Report the failure and ask the user for an alternative approach.
+
+**Completion:** Report whether content was successfully retrieved, the approximate word count, and which method was used (playbooks or WebFetch fallback).
+
+**Verification:** If reporting that a page is empty or inaccessible, show the actual command output or error message as evidence.

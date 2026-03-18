@@ -15,8 +15,9 @@ Review the provided content (`$ARGUMENTS`) for AI tells, quality issues, and adh
 4. Check contraction usage (at least 3 per paragraph)
 5. Analyze sentence rhythm (flag evenly-paced paragraphs)
 6. Check specificity (flag abstract claims missing evidence)
-7. Check hook strength (first line) and closer strength (last line)
-8. Provide a revised version with all fixes applied
+7. Flag every corrective reframe ("That's not X. That's Y." and all variants — replace with direct statements backed by evidence)
+8. Check hook strength (first line) and closer strength (last line)
+9. Provide a revised version with all fixes applied
 
 ## Checklist
 
@@ -30,7 +31,7 @@ Review the provided content (`$ARGUMENTS`) for AI tells, quality issues, and adh
 - [ ] Specific numbers/names/examples (not abstractions)
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
-- [ ] No self-refereeing more than once
+- [ ] Zero corrective reframes ("That's not X. That's Y." and all variants) — one max, zero ideal
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after
 - [ ] Achievements framed as earned, not just listed

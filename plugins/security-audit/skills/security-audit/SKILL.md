@@ -1,6 +1,7 @@
 ---
 name: security-audit
 description: Comprehensive cybersecurity audit for web applications. USE WHEN reviewing apps for vulnerabilities, hardening security, auditing auth/API/DB/infra, or performing penetration-style code review. Follows OWASP Top 10, NIST 800-53, and real-world red team methodologies.
+version: 1.0.0
 ---
 
 # Security Audit - Hardened Cybersecurity Review
@@ -276,6 +277,47 @@ Gets instant security header status. Identifies obvious misconfigurations before
 - **CWE Top 25:** https://cwe.mitre.org/top25/
 - **NIST 800-53 Rev 5:** Security and Privacy Controls
 - **Node.js Security Checklist:** https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
+
+---
+
+## Escalation Protocol
+
+**STOP and ask the user before proceeding when:**
+- A CRITICAL finding with CONFIRMED confidence requires immediate production changes
+- Remediation for a finding would break existing functionality or require downtime
+- Scope needs to expand beyond the originally agreed target (e.g., discovering a connected service that also needs review)
+- Unclear whether active exploitation testing is authorized (e.g., testing auth bypass, injecting payloads)
+- Two findings interact to create a potential exploit chain — confirm severity escalation before reporting as combined CRITICAL
+- A false positive rate for a category exceeds 50% — reassess methodology before continuing
+
+**Do NOT escalate (handle autonomously):**
+- Adding findings at any severity with supporting evidence
+- Downgrading confidence when evidence is insufficient
+- Skipping checklist items that don't apply to the target stack
+
+## Completion Status
+
+When the audit is complete, report:
+
+```
+AUDIT COMPLETE: {project}
+═══════════════════════════
+Scope: {files/routes/endpoints reviewed}
+Findings: {count by severity — CRITICAL: N, HIGH: N, MEDIUM: N, LOW: N, INFO: N}
+Confidence: {count by level — CONFIRMED: N, LIKELY: N, POSSIBLE: N}
+Coverage: {checklist tiers completed — T1: ✓/✗, T2: ✓/✗, T3: ✓/✗}
+Top risk: {one-sentence summary of highest-severity finding}
+Remediation: {count of findings with specific code fixes provided}
+═══════════════════════════
+```
+
+## Verification of Claims
+
+- **Every finding must cite a file path and line number.** No theoretical findings.
+- **Severity requires evidence threshold:** CRITICAL needs CONFIRMED or LIKELY confidence with a demonstrated attack chain. POSSIBLE findings are capped at MEDIUM.
+- **"Not found" claims must show search evidence:** If reporting a vulnerability class is absent, cite the grep/search commands used to verify.
+- **External references (OWASP, CWE, CVE) must be specific:** Cite the exact ID (e.g., CWE-89), not just "OWASP Top 10."
+- **Remediation code must be tested or clearly marked as untested.** Never present a fix as verified unless you confirmed it compiles/runs.
 
 ---
 

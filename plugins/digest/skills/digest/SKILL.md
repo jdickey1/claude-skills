@@ -1,7 +1,7 @@
 ---
 name: digest
 description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", or when a URL appears in conversation context. Also triggers on /digest command. Handles all URL types — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, everything else uses web-reader.
-version: 1.5.0
+version: 1.6.0
 ---
 
 # Digest
@@ -529,6 +529,46 @@ If multiple URLs are detected in the current context, process each one sequentia
 |--------|------|--------------------|------------|
 | @user1 | X Post | {brief rec} | /path/to/file.md |
 | techcrunch.com | Article | {brief rec} | /path/to/file.md |
+
+## Escalation Protocol
+
+**STOP and ask the user before proceeding when:**
+- All fetch tiers fail for a URL (don't silently produce an empty digest)
+- Content appears paywalled, login-walled, or restricted — ask if the user has access or wants a different approach
+- GitHub repo security scan finds CRITICAL issues (hardcoded secrets, active vulnerabilities)
+- Unsure whether a project connection is genuine or forced — when in doubt, ask rather than include a weak connection
+- The URL points to content that may be legally sensitive (court filings, sealed documents, DMCA'd content)
+- Video transcription fails and the page content alone is insufficient for meaningful analysis
+
+**Do NOT escalate (handle autonomously):**
+- Falling back between fetch tiers (Tier 1 → 2 → 3)
+- Classifying URL type and selecting fetch strategy
+- Generating project connections for clearly relevant content
+- Dispatching background code review agents for GitHub repos
+
+## Completion Status
+
+When the digest is complete, report:
+
+```
+DIGEST: {source_label}
+═══════════════════════════
+URL type: {X Post / GitHub Repo / Article / etc.}
+Fetch tier: {which tier succeeded}
+Content length: {word count of raw content}
+Connections: {count} project connections proposed
+File saved: {full path}
+Code review: {dispatched/completed/skipped/N/A}
+═══════════════════════════
+```
+
+## Verification of Claims
+
+- **Every project connection must cite specific content** from the source that justifies the connection. "Related to Hyperscale" is not evidence — "Article discusses 500MW datacenter expansion in Texas" is.
+- **Security findings for GitHub repos must cite file paths and line numbers**, not just categories.
+- **"No issues found" in security assessment must state what was checked**, not just the absence of findings.
+- **Fetch tier fallback must log why the previous tier failed** (e.g., "Tier 1 returned login wall", not just "fell back to Tier 2").
+- **Frontmatter connection targets must be verified to exist** before writing them.
 
 ## Learning
 
