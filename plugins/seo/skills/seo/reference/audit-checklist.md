@@ -236,6 +236,7 @@ See `reference/link-building.md` for full link building details.
 - [ ] Competitor backlink sources identified
 - [ ] Link velocity is natural
 - [ ] Original research/data as link magnets
+- [ ] **Backlink indexing workflow in place** — new backlinks submitted to GSC or cross-posted on social within 48 hours (see link-building.md Backlink Indexing section)
 - [ ] Brand searches exist/growing
 - [ ] Entity consistency across all web properties
 

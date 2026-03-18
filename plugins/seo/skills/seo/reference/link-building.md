@@ -23,6 +23,28 @@ Backlinks remain a core ranking factor but the game has shifted: **topical relev
 5. **Resource page outreach** — works best in niche industries with curated resource lists.
 6. **GSC "Export and Expand" prospecting** — use Google Search Console's Links report (free) as a backlink intelligence source. Workflow: export your linking domains → categorize by type (blogs, resource pages, directories, news) → search Google for similar sites in each category → build outreach list from results. This is free competitor backlink research without paid tools.
 
+## Backlink Indexing
+
+Building backlinks is only half the job — Google no longer reliably auto-indexes new pages. If a backlink isn't indexed, it passes zero value. Proactive indexing should be part of every link building workflow.
+
+### Indexing Methods (Prioritized)
+
+1. **Google Search Console submission** (free, owned domains only) — submit the backlink URL for inspection. Takes 24-48 hours but gives crawl/index diagnostics. Works for your own blogposts and any domain you control. Nearly 100% indexing rate on healthy sites.
+
+2. **Social media cross-posting** (free, any URL) — share the backlink URL across Facebook, X, Threads, Bluesky, Tumblr, and YouTube Community posts. Meta platforms changed indexing rules in 2025 — social posts now appear heavily in SERPs and the linked URLs frequently get crawled as a side effect. No ownership required.
+
+3. **Free press releases** (free, any URL) — publish a newsworthy press release on OpenPR or PRlog with the target URL in the body text. Press releases on these platforms typically index within ~20 minutes, and the embedded links get crawled. Requires writing actual news-angle content.
+
+4. **Paid indexing services** (paid, any URL) — tools like Primeindexer force Googlebot to visit target URLs. Can index links in 2-5 minutes. Works on social posts, cloud links, press releases, profile links, citations, and blog posts. Best for high-volume link building where you can't wait for organic crawling.
+
+### Indexing Checklist
+
+- [ ] **New backlinks are submitted for indexing** within 48 hours of creation
+- [ ] **Own-domain content** submitted to GSC immediately after publishing
+- [ ] **Third-party backlinks** (social posts, citations, guest posts) cross-posted on social platforms to trigger crawling
+- [ ] **High-priority backlinks** verified as indexed via `site:url` search within 1 week
+- [ ] **Non-indexed backlinks** resubmitted or reposted (for social: delete and repost with same content to get a fresh crawl)
+
 ## Free Prospecting Tools ($0)
 
 Before committing to paid APIs, these free tools cover core backlink research:
