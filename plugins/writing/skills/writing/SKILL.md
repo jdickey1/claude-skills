@@ -148,6 +148,50 @@ Read the appropriate reference before writing:
 - **Persuasion frameworks**: See [references/persuasion-frameworks.md](references/persuasion-frameworks.md)
 - **Interview scripts**: See [references/interview-scripts.md](references/interview-scripts.md)
 
+## Binary Quality Checks
+
+When evaluating writing output quality (for autoresearch or manual review), use these binary yes/no checks:
+
+**EVAL 1: No em dashes**
+Question: Does the output contain zero em dashes (—)?
+Pass: Not a single em dash in the entire text
+Fail: Any em dash present
+
+**EVAL 2: No banned buzzwords**
+Question: Does the output contain zero words from the banned phrases list?
+Pass: None of the banned phrases appear anywhere
+Fail: Any banned phrase detected
+
+**EVAL 3: Contractions present**
+Question: Does the output average 3+ contractions per paragraph?
+Pass: Most paragraphs use natural contractions (don't, can't, won't, isn't, etc.)
+Fail: Fewer than 3 contractions per paragraph on average
+
+**EVAL 4: Sentence rhythm**
+Question: Does the output include varied sentence lengths?
+Pass: Mix of short (<10 words), medium (10-25 words), and long (>25 words) sentences
+Fail: Most sentences are similar length
+
+**EVAL 5: Specific evidence**
+Question: Does every claim include specific numbers, names, or examples within 1-2 sentences?
+Pass: No abstract assertions without supporting specifics
+Fail: Any unsupported claim detected
+
+**EVAL 6: Strong opener**
+Question: Does the first sentence reference a specific time, place, number, or provoke curiosity?
+Pass: Opening isn't generic
+Fail: Generic opening (e.g., "In today's world..." or "Communication is key...")
+
+## Guard Assertions
+
+When optimizing writing quality, these guards prevent regressions:
+
+**GUARD 1: Word count constraints don't sacrifice quality**
+Tightening word count must not cut the headline, CTA, or key evidence. If brevity hurts impact, revert.
+
+**GUARD 2: Format-specific rules preserved**
+Each format (X post, LinkedIn, newsletter, web) has its own constraints. Optimizing for one format must not break another's rules.
+
 ## Pre-Publish Checklist
 
 Before finalizing any content:
@@ -167,3 +211,18 @@ Before finalizing any content:
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after
 - [ ] Achievements framed as earned, not just listed
+
+## Learning
+
+When this skill runs, append observations to `.learnings.jsonl` in the skill directory:
+
+```json
+{"timestamp": "ISO-8601", "skill": "writing", "event_type": "user_correction", "context": "User corrected em dash that slipped through"}
+{"timestamp": "ISO-8601", "skill": "writing", "event_type": "edge_case", "context": "Legal content needed formal tone — contractions rule conflicted"}
+```
+
+Track these patterns:
+- Which banned phrases slip through most often?
+- Which formats (X, LinkedIn, web) trigger the most corrections?
+- When do contractions hurt rather than help? (formal contexts)
+- Which rules conflict with each other under pressure?
