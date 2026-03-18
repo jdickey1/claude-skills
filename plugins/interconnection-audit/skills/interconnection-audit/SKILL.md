@@ -132,6 +132,33 @@ Report: notes updated, connections written, any errors.
 - **Non-destructive** — only modify frontmatter, never touch note body
 - **Idempotent** — running twice yields same proposals minus already-applied ones
 
+## Binary Quality Checks
+
+**EVAL 1: All proposals have valid targets**
+Question: Does every proposed connection point to an existing .md file?
+Pass: All target paths resolve to real files in the vault
+Fail: Any target path is a directory, doesn't exist, or is outside the vault
+
+**EVAL 2: No same-directory connections**
+Question: Are all proposed connections between files in different directories?
+Pass: No connection links two files in the same folder (except supersedes/superseded-by)
+Fail: Any same-directory connection proposed (other than supersedes)
+
+**EVAL 3: Connection context is actionable**
+Question: Does every connection include a specific, actionable one-sentence context?
+Pass: All contexts explain WHY the connection matters, not just that it exists
+Fail: Any context is generic ("Related to this project") or missing
+
+**EVAL 4: Health score is calibrated**
+Question: Does the health score (0-100) match the actual vault state within ±15 points?
+Pass: Score reflects reality — low score means genuinely poor connectivity
+Fail: Score is wildly optimistic or pessimistic vs. actual vault state
+
+**EVAL 5: No circular chains**
+Question: Are there no circular connection chains (A→B→C→A)?
+Pass: All connections form a directed acyclic graph
+Fail: Any circular reference detected
+
 ## Learning
 
 After each audit run, capture these events for future skill improvement:
@@ -142,6 +169,14 @@ After each audit run, capture these events for future skill improvement:
 - **Score calibration** — if the health score doesn't match the user's sense of vault health, note the discrepancy for formula tuning.
 
 Save observations to `{vault_root}/project-status/interconnection-audit-learnings.md` as a running log with dates.
+
+## Acceptance Criteria for Learning
+
+When reviewing learning events, apply these thresholds:
+
+- **Low-value proposal**: A connection the user skips or explicitly rejects. If a signal type produces >30% rejections across 20+ proposals, deprecate or refine that signal.
+- **Target type distribution**: If any single connection type exceeds 70% of all proposals, the discovery logic is over-weighted. Rebalance signals.
+- **Score calibration tolerance**: ±15 points from user's perception. If users consistently feel the score is wrong by >15 points, recalibrate the formula weights.
 
 ## References
 
