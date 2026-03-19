@@ -20,6 +20,18 @@ Universal writing standards for all content. Format-specific guidance in referen
 | `/write-review <content>` | Review/edit content for AI tells |
 | `/teach-writing` | Write voice/brand context to CLAUDE.md |
 
+## Pre-Write Context Check
+
+Before writing any content, confirm you know:
+
+1. **Who is the audience?** (general public, developers, clients, voters, etc.)
+2. **What voice/brand?** (personal, company, publication — check CLAUDE.md for voice context from `/teach-writing`)
+3. **What format?** (X post, blog, newsletter, etc. — may already be clear from the command used)
+
+If voice/brand context exists in CLAUDE.md (via `/teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content — a casual tone for a law firm or formal tone for a podcast social account wastes a draft.
+
+Exception: if the user provides enough context in their prompt ("write a casual X post about datacenter cooling"), skip the check and go.
+
 ## Universal Rules (ALL Content Must Follow)
 
 ### 1. No Em Dashes (CRITICAL)
