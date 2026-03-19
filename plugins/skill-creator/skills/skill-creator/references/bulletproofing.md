@@ -62,6 +62,34 @@ These skills can have gaps or unclear sections.
 
 **Success criteria:** Agent finds and correctly applies reference information for the use cases that matter most.
 
+### Wrapper Skills (library/API expertise)
+
+**Examples:** pptx-builder, claude-api, database-query-builder
+
+These skills package library knowledge as on-demand context. They fail when the agent hallucates API methods, uses deprecated patterns, or ignores the wrapper entirely.
+
+**Test with:**
+- Correctness comparison: Run the same library task WITH and WITHOUT the wrapper. Does the wrapper version use correct API calls?
+- Hallucination detection: Does the agent invent methods that don't exist in the wrapped library? Check output against the reference file's API surface.
+- Pitfall avoidance: Does the agent avoid known gotchas documented in the wrapper? Test with scenarios that commonly trigger mistakes.
+- Gap coverage: What happens when the user needs an API the wrapper doesn't cover? Does the agent follow the escape hatch (e.g., check official docs)?
+
+**Success criteria:** Agent produces correct library usage that avoids documented pitfalls, doesn't hallucinate methods, and gracefully handles gaps in the wrapper's coverage.
+
+### Generator Skills (template-driven output)
+
+**Examples:** digest, write-x, seo-brief, content-brief
+
+These skills produce structured documents from templates. They fail when the agent improvises the structure, skips required sections, or violates field constraints.
+
+**Test with:**
+- Template fidelity: Does the output contain ALL required sections in the correct order? (Highly automatable — write a script that parses the output and checks for section headings.)
+- Field constraints: Does it respect constraints like "one paragraph" (not three), "3-10 bullets" (not 15), or "max 100 words"?
+- Edge case inputs: What happens with minimal input? Ambiguous input? Very long input? Does the template still hold?
+- Fill quality: Are template fields filled with substantive content, not placeholder-like text? ("Summary: This is a summary of the content" is a failure.)
+
+**Success criteria:** Output matches the template structure exactly, respects all field constraints, and fills every section with substantive content adapted to the input. Script-based assertions should cover at least section presence and ordering.
+
 ---
 
 ## Pressure Types

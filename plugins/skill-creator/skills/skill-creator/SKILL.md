@@ -31,26 +31,56 @@ Be transparent about what you're doing and why. When spawning subagents, running
 
 Start by understanding the user's intent. The conversation might already contain a workflow to capture (e.g., "turn this into a skill"). If so, extract answers from context first — tools used, steps taken, corrections made, input/output formats observed.
 
-**Key questions:**
+**Key questions (minimum before proceeding):**
 1. What should this skill enable Claude to do?
 2. When should it trigger? (what user phrases/contexts)
 3. What's the expected output format?
-4. Should we set up test cases? (suggest based on skill type — objectively verifiable outputs benefit from evals; subjective outputs often don't)
+
+**Intent gate — do not proceed to Phase 2 until you can answer all three questions above.** If the conversation already contains clear answers (e.g., the user described a complete workflow), extract them and confirm. If not, ask. The reason: skills drafted without clear intent get rewritten. Spending 2 minutes on intent saves 20 minutes of iteration.
 
 **Interview and research:**
 - Ask about edge cases, input/output formats, example files, success criteria, dependencies
 - Check available MCPs — if useful for research (docs, similar skills, best practices), research via subagents if available, otherwise inline
 - Wait to write test prompts until intent is solid
+- Should we set up test cases? (suggest based on skill type — objectively verifiable outputs benefit from evals; subjective outputs often don't)
 
-**Skill type identification** (determines testing approach):
+### Skill Type Identification
+
+Classify the skill's **type** (what it enforces) and **design pattern** (how it's structured). Both inform testing strategy and file organization.
+
+**Skill types** (determines testing approach):
+
 | Type | Description | Example |
 |------|-------------|---------|
 | **Discipline** | Rules/requirements to enforce | TDD, code review gates |
 | **Technique** | Concrete method with steps | Condition-based waiting |
 | **Pattern** | Mental model for problems | Flatten-with-flags |
 | **Reference** | API docs, syntax guides | Library documentation |
+| **Wrapper** | On-demand library/API expertise | pptx-builder, claude-api |
+| **Generator** | Structured output from templates | digest, write-x, seo-brief |
 
 See `references/bulletproofing.md` for the testing approach specific to each type.
+
+### Design Pattern Classification
+
+After capturing intent, classify which design pattern best fits the skill. This determines the file organization template and testing strategy. Most skills are hybrids — pick the dominant pattern.
+
+| Pattern | Core idea | Template in |
+|---------|-----------|-------------|
+| **Tool Wrapper** | On-demand context for a specific library/API | `references/skill-structure.md` |
+| **Generator** | Structured output from a reusable template | `references/skill-structure.md` |
+| **Reviewer** | Score/evaluate against a rubric or checklist | Use `references/` for the rubric, SKILL.md for scoring logic |
+| **Inversion** | Agent interviews user before acting | Hard-gate questions in SKILL.md before any output |
+| **Pipeline** | Strict multi-step workflow with checkpoints | Numbered phases with explicit gates between them |
+
+**Classification heuristics:**
+- Does the skill produce a specific document format every time? → **Generator**
+- Does it make the agent better at using a specific tool/library? → **Tool Wrapper**
+- Does it evaluate or score something against criteria? → **Reviewer**
+- Does it need to gather information before it can act? → **Inversion**
+- Does it enforce a multi-step sequence where order matters? → **Pipeline**
+
+Present your classification to the user: "This looks like a Generator skill — it produces a structured digest from a template. I'll use the Generator template from skill-structure.md as the starting point." If uncertain, state the top two candidates and ask.
 
 ---
 
@@ -169,6 +199,8 @@ kill $VIEWER_PID 2>/dev/null
 | **Technique** | Application + variation + missing-information scenarios. |
 | **Pattern** | Recognition + counter-examples (when NOT to apply). |
 | **Reference** | Retrieval + application + gap testing. |
+| **Wrapper** | Library correctness: does the agent use correct API calls? Hallucination check: does it invent methods that don't exist? Compare with vs. without wrapper. |
+| **Generator** | Template fidelity: does output contain all required sections in the right order? Field constraints: does it respect "one paragraph" or "3-10 bullets"? Automatable via scripts. |
 
 See `references/bulletproofing.md` for the complete methodology.
 
