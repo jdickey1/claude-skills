@@ -179,6 +179,91 @@ Use when: Reference material is too large to inline (100+ lines of API docs, com
 
 ---
 
+## Design Pattern Templates
+
+These templates map to the five recurring skill design patterns identified across the agent ecosystem. Use them as starting points — most skills are hybrids.
+
+### Generator Pattern
+
+Generators produce structured output from reusable templates. The template defines the shape; the skill defines how to fill it.
+
+```
+digest/
+├── SKILL.md          # Workflow: fetch → analyze → fill template → save
+├── references/
+│   └── analysis-guide.md   # What to look for in different content types
+└── assets/
+    └── output-template.md  # The locked output structure
+```
+
+**Key design decisions:**
+
+- **Template location**: Put templates in `assets/` when the output structure is fixed and reusable. Inline the template in SKILL.md only when it's short (<30 lines) and unlikely to change independently.
+- **Template locking**: Use explicit "ALWAYS use this exact template" language. Generators fail when the agent improvises the structure. Lock section headings, field names, and ordering.
+- **Variable vs. fixed sections**: Mark which sections scale with content (e.g., "Key Claims" can have 3-10 bullets) vs. which are fixed (e.g., "Summary" is always one paragraph).
+- **Format enforcement**: Include a concrete filled-in example alongside the empty template. One example of correct output teaches more than a page of format rules.
+
+**SKILL.md body pattern:**
+
+```markdown
+## Output Template
+ALWAYS use this exact structure. Do not add, remove, or reorder sections.
+
+# [Title]
+**Source**: [url]
+**Type**: [content type]
+## Summary
+[One paragraph — what this is and why it matters]
+## Key Claims
+- [Specific assertions from the content]
+## Recommendations
+- [Actionable next steps]
+```
+
+**Testing Generator skills**: Assert template fidelity — does the output contain all required sections in the right order? Does it respect field constraints (one paragraph, not three)? Fidelity assertions are highly automatable with scripts.
+
+### Tool Wrapper Pattern
+
+Tool Wrappers give agents on-demand expertise for a specific library, API, or CLI tool. Instead of stuffing API knowledge into the system prompt, you package it as a skill that loads only when the agent works with that technology.
+
+```
+pptx-builder/
+├── SKILL.md              # When to use, quick patterns, pointers to references
+└── references/
+    ├── pptxgenjs-api.md  # Full API surface (loaded on demand)
+    ├── common-layouts.md # Reusable slide patterns
+    └── gotchas.md        # Known pitfalls and workarounds
+```
+
+**Key design decisions:**
+
+- **API surface extraction**: Distill the library's docs into what the agent actually needs. Full API docs are too noisy — curate the 20% of the API that covers 80% of use cases. Put the curated version in `references/`.
+- **Conditional loading**: SKILL.md should contain only quick-reference patterns and branching logic. Heavy API docs load on demand: "Read `references/pptxgenjs-api.md` when creating slides with custom layouts."
+- **Version pinning**: Note which library version the reference covers. APIs drift — stale wrapper references cause subtle bugs.
+- **Escape hatch**: Tell the agent what to do when the wrapper doesn't cover a use case: "If the API you need isn't in the reference, check the official docs at [URL] or use context7."
+
+**SKILL.md body pattern:**
+
+```markdown
+## Quick Reference
+| Task | Pattern |
+|------|---------|
+| Create slide | `slide = pres.addSlide()` |
+| Add text | `slide.addText('Hello', { x: 1, y: 1 })` |
+
+## When to Load Full Reference
+- Read `references/pptxgenjs-api.md` for shape/layout API details
+- Read `references/common-layouts.md` for reusable slide templates
+- Read `references/gotchas.md` when debugging unexpected behavior
+
+## Not Covered?
+If the API you need isn't in the references, query context7 or check [official docs URL].
+```
+
+**Testing Tool Wrapper skills**: Compare agent output WITH the wrapper vs. WITHOUT it on the same library task. The wrapper should produce correct API usage, avoid known pitfalls, and reduce hallucinated method names. Assert specific API patterns appear in the output.
+
+---
+
 ## Domain Organization
 
 When a skill supports multiple domains, organize by variant. Claude reads only the relevant file.
