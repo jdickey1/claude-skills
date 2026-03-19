@@ -282,6 +282,11 @@ Pre-publish checklist: {all passed / items failed}
 - **Specific claims (numbers, dates, names) must be sourced** from the user's input or verified reference material. Never fabricate statistics.
 - **"Read aloud test" means actually evaluating rhythm and flow**, not just checking sentence length metrics.
 
+## Gotchas
+- **Em dash verification must be literal** — Don't trust "I didn't use em dashes." Run `grep -c '—'` on the actual output. Claude's most common quality failure.
+- **Contractions conflict with formal tone** — The 3+ contractions/paragraph rule breaks legal, regulatory, or formal business content. Ask the user if formal tone is required before forcing contractions.
+- **Banned buzzword variants slip through** — "The modern digital landscape" contains "landscape" but Claude misses it because the exact phrase "In today's digital age" isn't present. Check each banned word independently, not as phrases.
+
 ## Learning
 
 When this skill runs, append observations to `.learnings.jsonl` in the skill directory:

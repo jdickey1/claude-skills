@@ -285,6 +285,11 @@ Score breakdown: Technical {X}/20, On-Page {X}/20, E-E-A-T {X}/15, Local {X}/20,
 
 ---
 
+## Gotchas
+- **Content extractor strips structural elements** — Phone numbers in footers, nav links, and header CTAs get stripped by extractors. Always verify header/nav/footer findings with `curl | grep` on raw HTML, not extractor output.
+- **Severity without ranking factors** — Don't invent severity levels. Consult reference/ranking-factors.md before assigning HIGH/MEDIUM/LOW. A missing H2 is LOW, not HIGH.
+- **Confidence inversion** — Extracted-content findings are LIKELY at best, not CONFIRMED. Only CONFIRMED when you directly viewed raw HTML source.
+
 ## Learning
 
 When this skill runs, append observations to `.learnings.jsonl`:

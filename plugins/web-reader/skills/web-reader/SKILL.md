@@ -42,6 +42,10 @@ npx playbooks get https://github.com/owner/repo
 - If the command fails or the page requires JavaScript rendering, fall back to WebFetch or Playwright.
 - Works best for static content, documentation, articles, and markdown-friendly pages.
 
+## Gotchas
+- **Empty output ≠ page failure** — npx playbooks may return empty string or <100 chars for JS-heavy pages. Check exit code == 0 AND output length > 100 chars before accepting. If either fails, fall back to WebFetch.
+- **Login pages returned as content** — Some sites return 200 OK with embedded login HTML. If output contains `<form>`, `<input type="password">`, or login keywords, escalate — don't treat it as page content.
+
 ## Escalation & Completion
 
 **Escalate when:** The page requires authentication, returns a CAPTCHA, or `npx playbooks get` and WebFetch both fail. Report the failure and ask the user for an alternative approach.
