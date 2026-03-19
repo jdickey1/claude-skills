@@ -177,6 +177,10 @@ TODOS.md entries: {count} deferred items written
 - **"Existing code handles this" must cite the specific handler** (file, function, line), not assume from file names.
 - **Diagram staleness claims must show what changed** vs. what the diagram depicts.
 
+## Gotchas
+- **Mode commitment vs. discovered infeasibility** — The skill says "commit to scope fully after Step 0" but review may uncover blockers mid-analysis. If review reveals a component is infeasible, escalate immediately rather than silently cutting scope or pretending commitment still holds.
+- **Step 0 forward reference** — The priority hierarchy references "Step 0" before defining it. Read the full skill before starting review so you know what Step 0 actually requires.
+
 ## Learning
 
 When this skill runs, append to `.learnings.jsonl`:
