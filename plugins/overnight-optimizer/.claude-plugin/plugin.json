@@ -1,0 +1,8 @@
+{
+  "name": "overnight-optimizer",
+  "description": "General-purpose autonomous experiment runner for Claude Code. Implements the autoresearch pattern (modify, eval, keep/revert, repeat) to optimize any target: prompts, configs, code, templates. Use when running overnight optimization loops, autonomous experiments, or iterative prompt improvement.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
