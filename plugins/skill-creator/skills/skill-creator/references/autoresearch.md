@@ -7,6 +7,8 @@ description: Autonomous hill-climbing loop protocol for skill optimization. Defi
 
 Autonomous iterative optimization for Claude Code skills. Based on Karpathy's autoresearch methodology: make one change, measure, keep or discard, repeat.
 
+> **See also:** `plugins/overnight-optimizer/` — a general-purpose version of this protocol that works on any target (prompts, configs, code, templates), not just skills. Uses `experiment.yaml` config files and git commits for versioning instead of working copies.
+
 ---
 
 ## Core Loop
