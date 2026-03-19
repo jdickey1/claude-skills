@@ -321,6 +321,11 @@ Remediation: {count of findings with specific code fixes provided}
 
 ---
 
+## Gotchas
+- **CONFIRMED requires a full exploit path** — Finding vulnerable code isn't enough. Trace: user input → vulnerable function → impact. If any link is missing, downgrade to LIKELY or POSSIBLE.
+- **CRITICAL severity requires CONFIRMED or LIKELY confidence** — Never combine CRITICAL severity with POSSIBLE confidence. If evidence is insufficient, cap at MEDIUM.
+- **Don't report absence as vulnerability** — "Missing CSRF protection" without reading the form submission code is a phantom finding. CSRF may be handled via SameSite cookies or framework middleware. Read the code path before reporting.
+
 ## Learning
 
 When this skill runs, append observations to `.learnings.jsonl`:

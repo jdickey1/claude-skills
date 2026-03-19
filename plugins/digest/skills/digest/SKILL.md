@@ -521,6 +521,11 @@ After saving, present inline:
 
 Keep the inline presentation brief — the full analysis is in the file.
 
+## Gotchas
+- **Tier 1 false success** — npx playbooks may return cookie walls or login prompts that look like content. Always check output length > 100 chars AND absence of "JavaScript is not available" before accepting Tier 1 results.
+- **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
+- **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
+
 ## 9. Multiple URLs
 
 If multiple URLs are detected in the current context, process each one sequentially. After all are processed, present a summary table:
