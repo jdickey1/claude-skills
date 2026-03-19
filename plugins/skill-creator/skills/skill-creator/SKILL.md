@@ -466,3 +466,7 @@ Marketplace: {in sync / needs update / N/A}
 - **Description optimization scores must report both train AND test set performance** to show no overfitting.
 - **Timing data (tokens, duration) must come from subagent completion notifications**, not estimates.
 - **Marketplace sync claims must show the verification command output** (grep for the plugin name in marketplace.json).
+
+## Gotchas
+- **Phase 3 requires subagents** — The RED/GREEN eval cycle spawns parallel subagents, which only works in Claude Code. Claude.ai users will hit this limitation mid-workflow. Check platform capability before starting Phase 3.
+- **Timing data is ephemeral** — `total_tokens` and `duration_ms` appear only in the subagent completion notification. If not captured immediately to `timing.json`, the data is lost forever.
