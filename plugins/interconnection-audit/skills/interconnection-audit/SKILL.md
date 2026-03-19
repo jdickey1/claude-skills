@@ -160,6 +160,10 @@ Question: Are there no circular connection chains (A→B→C→A)?
 Pass: All connections form a directed acyclic graph
 Fail: Any circular reference detected
 
+## Gotchas
+- **Subagent context overflow on large vaults** — Passing the full vault registry to all Phase 2 subagents can exceed context on 500+ note vaults, causing truncated results. Chunk the registry by category and send each subagent only its partition.
+- **Circular reverse link chains** — A→B from agent 1, B→C from agent 3, C→A from agent 4 creates a cycle that pairwise deduplication won't catch. After deduplication, check for transitive cycles before proposing connections.
+
 ## Learning
 
 After each audit run, capture these events for future skill improvement:

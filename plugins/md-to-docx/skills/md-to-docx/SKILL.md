@@ -74,6 +74,10 @@ After converting, verify:
 
 **Verification:** Verify the output file exists (`test -f`) and has non-zero bytes before reporting success.
 
+## Gotchas
+- **YAML frontmatter leaks into document body** — Without `--from=markdown+yaml_metadata_block`, pandoc renders frontmatter as a code block in the output. Use `-s` (standalone) flag or specify the input format explicitly.
+- **Relative image paths resolve from CWD, not file location** — Running `pandoc /path/to/file.md` resolves `./images/pic.png` relative to your current directory. Either use absolute paths or `cd` to the markdown file's directory before running pandoc.
+
 ## Learning
 
 When this skill runs, append to `.learnings.jsonl`:
