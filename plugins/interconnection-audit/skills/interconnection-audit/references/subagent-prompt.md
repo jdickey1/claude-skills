@@ -98,7 +98,7 @@ Return a JSON array of proposed connections:
     "target": "path/to/target-note.md",
     "type": "informs|extends|blocks|contradicts|source-for|action-pending|supersedes",
     "context": "One sentence explaining why this connection matters",
-    "signal": "project-mention|audit-subject|supersession|unacted-recommendation|shared-tags|topical-similarity"
+    "signal": "project-mention|audit-subject|supersession|unacted-recommendation|shared-tags|topical-similarity|wikilink-backlink"
   }
 ]
 ```

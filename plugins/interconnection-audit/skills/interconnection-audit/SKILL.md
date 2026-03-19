@@ -1,7 +1,7 @@
 ---
 name: interconnection-audit
 description: Use when auditing vault connections, checking vault health, finding orphan notes, discovering missing cross-note links, or improving interconnection between Obsidian vault notes. Also use after a batch of new content (20+ notes) or on a monthly cadence.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Interconnection Mapping Audit
@@ -83,9 +83,30 @@ Each agent can propose connections to **any note in the vault** (not just its pa
 
 Read `references/subagent-prompt.md` for the complete prompt template, discovery signals, and output format.
 
+## Phase 2.5: Wikilink Backlink Enrichment
+
+After subagents return but before deduplication, run `obsidian-cli` to surface wikilink-based relationships that content analysis may have missed.
+
+**Requires:** `obsidian-cli` installed locally (`brew install yakitrak/yakitrak/obsidian-cli`).
+
+For each **orphan candidate** (notes with zero proposed connections from Phase 2):
+
+```bash
+obsidian-cli print "<note-name>" --vault automation-vault-local --mentions
+```
+
+This appends a "Linked Mentions" section showing every note that references this note via `[[wikilinks]]`, with the surrounding context line. For each mention found:
+- If the linking note is in a **different directory** and no connection already exists → propose an `informs` or `source-for` connection (pick based on directionality)
+- Use the mention's context line to draft the connection's `context` field
+- Tag the proposal with signal `wikilink-backlink`
+
+**Scope limit:** Only run on orphan candidates and notes with fewer than 2 proposed connections. Do not run on every note — it's a targeted enrichment pass, not a full scan.
+
+**Fallback:** If `obsidian-cli` is not available, skip this phase silently. The audit still works without it.
+
 ## Phase 3: Review & Report
 
-After all subagents return:
+After all subagents return (and Phase 2.5 enrichment, if available):
 
 1. **Deduplicate** — merge identical proposals, consolidate expected reverse pairs
 2. **Check reverse links** — per the reverse link pairs table, flag missing reverses
