@@ -1,20 +1,31 @@
 ---
 name: digest
-description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", or when a URL appears in conversation context. Also triggers on /digest command. Handles all URL types — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, everything else uses web-reader.
-version: 1.6.0
+description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo) OR a local file path (PDF, text, markdown, Word doc, CSV, JSON, image), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", "digest this file", "analyze this PDF", or when a URL or file path appears in conversation context. Also triggers on /digest command. Handles all URL types and local files — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, local files are read directly, everything else uses web-reader.
+version: 1.7.0
 ---
 
 # Digest
 
-Fetch, analyze, and save any web content to Obsidian with actionable recommendations.
+Fetch, analyze, and save any web content or local file to Obsidian with actionable recommendations.
 
 ## 1. Overview
 
-Given any URL, this skill: classifies the URL type, fetches content using the appropriate strategy, performs structured analysis, saves a markdown file to Obsidian, and presents a concise summary with top recommendations.
+Given any URL or local file path, this skill: classifies the input type, fetches/reads content using the appropriate strategy, performs structured analysis, saves a markdown file to Obsidian, and presents a concise summary with top recommendations.
 
-## 2. URL Classification
+## 2. Input Classification
 
-Determine the URL type to select the right fetch strategy and file naming.
+Determine the input type to select the right fetch strategy and file naming.
+
+**Local File Paths** match these patterns:
+- Absolute paths: `/Users/...`, `/home/...`, `/tmp/...`
+- Home-relative paths: `~/...`
+- Relative paths: `./...`
+- iCloud paths: `/Users/*/Library/Mobile Documents/...`
+- Common document extensions: `.pdf`, `.txt`, `.md`, `.docx`, `.doc`, `.csv`, `.json`, `.xml`, `.html`, `.htm`, `.rtf`, `.xlsx`, `.xls`, `.pptx`
+- Image files (for visual analysis): `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg`
+- Audio/video files (for transcription): `.mp3`, `.wav`, `.m4a`, `.mp4`, `.mov`, `.webm`
+
+When the input is a file path (not a URL), classify as **Local File** and skip URL-based fetch strategies entirely.
 
 **X/Twitter URLs** match these patterns:
 - `https://x.com/{user}/status/{id}`
@@ -157,6 +168,104 @@ Pass the cloned repo path (`$TMPDIR/$REPO`) to the agent. This review runs in pa
 
 Clean up the temp directory. Use `find <dir> -delete` rather than `rm -rf` (security hook may block rm -rf on temp dirs).
 
+### For Local Files
+
+Read the file using the strategy appropriate to its type:
+
+**PDFs** — use the Read tool, which natively supports PDF files:
+
+```
+Read tool with file_path = "{path}"
+```
+
+- For PDFs over 10 pages, read in chunks using the `pages` parameter (e.g., `pages: "1-20"`, then `pages: "21-40"`)
+- Maximum 20 pages per Read call — loop through larger documents
+- The Read tool renders PDF content as text with page markers
+
+**Text-based files** (`.txt`, `.md`, `.csv`, `.json`, `.xml`, `.html`, `.rtf`) — use the Read tool directly:
+
+```
+Read tool with file_path = "{path}"
+```
+
+- For large files (>2000 lines), read in sections using `offset` and `limit` parameters
+- For CSV files, read the full content — analyze column structure, row count, and data patterns
+- For JSON files, read and summarize the structure (keys, nesting, array lengths)
+
+**Word documents** (`.docx`, `.doc`) — convert to text first:
+
+```bash
+# If pandoc is available (preferred)
+pandoc -f docx -t plain "{path}"
+
+# Fallback: use python-docx
+python3 -c "
+import docx
+doc = docx.Document('{path}')
+for para in doc.paragraphs:
+    print(para.text)
+"
+```
+
+If neither tool is available, inform the user that `.docx` extraction requires `pandoc` or `python-docx`.
+
+**Spreadsheets** (`.xlsx`, `.xls`) — extract content:
+
+```bash
+# Use python with openpyxl
+python3 -c "
+import openpyxl
+wb = openpyxl.load_workbook('{path}', read_only=True)
+for sheet in wb.sheetnames:
+    ws = wb[sheet]
+    print(f'=== Sheet: {sheet} ===')
+    for row in ws.iter_rows(max_row=100, values_only=True):
+        print('\t'.join(str(c) if c is not None else '' for c in row))
+"
+```
+
+**Presentations** (`.pptx`) — extract slide text:
+
+```bash
+python3 -c "
+from pptx import Presentation
+prs = Presentation('{path}')
+for i, slide in enumerate(prs.slides, 1):
+    print(f'=== Slide {i} ===')
+    for shape in slide.shapes:
+        if shape.has_text_frame:
+            print(shape.text)
+"
+```
+
+**Images** (`.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`) — use the Read tool, which supports visual analysis:
+
+```
+Read tool with file_path = "{path}"
+```
+
+The Read tool renders images visually. Describe the image content, extract any visible text (OCR-style), and analyze the visual information.
+
+**Audio/Video files** (`.mp3`, `.wav`, `.m4a`, `.mp4`, `.mov`, `.webm`) — transcribe using the VPS transcription tool:
+
+```bash
+# Copy to VPS if running locally
+scp "{path}" nonrootadmin:/tmp/digest-local-media.{ext}
+
+# Transcribe (on VPS)
+ssh nonrootadmin "transcribe /tmp/digest-local-media.{ext} base"
+
+# Clean up
+ssh nonrootadmin "rm /tmp/digest-local-media.{ext}"
+```
+
+If the file is already on the VPS, skip the `scp` step. For files over 60 minutes, use the `tiny` model instead of `base`.
+
+**File validation:**
+- Before reading, verify the file exists (the Read tool will return an error if not)
+- Check file size where possible — warn the user if a file is unusually large (>50MB for non-media, >500MB for media)
+- Never attempt to read binary files that aren't explicitly supported (e.g., `.exe`, `.zip`, `.dmg`)
+
 ## 3b. Video Content Handling
 
 Video transcription is supported for **any URL** — X/Twitter native video, YouTube, and generic web pages with embedded video.
@@ -223,6 +332,13 @@ After fetching, extract metadata for the output template:
 - `source_type`: `GitHub Repo`
 - `primary_language`: From repo metadata
 - `license`: From repo metadata (flag if missing — could be a risk)
+
+**For Local Files:**
+- `source_label`: Filename without extension (e.g., `Q1-Infrastructure-Report`)
+- `source_type`: Based on extension and content — `PDF Document`, `Word Document`, `Spreadsheet`, `Text File`, `Markdown`, `Image`, `Audio`, `Video`, `Data File` (CSV/JSON/XML)
+- `file_path`: Original path provided by the user
+- `file_size`: File size if determinable
+- `page_count`: For PDFs, total page count
 
 **For Web URLs:**
 - `source_label`: Page title if available, otherwise the domain name
@@ -313,10 +429,10 @@ Analyze the fetched content and produce all of the following:
 
 When evaluating digest output quality, use these binary checks:
 
-**EVAL 1: URL correctly classified**
-Question: Was the URL type (X/Twitter, GitHub Repo, General Web) correctly identified?
-Pass: Fetch strategy matches URL pattern
-Fail: Wrong strategy used (e.g., X fetch for a blog URL)
+**EVAL 1: Input correctly classified**
+Question: Was the input type (Local File, X/Twitter, GitHub Repo, General Web) correctly identified?
+Pass: Fetch/read strategy matches input pattern (file paths use Read tool, URLs use fetch tiers)
+Fail: Wrong strategy used (e.g., URL fetch for a local file path, or Read tool for a URL)
 
 **EVAL 2: Content successfully fetched**
 Question: Did the fetch return meaningful content (not a login wall, cookie prompt, or empty page)?
@@ -437,6 +553,60 @@ connections:
 ```
 ````
 
+**For Local Files:**
+
+````markdown
+---
+connections:
+{for each project mentioned in Project Connections with a specific, actionable recommendation:}
+  - target: "{relative path to project's main doc in 01-Projects/}"
+    type: {action-pending | informs | source-for}
+    context: "{specific, actionable one-sentence explanation of the connection}"
+---
+
+# Digest: {source_label}
+
+**Source**: `{file_path}` (local file)
+**Type**: {source_type}
+**Size**: {file_size}
+{if PDF:**Pages**: {page_count}}
+**Analyzed**: {YYYY-MM-DD HH:MM}
+**Tags**: #{category}
+
+---
+
+## Summary
+{one paragraph}
+
+## Key Claims
+- {claims}
+
+## Sentiment
+{assessment}
+
+## Recommendations
+
+### Content Ideas
+- {ideas with angle/hook}
+
+### Action Items
+- {next steps}
+
+### Project Connections
+- {mapping to user's projects}
+
+---
+
+## Raw Content
+```
+{extracted text from the file}
+```
+````
+
+For images, replace "Raw Content" with "Visual Description" containing a detailed description of the image content and any extracted text.
+
+For data files (CSV/JSON/XML), replace "Key Claims" with "Data Summary" containing structure overview, key fields/columns, row counts, and notable patterns.
+
 **For all other URL types:**
 
 ````markdown
@@ -497,8 +667,9 @@ Save to the vault's `web-analyses/` directory (external content analysis, not PA
 
 **Remote access:** If not running on the VPS, use SSH: `ssh nonrootadmin` with `sudo -u obsidian` for file writes.
 
-**File naming by URL type:**
+**File naming by input type:**
 
+- **Local Files**: `YYYY-MM-DD-file-{filename-slug}.md` (e.g., `2026-03-20-file-q1-infrastructure-report.md`)
 - **X/Twitter**: `YYYY-MM-DD-{username}-{tweet_id}.md` (e.g., `2026-02-23-elonmusk-1234567890.md`)
 - **GitHub Repos**: `YYYY-MM-DD-gh-{owner}-{repo}.md` (e.g., `2026-02-27-gh-jjenglert1-gtm-engineer-starter-kit.md`)
 - **Web pages**: `YYYY-MM-DD-{domain}-{path-slug}.md` (e.g., `2026-02-23-techcrunch-com-ai-startup-raises.md`)
@@ -522,13 +693,16 @@ After saving, present inline:
 Keep the inline presentation brief — the full analysis is in the file.
 
 ## Gotchas
+- **Local file path ambiguity** — A string like `report.pdf` could be a relative path. If a bare filename is provided without a path prefix (`/`, `~/`, `./`), check the current working directory first, then ask the user to confirm the full path if not found.
+- **Large PDFs** — The Read tool has a 20-page-per-call limit for PDFs. For documents over 20 pages, loop through page ranges. For very large PDFs (100+ pages), read the first 40 pages and the last 10 pages, then summarize with a note about partial coverage.
+- **DOCX without tooling** — `pandoc` or `python-docx` may not be installed. Check availability before attempting conversion. If neither is available, escalate to the user.
 - **Tier 1 false success** — npx playbooks may return cookie walls or login prompts that look like content. Always check output length > 100 chars AND absence of "JavaScript is not available" before accepting Tier 1 results.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
 
-## 9. Multiple URLs
+## 9. Multiple Inputs
 
-If multiple URLs are detected in the current context, process each one sequentially. After all are processed, present a summary table:
+If multiple URLs or file paths are detected in the current context, process each one sequentially. After all are processed, present a summary table:
 
 | Source | Type | Top Recommendation | File Saved |
 |--------|------|--------------------|------------|
@@ -538,6 +712,8 @@ If multiple URLs are detected in the current context, process each one sequentia
 ## Escalation Protocol
 
 **STOP and ask the user before proceeding when:**
+- A local file path doesn't exist or can't be read (don't guess alternative paths)
+- A file type is unsupported or requires missing tooling (e.g., `.docx` without pandoc)
 - All fetch tiers fail for a URL (don't silently produce an empty digest)
 - Content appears paywalled, login-walled, or restricted — ask if the user has access or wants a different approach
 - GitHub repo security scan finds CRITICAL issues (hardcoded secrets, active vulnerabilities)
@@ -546,8 +722,9 @@ If multiple URLs are detected in the current context, process each one sequentia
 - Video transcription fails and the page content alone is insufficient for meaningful analysis
 
 **Do NOT escalate (handle autonomously):**
+- Reading local files that exist and are in supported formats
 - Falling back between fetch tiers (Tier 1 → 2 → 3)
-- Classifying URL type and selecting fetch strategy
+- Classifying input type and selecting fetch/read strategy
 - Generating project connections for clearly relevant content
 - Dispatching background code review agents for GitHub repos
 
@@ -558,8 +735,8 @@ When the digest is complete, report:
 ```
 DIGEST: {source_label}
 ═══════════════════════════
-URL type: {X Post / GitHub Repo / Article / etc.}
-Fetch tier: {which tier succeeded}
+Input type: {Local File / X Post / GitHub Repo / Article / etc.}
+Fetch method: {Read tool / Tier 1 / Tier 2 / Tier 3 / pandoc / etc.}
 Content length: {word count of raw content}
 Connections: {count} project connections proposed
 File saved: {full path}
@@ -589,3 +766,6 @@ Track these patterns:
 - Which project connections get removed by users? (signals forced connections)
 - Security assessment accuracy for GitHub repos (did flagged issues matter?)
 - Video transcription success rate
+- Local file type distribution (which formats are digested most?)
+- PDF page count vs. content quality (do large PDFs need full reads or are partial reads sufficient?)
+- DOCX/XLSX tooling availability (how often is pandoc/openpyxl missing?)
