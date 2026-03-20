@@ -1,6 +1,6 @@
 {
   "name": "digest",
-  "description": "Fetches any web page or X/Twitter post, saves structured analysis to Obsidian, and recommends actionable ways to use the information.",
+  "description": "Fetches any web page, X/Twitter post, or local file (PDF, Word, text, spreadsheet, image), saves structured analysis to Obsidian, and recommends actionable ways to use the information.",
   "author": {
     "name": "James Dickey",
     "url": "https://github.com/jdickey1"
