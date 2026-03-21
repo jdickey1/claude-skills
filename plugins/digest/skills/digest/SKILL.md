@@ -82,6 +82,49 @@ Parse JSON. Key fields: `.html` (blockquote containing tweet text), `.author_nam
 
 If all three tiers fail, report the failure with the specific error from each tier.
 
+#### Thread/Reply Detection (REQUIRED for all X/Twitter posts)
+
+Many X posts are threads where the main tweet is just a hook (e.g., "Here are 7 prompts 👇") and the actual content lives in the author's self-replies. **Always attempt to fetch thread replies** — do not assume a single tweet is the complete content, even if it appears self-contained.
+
+**Step 1: Check for thread indicators**
+
+Look for signals that the tweet has replies worth fetching:
+- Thread markers: "👇", "🧵", "Thread:", "1/", "(thread)", "A thread"
+- Promises of listed content: "Here are N...", "X things that...", numbered items
+- `conversation_count` > 0 in syndication API response
+
+Even if none of these signals are present, still attempt Step 2 — the author may have added context in replies without signaling a thread.
+
+**Step 2: Fetch thread replies via Playwright**
+
+Use the Playwright MCP browser to load the tweet page and capture thread replies:
+
+1. Navigate to the tweet URL
+2. Take a snapshot to capture the page content
+3. Scroll down and take additional snapshots to load more replies
+4. Extract all replies by the same author (`@{username}`) — these form the thread
+
+**Step 3: Fallback — ThreadReaderApp**
+
+If Playwright is unavailable or fails:
+
+```bash
+npx playbooks get "https://threadreaderapp.com/thread/${TWEET_ID}.html"
+```
+
+**Caution:** ThreadReaderApp sometimes returns a different thread by the same user. Verify the returned content matches the original tweet's topic before accepting it.
+
+**Step 4: Fallback — manual content from user**
+
+If automated thread fetching fails, ask the user: "This looks like a thread but I couldn't fetch the replies. Can you paste the thread content or share a ThreadReader/Typefully unrolled link?"
+
+**Assembling thread content:**
+- Combine the parent tweet text with all same-author replies in order
+- The parent tweet is the intro; replies are the body
+- Include the full thread in the Raw Content section
+- Analyze the complete thread, not just the hook tweet
+- Never dismiss a tweet as "engagement bait" or "missing promised content" without first attempting to fetch replies
+
 ### For All Other URLs (2-Tier Fallback)
 
 **Tier 1: npx playbooks get**
@@ -459,6 +502,11 @@ Question: Do all YAML frontmatter connections point to real files with valid typ
 Pass: All targets are specific .md file paths; all types are action-pending/informs/source-for
 Fail: Any target is a directory, any type is invalid, or any context is generic
 
+**EVAL 7: Thread replies fetched for X/Twitter posts**
+Question: For X/Twitter posts, were thread replies attempted before concluding the post is complete?
+Pass: Reply fetching was attempted (Playwright, ThreadReaderApp, or user asked); thread content included if found
+Fail: Post dismissed as "engagement bait" or "missing promised content" without attempting to fetch replies
+
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
@@ -468,6 +516,7 @@ Fail: Any target is a directory, any type is invalid, or any context is generic
 | Recommend adoption without considering maintenance burden | Uncritical adoption leads to tech debt | Always include "Adoption Risks" for repos |
 | Use generic connection context ("Related to this project") | Unactionable connections add noise | Context must be a specific, actionable sentence |
 | Same-directory connections | Digest files are all in web-analyses/ | Never link to other web-analyses/ files |
+| Dismiss X post as "engagement bait" without fetching replies | Thread content lives in replies, not the hook tweet | Always attempt reply fetching before judging content completeness |
 
 ## 6. Output Template
 
@@ -699,6 +748,8 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **Tier 1 false success** — npx playbooks may return cookie walls or login prompts that look like content. Always check output length > 100 chars AND absence of "JavaScript is not available" before accepting Tier 1 results.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
+- **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies. The syndication API only returns the parent tweet. Always attempt to fetch replies via Playwright or ThreadReaderApp before concluding a post lacks substance.
+- **ThreadReaderApp wrong thread** — ThreadReaderApp sometimes returns a different thread by the same author, especially for very recent posts. Always verify the returned content topic matches the original tweet before using it.
 
 ## 9. Multiple Inputs
 
