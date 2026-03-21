@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.1.0
+version: 2.2.0
 ---
 
 # Writing
@@ -68,6 +68,20 @@ These words are immediate AI detection flags. Replace on sight:
 | comprehensive | thorough, complete |
 | In today's digital age | [delete entirely] |
 | It is essential to note | [delete entirely] |
+| seamless | [describe the specific integration] |
+| cutting-edge | [name the actual advance] |
+| groundbreaking | [state what's new about it] |
+| revolutionary | [describe the change] |
+| transformative | [show the before/after] |
+| game-changing | [explain the specific impact] |
+| next-level | [describe the improvement] |
+| world-class | [cite the ranking or comparison] |
+| leverage | use |
+| navigate (challenges) | solve, handle |
+| unpack (concepts) | explain |
+| supercharge | speed up, improve |
+| unlock | enable, allow |
+| reimagine | redesign, rethink |
 
 ### 3. Use Contractions
 
@@ -160,6 +174,29 @@ State key credentials, numbers, and authority markers with full specificity *onc
 - First mention: "one of only 16 fully recommended Newman Guide colleges in America"
 - Later: "as a Newman Guide university" (the reader already knows what that means)
 
+### 14. AI Slop Patterns (CRITICAL)
+
+Beyond individual banned words, AI produces recognizable *structural* patterns that scream "a model wrote this." These are just as damaging as em dashes or buzzwords because readers pattern-match on them instantly.
+
+**Full encyclopedia**: See [references/ai-slop-patterns.md](references/ai-slop-patterns.md) for every pattern with examples and fixes.
+
+**The worst offenders to catch in every draft:**
+
+| Pattern | Example | Fix |
+|---------|---------|-----|
+| Throat-clearers | "Here's the thing:" / "Let me be clear:" | Delete. Start with the actual point. |
+| False exclusivity | "Nobody's talking about this" | If it's novel, the content proves it. Cut the hook. |
+| Manufactured urgency | "This changes everything" / "Drop everything" | Show urgency with evidence (deadlines, data), don't assert it. |
+| Dramatic fragmentation | "Let that sink in." / "Read that again." | Write a compelling paragraph instead. |
+| Fake vulnerability | "Unpopular opinion:" / "Hot take incoming:" | If the take is bold, the content proves it. |
+| Qualifier sandwiches | "It's worth noting that..." / "To be fair..." | Make the claim. Put caveats in the next sentence as new info. |
+| Pivot hype | "But here's where it gets interesting:" | Transition with logic, not hype. |
+| Fake closers | "Buckle up." / "We're still early." / "Act accordingly." | End with something specific: a number, name, or concrete next step. |
+| AI adverb clusters | literally, incredibly, fundamentally, genuinely | Cut them. If the sentence is weaker without the adverb, rewrite the sentence. |
+| Fill-in-the-blank templates | "[X] is the new [Y]." / "If you're still [old method], you're already behind." | If your sentence fits a template, it's not insight. Rewrite with specifics. |
+
+**Scoring rule:** If a draft triggers 4+ patterns from the full list, it needs a rewrite, not a polish. The patterns compound: readers who spot one start looking for the rest.
+
 ### 13. Earned Language Over Credential-Dropping
 
 Don't just list what you are. Show that you earned it. "Diligence and fidelity to mission that earned a spot on the Newman Guide" is stronger than "a Newman Guide institution." The reader respects achievement more than status.
@@ -181,6 +218,7 @@ Read the appropriate reference before writing:
 
 - **Headlines & titles (START HERE)**: See [references/headlines.md](references/headlines.md)
 - **X/Twitter posts**: See [references/x-posts.md](references/x-posts.md) (algorithm & strategy) and [references/x-writing-craft.md](references/x-writing-craft.md) (quality & voice)
+- **AI slop patterns (anti-patterns)**: See [references/ai-slop-patterns.md](references/ai-slop-patterns.md)
 - **X Articles (long-form)**: See [references/x-articles.md](references/x-articles.md)
 - **LinkedIn posts & articles**: See [references/linkedin.md](references/linkedin.md)
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)
@@ -221,7 +259,12 @@ Question: Does the first sentence reference a specific time, place, number, or p
 Pass: Opening isn't generic
 Fail: Generic opening (e.g., "In today's world..." or "Communication is key...")
 
-**EVAL 7: No corrective reframing**
+**EVAL 7: No AI slop patterns**
+Question: Does the output avoid throat-clearers, false exclusivity hooks, manufactured urgency, dramatic fragmentation, fake vulnerability, qualifier sandwiches, pivot hype, fake closers, and fill-in-the-blank templates?
+Pass: Zero instances of structural AI slop patterns (see references/ai-slop-patterns.md)
+Fail: Any throat-clearer ("Here's the thing:"), false exclusivity ("Nobody's talking about this"), urgency hook ("This changes everything"), dramatic fragment ("Let that sink in."), fake vulnerability ("Unpopular opinion:"), qualifier sandwich ("It's worth noting..."), pivot hype ("But here's where it gets interesting:"), fake closer ("Buckle up."), or template sentence detected
+
+**EVAL 8: No corrective reframing**
 Question: Does the output avoid the "That's not X. That's Y." pattern and its variants?
 Pass: Zero instances of corrective reframing (or at most one deliberate structural pivot)
 Fail: Any "That's not X. That's Y.", "This isn't X. It's Y.", "More than just X, it's Y.", "Forget X. Think Y.", or similar construct detected
@@ -251,6 +294,7 @@ Before finalizing any content:
 - [ ] Specific numbers/names/examples (not abstractions)
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
+- [ ] Zero AI slop patterns (throat-clearers, false exclusivity, fake urgency, dramatic fragments, fake closers — see [ai-slop-patterns.md](references/ai-slop-patterns.md))
 - [ ] Zero corrective reframes ("That's not X. That's Y." and all variants) — one max, zero ideal
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after
@@ -281,7 +325,7 @@ CONTENT: {title or description}
 Format: {X post / LinkedIn / web copy / newsletter / etc.}
 Word count: {N}
 Headlines tested: {N} candidates → selected: "{winner}"
-Quality checks: {passed/failed count} of 7 binary evals
+Quality checks: {passed/failed count} of 8 binary evals
 Pre-publish checklist: {all passed / items failed}
 ═══════════════════════════
 ```
@@ -298,6 +342,7 @@ Pre-publish checklist: {all passed / items failed}
 - **Em dash verification must be literal** — Don't trust "I didn't use em dashes." Run `grep -c '—'` on the actual output. Claude's most common quality failure.
 - **Contractions conflict with formal tone** — The 3+ contractions/paragraph rule breaks legal, regulatory, or formal business content. Ask the user if formal tone is required before forcing contractions.
 - **Banned buzzword variants slip through** — "The modern digital landscape" contains "landscape" but Claude misses it because the exact phrase "In today's digital age" isn't present. Check each banned word independently, not as phrases.
+- **AI slop patterns are structural, not lexical** — You can't grep for "fake vulnerability." You have to read the draft and recognize the pattern. "Unpopular opinion:" is easy to catch; "I know this might be controversial, but..." is the same pattern in disguise. Check the full reference at `references/ai-slop-patterns.md` and match on intent, not exact wording.
 
 ## Learning
 
