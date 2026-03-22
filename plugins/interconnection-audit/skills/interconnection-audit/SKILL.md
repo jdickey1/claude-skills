@@ -144,6 +144,23 @@ Apply reverse links to target notes using the same process.
 
 Report: notes updated, connections written, any errors.
 
+### Deleting Vault Files
+
+When the audit recommends deleting files (empty placeholders, redirect stubs, duplicates), use the Vault Manager API on Mac Mini to delete from both local and VPS simultaneously. Direct `rm` only deletes locally and rsync will resurrect the file.
+
+```bash
+curl -s -X POST http://localhost:3456/api/delete \
+  -H "Content-Type: application/json" \
+  -d '{"paths": ["path/relative/to/vault/root.md", "another/file.md"]}'
+```
+
+The Vault Manager (`~/Projects/obsidian/vault-manager.ts`) runs on port 3456 and deletes from VPS via SSH first, then locally. Returns JSON with per-path success status. **Always use this for any file deletions or moves (delete old path after copying to new location).**
+
+If the Vault Manager is not running, fall back to manual dual-delete:
+```bash
+ssh nonrootadmin "sudo -u obsidian rm -f '/home/obsidian/automation-vault/PATH'" && rm -f ~/Projects/obsidian/automation-vault-local/PATH
+```
+
 ## Constraints
 
 - **No auto-apply** — all connections require user approval
