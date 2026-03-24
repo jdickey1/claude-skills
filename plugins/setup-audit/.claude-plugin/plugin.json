@@ -1,0 +1,8 @@
+{
+  "name": "setup-audit",
+  "description": "Audit Claude Code setup for dead weight — default behavior overlap, contradictions, redundancy, one-off fixes, and vagueness across CLAUDE.md files, skills, and memories.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
