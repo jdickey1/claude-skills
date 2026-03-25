@@ -4,6 +4,7 @@ description: >-
   Use when running autonomous optimization experiments, overnight prompt tuning,
   iterative config improvement, or any modify-eval-keep/revert loop. Supports
   script-based evals (fast, programmatic) and assertion-based evals (Claude-judged).
+effort: high
 ---
 
 ## 1. Context Recovery (FIRST)

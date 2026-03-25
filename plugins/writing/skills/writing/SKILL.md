@@ -2,6 +2,7 @@
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
 version: 2.2.0
+effort: high
 ---
 
 # Writing

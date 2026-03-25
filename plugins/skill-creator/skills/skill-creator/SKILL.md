@@ -2,6 +2,7 @@
 name: skill-creator
 description: Create, test, harden, and continuously improve skills. Use when creating a skill from scratch, updating or optimizing an existing skill, running evals to test a skill, benchmarking performance, optimizing a skill's description for triggering accuracy, or instrumenting a skill for self-improvement via learning loops.
 version: 1.0.0
+effort: high
 ---
 
 # Skill Creator

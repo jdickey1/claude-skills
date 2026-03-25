@@ -2,6 +2,7 @@
 name: md-to-docx
 description: Convert Markdown files to Word (.docx) documents. Use when user says "convert to Word", "make a docx", "export as Word", "markdown to Word", "md to docx", or asks to create a Word document from a markdown file.
 version: 1.0.0
+effort: low
 ---
 
 # Markdown to Word Converter

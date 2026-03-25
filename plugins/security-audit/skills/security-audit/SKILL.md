@@ -2,6 +2,7 @@
 name: security-audit
 description: Comprehensive cybersecurity audit for web applications. USE WHEN reviewing apps for vulnerabilities, hardening security, auditing auth/API/DB/infra, or performing penetration-style code review. Follows OWASP Top 10, NIST 800-53, and real-world red team methodologies.
 version: 1.0.0
+effort: high
 ---
 
 # Security Audit - Hardened Cybersecurity Review
