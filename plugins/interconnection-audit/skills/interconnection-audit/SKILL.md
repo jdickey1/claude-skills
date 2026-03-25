@@ -2,6 +2,7 @@
 name: interconnection-audit
 description: Use when auditing vault connections, checking vault health, finding orphan notes, discovering missing cross-note links, or improving interconnection between Obsidian vault notes. Also use after a batch of new content (20+ notes) or on a monthly cadence.
 version: 1.1.0
+effort: high
 ---
 
 # Interconnection Mapping Audit

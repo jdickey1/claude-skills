@@ -1,6 +1,7 @@
 ---
 name: setup-audit
 description: Audit Claude Code setup for dead weight across CLAUDE.md, skills, and memories. USE WHEN user says "audit my setup", "check for dead weight", "trim my instructions", "setup audit", or monthly maintenance.
+effort: medium
 ---
 
 # Setup Audit

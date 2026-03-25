@@ -2,6 +2,7 @@
 name: web-reader
 description: This skill should be used when needing to "read a web page", "get page content", "fetch URL as markdown", "scrape page text", or any time web page content needs to be retrieved as text/markdown rather than viewed visually. Not suitable for visual inspection of pages.
 version: 1.0.0
+effort: low
 ---
 
 # Web Reader
