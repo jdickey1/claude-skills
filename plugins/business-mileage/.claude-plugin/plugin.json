@@ -1,0 +1,8 @@
+{
+  "name": "business-mileage",
+  "description": "Calculate monthly business driving mileage from calendar events for expense reimbursement. Fetches Outlook events, filters virtual meetings, builds trip chains, looks up distances via Google Maps, and generates IRS mileage reports.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
