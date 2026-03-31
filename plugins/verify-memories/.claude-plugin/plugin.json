@@ -1,0 +1,8 @@
+{
+  "name": "verify-memories",
+  "description": "Verify machine-checkable rules in auto-memory feedback entries. Sweeps memory files for verify: frontmatter blocks and runs checks.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
