@@ -1,0 +1,8 @@
+{
+  "name": "gsc-bigquery",
+  "description": "Analyze Google Search Console data via BigQuery bulk exports using the bq CLI. 22 proven SQL query templates for SEO analysis including anonymous traffic, content decay, cannibalization, ARIMA forecasting, and anomaly detection. Slash commands: /gsc-snapshot, /gsc-audit, /gsc-report.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
