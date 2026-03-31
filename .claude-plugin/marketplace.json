@@ -57,9 +57,51 @@
       "homepage": "https://github.com/jdickey1/claude-skills"
     },
     {
+      "name": "md-to-docx",
+      "description": "Convert Markdown files to Word documents (.docx) using pandoc.",
+      "source": "./plugins/md-to-docx",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "overnight-optimizer",
+      "description": "General-purpose autonomous experiment runner for Claude Code. Implements the autoresearch pattern (modify, eval, keep/revert, repeat) to optimize any target: prompts, configs, code, templates.",
+      "source": "./plugins/overnight-optimizer",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "plan-review",
+      "description": "Thorough plan review before implementation. Two modes: /plan-review (4-section standard review) and /plan-mega-review (10-section exhaustive review). Challenges scope, reviews architecture/code quality/tests/performance/security/observability/deployment.",
+      "source": "./plugins/plan-review",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "setup-audit",
+      "description": "Audit Claude Code setup for dead weight — default behavior overlap, contradictions, redundancy, one-off fixes, and vagueness across CLAUDE.md files, skills, and memories.",
+      "source": "./plugins/setup-audit",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "verify-memories",
+      "description": "Verify machine-checkable rules in auto-memory feedback entries. Sweeps memory files for verify: frontmatter blocks and runs checks.",
+      "source": "./plugins/verify-memories",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
       "name": "business-mileage",
       "description": "Monthly business driving mileage from calendar events for expense reimbursement. Fetches Outlook events, filters virtual meetings, builds trip chains, looks up distances via Google Maps, and generates IRS mileage reports.",
       "source": "./plugins/business-mileage",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "gsc-bigquery",
+      "description": "Analyze Google Search Console data via BigQuery bulk exports. 22 SQL query templates for SEO analysis including anonymous traffic, content decay, cannibalization, ARIMA forecasting, and anomaly detection. Replaces a 26-tool MCP server with zero overhead.",
+      "source": "./plugins/gsc-bigquery",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
     }
