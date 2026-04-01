@@ -1,0 +1,8 @@
+{
+  "name": "autoreason",
+  "description": "Adversarial refinement for subjective content. Iterates through isolated critic, author, synthesizer, and blind judge agents until convergence. Eliminates LLM sycophancy, hypercriticism, and over-compromise through context isolation. Slash command: /autoreason.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
