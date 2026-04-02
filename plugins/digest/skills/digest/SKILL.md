@@ -1,7 +1,7 @@
 ---
 name: digest
 description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo) OR a local file path (PDF, text, markdown, Word doc, CSV, JSON, image), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", "digest this file", "analyze this PDF", or when a URL or file path appears in conversation context. Also triggers on /digest command. Handles all URL types and local files — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, local files are read directly, everything else uses web-reader.
-version: 1.7.0
+version: 1.8.0
 effort: high
 ---
 
@@ -46,7 +46,9 @@ Do NOT match GitHub issue, PR, or file URLs (those use general web fetch):
 
 ## 3. Fetch Strategy
 
-### For X/Twitter URLs (3-Tier Fallback)
+### For X/Twitter URLs
+
+X aggressively blocks scrapers, APIs, and headless fetchers. **dev-browser is the only reliable method** — start there, use APIs only for metadata.
 
 Extract `username` and `tweet_id` from the URL:
 
@@ -55,69 +57,71 @@ USERNAME=$(echo "$URL" | grep -oP '(?<=x\.com/|twitter\.com/)[^/]+')
 TWEET_ID=$(echo "$URL" | grep -oP '(?<=status/)[0-9]+')
 ```
 
-**Tier 1: npx playbooks get**
+**Step 1: Fetch full content via dev-browser (PRIMARY)**
 
-```bash
-npx playbooks get "$URL"
+Write a script file to `/tmp/fetch-x-digest.js` and run it with `dev-browser run`:
+
+```javascript
+// /tmp/fetch-x-digest.js
+const p = await browser.getPage("xdigest");
+await p.goto("URL_HERE", { waitUntil: "domcontentloaded", timeout: 30000 });
+await new Promise(r => setTimeout(r, 5000));
+const text = await p.evaluate("document.body.innerText");
+console.log(text);
 ```
 
-Use this output if it contains actual tweet text. Reject it (fall to Tier 2) if the output:
-- Contains "Did someone say" or "JavaScript is not available"
-- Is mostly empty or contains only a cookie wall / login prompt
+```bash
+dev-browser run /tmp/fetch-x-digest.js
+```
 
-**Tier 2: Twitter Syndication API (no auth)**
+This returns the full rendered page text including article content, thread replies, and engagement stats. It works because dev-browser uses a real browser session (not headless) that X treats as a normal user.
+
+**Important dev-browser rules:**
+- Always use `dev-browser run /path/to/script.js` — never heredocs or inline `-e` flags
+- Use `browser.getPage("xdigest")` to get/create a named page
+- Use `p.evaluate("document.body.innerText")` for text content
+- Use `p.snapshotForAI()` if you need structured DOM info (slower but more detail)
+- Allow 5 seconds after navigation for X's JS to render
+
+**Step 2: Metadata enrichment via Syndication API (PARALLEL)**
+
+Run this in parallel with Step 1 to get structured metadata:
 
 ```bash
 curl -s "https://cdn.syndication.twimg.com/tweet-result?id=${TWEET_ID}&token=0"
 ```
 
-Parse JSON. Key fields: `.text`, `.user.name`, `.user.screen_name`, `.favorite_count`, `.created_at`.
+Parse JSON for: `.text`, `.user.name`, `.user.screen_name`, `.favorite_count`, `.created_at`, `.conversation_count`, `.article` (for X Articles).
 
-**Tier 3: Twitter oEmbed API (no auth)**
+This API is lightweight and usually works. Use it for metadata (likes, date, article title) — not for content fetching.
 
-```bash
-curl -s "https://publish.twitter.com/oembed?url=${URL}"
+**Step 3: Fallback — manual content from user**
+
+If dev-browser fails (not installed, browser not running), ask the user to paste the content or share a ThreadReader/Typefully unrolled link.
+
+**Do NOT attempt these — they consistently fail on X:**
+- `npx playbooks get` (returns "Something went wrong" or cookie wall)
+- `WebFetch` (returns 402 or login prompt)
+- `ThreadReaderApp` (requires auth, returns login page)
+- `oEmbed API` (returns only the tweet text, not articles or threads)
+
+#### Thread & Article Detection
+
+The syndication API response tells you the content type:
+- **X Article**: `article` field present with `title` and `preview_text` — the full article lives on the rendered page, dev-browser captures it automatically
+- **Thread**: `conversation_count` > 0 — dev-browser captures the parent tweet; scroll down in the script to capture self-replies if needed
+- **Single tweet**: No article field, low conversation_count — dev-browser innerText is sufficient
+
+For threads, extend the dev-browser script to scroll and capture replies:
+
+```javascript
+// After initial load, scroll to capture thread replies
+const p = await browser.getPage("xdigest");
+await p.evaluate("window.scrollTo(0, document.body.scrollHeight)");
+await new Promise(r => setTimeout(r, 3000));
+const text = await p.evaluate("document.body.innerText");
+console.log(text);
 ```
-
-Parse JSON. Key fields: `.html` (blockquote containing tweet text), `.author_name`.
-
-If all three tiers fail, report the failure with the specific error from each tier.
-
-#### Thread/Reply Detection (REQUIRED for all X/Twitter posts)
-
-Many X posts are threads where the main tweet is just a hook (e.g., "Here are 7 prompts 👇") and the actual content lives in the author's self-replies. **Always attempt to fetch thread replies** — do not assume a single tweet is the complete content, even if it appears self-contained.
-
-**Step 1: Check for thread indicators**
-
-Look for signals that the tweet has replies worth fetching:
-- Thread markers: "👇", "🧵", "Thread:", "1/", "(thread)", "A thread"
-- Promises of listed content: "Here are N...", "X things that...", numbered items
-- `conversation_count` > 0 in syndication API response
-
-Even if none of these signals are present, still attempt Step 2 — the author may have added context in replies without signaling a thread.
-
-**Step 2: Fetch thread replies via Playwright**
-
-Use the Playwright MCP browser to load the tweet page and capture thread replies:
-
-1. Navigate to the tweet URL
-2. Take a snapshot to capture the page content
-3. Scroll down and take additional snapshots to load more replies
-4. Extract all replies by the same author (`@{username}`) — these form the thread
-
-**Step 3: Fallback — ThreadReaderApp**
-
-If Playwright is unavailable or fails:
-
-```bash
-npx playbooks get "https://threadreaderapp.com/thread/${TWEET_ID}.html"
-```
-
-**Caution:** ThreadReaderApp sometimes returns a different thread by the same user. Verify the returned content matches the original tweet's topic before accepting it.
-
-**Step 4: Fallback — manual content from user**
-
-If automated thread fetching fails, ask the user: "This looks like a thread but I couldn't fetch the replies. Can you paste the thread content or share a ThreadReader/Typefully unrolled link?"
 
 **Assembling thread content:**
 - Combine the parent tweet text with all same-author replies in order
@@ -505,7 +509,7 @@ Fail: Any target is a directory, any type is invalid, or any context is generic
 
 **EVAL 7: Thread replies fetched for X/Twitter posts**
 Question: For X/Twitter posts, were thread replies attempted before concluding the post is complete?
-Pass: Reply fetching was attempted (Playwright, ThreadReaderApp, or user asked); thread content included if found
+Pass: dev-browser used as primary fetch method; thread/article content captured from rendered page
 Fail: Post dismissed as "engagement bait" or "missing promised content" without attempting to fetch replies
 
 ## Anti-Patterns
@@ -746,7 +750,7 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **Local file path ambiguity** — A string like `report.pdf` could be a relative path. If a bare filename is provided without a path prefix (`/`, `~/`, `./`), check the current working directory first, then ask the user to confirm the full path if not found.
 - **Large PDFs** — The Read tool has a 20-page-per-call limit for PDFs. For documents over 20 pages, loop through page ranges. For very large PDFs (100+ pages), read the first 40 pages and the last 10 pages, then summarize with a note about partial coverage.
 - **DOCX without tooling** — `pandoc` or `python-docx` may not be installed. Check availability before attempting conversion. If neither is available, escalate to the user.
-- **Tier 1 false success** — npx playbooks may return cookie walls or login prompts that look like content. Always check output length > 100 chars AND absence of "JavaScript is not available" before accepting Tier 1 results.
+- **dev-browser is the only reliable X fetcher** — npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls. Always start with dev-browser for X/Twitter URLs. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
 - **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies. The syndication API only returns the parent tweet. Always attempt to fetch replies via Playwright or ThreadReaderApp before concluding a post lacks substance.
