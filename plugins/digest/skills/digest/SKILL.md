@@ -396,11 +396,42 @@ After fetching, extract metadata for the output template:
 
 ## 5. Analysis Instructions
 
+### 5a. Vault Wikilinking
+
+Before writing the analysis, query the Obsidian vault for existing notes that match key concepts in the fetched content. This connects new digests to the knowledge graph automatically.
+
+```bash
+# Get a list of all note titles in the vault (excluding web-analyses/ to avoid self-linking)
+ssh nonrootadmin "find /home/obsidian/automation-vault -name '*.md' -not -path '*/web-analyses/*' -not -path '*/.trash/*' | sed 's|.*/||;s|\.md$||'" > /tmp/vault-notes.txt
+```
+
+**Matching rules:**
+- Compare note titles (case-insensitive) against key terms, proper nouns, tools, frameworks, and concepts in the fetched content
+- Only link on first mention in each section (Summary, Key Claims, Frameworks) — don't over-link
+- Minimum 3-character match to avoid false positives on short words
+- Prefer exact matches; skip partial matches that could be ambiguous (e.g., don't link "Arc" if the note is "Arc-Invoice" and the content is about architecture)
+- If a concept matches multiple notes, pick the most specific one
+
+**Where to insert wikilinks:**
+- Summary paragraph: link key concepts and proper nouns
+- Key Claims bullets: link tools, frameworks, and named entities
+- Frameworks section: link referenced mental models if they already exist as notes
+
+**Example:** If the vault contains a note called "Model Context Protocol" and the content mentions MCP, write `[[Model Context Protocol|MCP]]` on first mention.
+
+If the vault query fails or returns empty, skip wikilinking silently — it's an enhancement, not a requirement.
+
+### 5b. Structured Analysis
+
 Analyze the fetched content and produce all of the following:
 
-**Summary**: One paragraph digest of the content's main point or argument.
+**Summary**: One paragraph digest of the content's main point or argument. Include `[[wikilinks]]` to matching vault notes.
 
-**Key Claims**: Bulleted list of specific assertions, data points, or statements made.
+**Key Claims**: Bulleted list of specific assertions, data points, or statements made. Include `[[wikilinks]]` where concepts match existing vault notes.
+
+**Frameworks**: Bulleted list of reusable mental models, patterns, or structured approaches presented in the content. Examples: "3-layer memory stack", "PARA method", "Jobs to Be Done framework". Only include if the content presents a named or clearly structured pattern — skip this section entirely if the content is purely factual/news with no frameworks.
+
+**Open Questions**: Bulleted list of what the content doesn't answer, leaves ambiguous, or raises for further investigation. What would you want to know next? What claims need verification? Skip this section if the content is comprehensive and self-contained.
 
 **Sentiment**: Brief assessment of tone and intent (e.g., promotional, critical, informational, provocative).
 
@@ -512,6 +543,11 @@ Question: For X/Twitter posts, were thread replies attempted before concluding t
 Pass: dev-browser used as primary fetch method; thread/article content captured from rendered page
 Fail: Post dismissed as "engagement bait" or "missing promised content" without attempting to fetch replies
 
+**EVAL 8: Vault wikilinking attempted**
+Question: Was the vault queried for existing notes and wikilinks inserted where concepts match?
+Pass: Vault note list was fetched; wikilinks appear in Summary and/or Key Claims for matching concepts
+Fail: No vault query attempted, or wikilinks are missing despite obvious matches (e.g., content mentions "Model Context Protocol" and that note exists)
+
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
@@ -522,6 +558,8 @@ Fail: Post dismissed as "engagement bait" or "missing promised content" without 
 | Use generic connection context ("Related to this project") | Unactionable connections add noise | Context must be a specific, actionable sentence |
 | Same-directory connections | Digest files are all in web-analyses/ | Never link to other web-analyses/ files |
 | Dismiss X post as "engagement bait" without fetching replies | Thread content lives in replies, not the hook tweet | Always attempt reply fetching before judging content completeness |
+| Over-wikilink with forced matches | Noisy links reduce signal and clutter the graph | Only link exact or near-exact matches on first mention per section |
+| Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
 
 ## 6. Output Template
 
@@ -630,10 +668,16 @@ connections:
 ---
 
 ## Summary
-{one paragraph}
+{one paragraph — include [[wikilinks]] to matching vault notes}
 
 ## Key Claims
-- {claims}
+- {claims — include [[wikilinks]] where concepts match existing vault notes}
+
+## Frameworks
+- {reusable mental models, patterns, or structured approaches — skip section if none}
+
+## Open Questions
+- {what the content doesn't answer or raises for investigation — skip section if content is comprehensive}
 
 ## Sentiment
 {assessment}
@@ -682,10 +726,16 @@ connections:
 ---
 
 ## Summary
-{one paragraph}
+{one paragraph — include [[wikilinks]] to matching vault notes}
 
 ## Key Claims
-- {claims}
+- {claims — include [[wikilinks]] where concepts match existing vault notes}
+
+## Frameworks
+- {reusable mental models, patterns, or structured approaches — skip section if none}
+
+## Open Questions
+- {what the content doesn't answer or raises for investigation — skip section if content is comprehensive}
 
 ## Sentiment
 {assessment}
@@ -755,6 +805,7 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
 - **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies. The syndication API only returns the parent tweet. Always attempt to fetch replies via Playwright or ThreadReaderApp before concluding a post lacks substance.
 - **ThreadReaderApp wrong thread** — ThreadReaderApp sometimes returns a different thread by the same author, especially for very recent posts. Always verify the returned content topic matches the original tweet before using it.
+- **Vault wikilinking false positives** — Short note titles (e.g., "Arc", "DLG") can match unrelated content. Only link when the context clearly matches the note's subject. When in doubt, skip the link. Also watch for notes with similar names (e.g., "Claude" the project vs "Claude" the AI model) — pick the one that matches context.
 
 ## 9. Multiple Inputs
 
@@ -825,3 +876,6 @@ Track these patterns:
 - Local file type distribution (which formats are digested most?)
 - PDF page count vs. content quality (do large PDFs need full reads or are partial reads sufficient?)
 - DOCX/XLSX tooling availability (how often is pandoc/openpyxl missing?)
+- Wikilinking hit rate (how many vault notes match per digest? which sections get the most links?)
+- Frameworks extraction rate (what % of digests have extractable frameworks vs. skipping the section?)
+- Open Questions usefulness (do users act on the open questions or ignore them?)
