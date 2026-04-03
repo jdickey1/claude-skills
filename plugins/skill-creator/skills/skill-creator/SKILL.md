@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Create, test, harden, and continuously improve skills. Use when creating a skill from scratch, updating or optimizing an existing skill, running evals to test a skill, benchmarking performance, optimizing a skill's description for triggering accuracy, or instrumenting a skill for self-improvement via learning loops.
+description: "Use when creating a skill from scratch, updating or optimizing an existing skill, running evals to test a skill, benchmarking performance, optimizing a skill's description for triggering accuracy, or instrumenting a skill for self-improvement via learning loops."
 version: 1.0.0
 effort: high
 ---
@@ -9,7 +9,7 @@ effort: high
 
 Create skills and iteratively improve them through test-driven development with learning loops.
 
-**The lifecycle:** Capture Intent → Draft → Test (RED/GREEN) → Harden (REFACTOR) or Autoresearch → Instrument → Optimize Description → Deploy → Learn → Repeat
+**The lifecycle:** Capture Intent → Plan → Draft → Test (RED/GREEN) → Harden (REFACTOR) or Autoresearch → Instrument → Optimize Description → Deploy → Learn → Repeat
 
 Your job is to figure out where the user is in this lifecycle and jump in. Maybe they want to create from scratch, or they have an existing skill that needs better testing, or they just want to optimize a description. Be flexible — if the user says "just vibe with me," skip the formal process.
 
@@ -82,6 +82,23 @@ After capturing intent, classify which design pattern best fits the skill. This 
 - Does it enforce a multi-step sequence where order matters? → **Pipeline**
 
 Present your classification to the user: "This looks like a Generator skill — it produces a structured digest from a template. I'll use the Generator template from skill-structure.md as the starting point." If uncertain, state the top two candidates and ask.
+
+---
+
+## Phase 1.5: Plan the Skill
+
+After intent is captured, plan the skill before drafting. This prevents missed integration points, forgotten infrastructure steps (marketplace.json), and skills that need rewriting because they didn't account for how they'd be invoked.
+
+**Invoke `/ce:plan` with the skill's feature description.** Read `references/skill-plan-guide.md` for what the plan should include: skill identity, triggering conditions, integration points, plugin structure, content outline, and delivery checklist.
+
+**When to skip planning:**
+- Simple single-file skill with no external dependencies
+- Improving an existing skill (description optimization, hardening, etc.)
+- The user explicitly says "just draft it" or "skip planning"
+
+**Why this exists:** Skills that wrap external tools (CLI, APIs, VPS commands) or live in marketplace plugins have integration surface that pure prose drafting misses. The infographic skill's marketplace.json was missed because there was no planning step to catch it. Planning also ensures the delivery checklist includes every step from SKILL.md to marketplace registration to reload verification.
+
+The plan does not need implementation units or test scenarios like a code plan — skills are primarily prose. Focus on: what the skill touches, where it lives, what files are needed, and what must happen for it to be fully deployed.
 
 ---
 
@@ -440,6 +457,7 @@ All features work: subagents for parallel eval runs, browser-based viewer, descr
 | File | Purpose |
 |------|---------|
 | `references/schemas.md` | JSON schemas for evals, grading, benchmark, and learning events |
+| `references/skill-plan-guide.md` | What to include when planning a skill via /ce:plan |
 | `references/skill-structure.md` | Skill anatomy, templates, progressive disclosure patterns |
 | `references/cso-guide.md` | Description optimization for triggering accuracy (CSO) |
 | `references/bulletproofing.md` | Testing methodology, pressure scenarios, rationalization defense |
@@ -454,7 +472,7 @@ All features work: subagents for parallel eval runs, browser-based viewer, descr
 
 ## The Core Loop
 
-Capture → Draft → Test → Harden → Instrument → Optimize → Deploy → Learn → Repeat
+Capture → Plan → Draft → Test → Harden → Instrument → Optimize → Deploy → Learn → Repeat
 
 Every pass through this loop makes the skill more robust. The first iteration catches obvious issues. The second catches subtle rationalizations. By the third, the skill should be solid — but the learning loops keep improving it in production.
 
@@ -484,6 +502,7 @@ When the skill creation/improvement is complete, report:
 ```
 SKILL: {skill-name}
 ═══════════════════════════
+Planned: {yes/no — via /ce:plan or skipped}
 Phase completed: {1-7 or specific phase name}
 Eval results: {pass rate}% ({N}/{total} assertions passing)
 Iterations: {count} (baseline → final)
