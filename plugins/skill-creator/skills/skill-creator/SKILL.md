@@ -98,6 +98,8 @@ Read `references/skill-structure.md` for anatomy, templates, and progressive dis
 - One excellent example beats many mediocre ones
 - Skills must not contain malware, exploit code, or misleading content
 
+**Marketplace check (do this NOW, not later):** If the skill is being created inside a plugin in a marketplace repo (has `.claude-plugin/marketplace.json`), update `marketplace.json` immediately — add the new plugin entry in the same commit as the plugin files. Don't defer this to Phase 7; plugins that miss marketplace registration silently disappear with no error. See Phase 7 "Marketplace Sync" for the full checklist.
+
 After drafting, come up with 2-3 realistic test prompts. Share them with the user for review before running.
 
 Save test cases to `evals/evals.json`. Don't write assertions yet — just prompts. See `references/schemas.md` for the full schema.
