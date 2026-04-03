@@ -37,6 +37,8 @@ Bad mutations:
 - Making the skill longer without a specific reason
 - Adding vague instructions like "make it better"
 
+**Overfitting test:** Before committing to a mutation, ask: *"If this exact eval disappeared, would this still be a worthwhile skill improvement?"* If the answer is no, the mutation is probably overfitting to the test set rather than making the skill genuinely better. Prefer changes that fix a class of failures, not a single eval.
+
 **3. MUTATE the working copy.**
 Edit the working copy of SKILL.md (NEVER the original). One targeted change only.
 
@@ -51,7 +53,8 @@ Run any guard assertions. Guards are pass/fail checks that must hold even when t
 
 **7. DECIDE: keep or discard.**
 - Score improved AND guards pass → **KEEP.** Update working copy as new baseline.
-- Score unchanged → **DISCARD.** Revert working copy to previous version.
+- Score unchanged AND skill is simpler → **KEEP.** Simplification that maintains score is a real improvement — fewer instructions, cleaner examples, less code for the same outcome. Log as `keep (simplification)`.
+- Score unchanged AND skill is not simpler → **DISCARD.** Revert working copy to previous version.
 - Score worsened → **DISCARD.** Revert working copy to previous version.
 - Score improved BUT guards fail → **DISCARD.** The improvement isn't worth the regression.
 
@@ -103,12 +106,15 @@ autoresearch-[skill-name]/
 Tab-separated. Header row required.
 
 ```
-experiment	score	max_score	pass_rate	status	description
-0	14	20	70.0%	baseline	original skill — no changes
-1	16	20	80.0%	keep	added explicit hex codes for color palette
-2	16	20	80.0%	discard	tried enforcing left-to-right layout — no improvement
-3	18	20	90.0%	keep	added worked example of correct formatting
+experiment	score	max_score	pass_rate	tokens	cost_usd	status	description
+0	14	20	70.0%	42150	0.18	baseline	original skill — no changes
+1	16	20	80.0%	38900	0.16	keep	added explicit hex codes for color palette
+2	16	20	80.0%	45200	0.19	discard	tried enforcing left-to-right layout — no improvement
+3	16	20	80.0%	31400	0.13	keep (simplification)	removed redundant formatting rules — same score, 20% fewer tokens
+4	18	20	90.0%	33100	0.14	keep	added worked example of correct formatting
 ```
+
+`tokens` is the total tokens across all runs in the experiment. `cost_usd` is the estimated API cost. Tracking these reveals whether improvements come at the cost of efficiency — a skill that scores 90% but uses 3x the tokens may not be better in practice.
 
 ---
 
@@ -119,9 +125,10 @@ Append after each experiment:
 ```markdown
 ## Experiment [N] — [keep/discard]
 
-**Score:** [X]/[max] ([percent]%)
+**Score:** [X]/[max] ([percent]%) | **Tokens:** [total] | **Cost:** $[usd]
 **Change:** [One sentence describing what was changed]
 **Reasoning:** [Why this change was expected to help]
+**Overfitting check:** [Would this improvement survive if the failing eval disappeared? yes/no]
 **Result:** [What actually happened — which evals improved/declined]
 **Failing outputs:** [Brief description of what still fails, if anything]
 ```
@@ -145,6 +152,8 @@ Powers the live dashboard. Updated after each experiment.
       "score": 14,
       "max_score": 20,
       "pass_rate": 70.0,
+      "tokens": 42150,
+      "cost_usd": 0.18,
       "status": "baseline",
       "description": "original skill — no changes"
     }
