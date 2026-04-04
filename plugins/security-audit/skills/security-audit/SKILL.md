@@ -48,6 +48,7 @@ effort: high
 - [ ] Server-Side Template Injection (SSTI)
 - [ ] Header injection (CRLF in response headers)
 - [ ] Path traversal in file operations
+- [ ] File upload MIME type validation (server-side content inspection, not just filename/extension)
 
 #### A3 - Authorization & Access Control
 - [ ] Broken Object Level Authorization (BOLA/IDOR) - Can user A access user B's data?
@@ -77,6 +78,7 @@ effort: high
 - [ ] API versioning exposing deprecated/vulnerable endpoints
 - [ ] Webhook signature verification (Stripe, GitHub, etc.)
 - [ ] Request size limits (prevent DoS via large payloads)
+- [ ] Open redirects in callback/return URLs (validate and whitelist redirect destinations)
 
 #### B2 - Cryptographic Failures
 - [ ] Weak or deprecated hashing (MD5, SHA1 for security purposes)
