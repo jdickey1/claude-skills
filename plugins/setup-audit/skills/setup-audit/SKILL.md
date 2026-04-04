@@ -28,6 +28,19 @@ Read ALL of the following before analyzing:
 ### Settings
 - `~/.claude/settings.json` (hooks, permissions, env vars)
 
+## Step 0: Validate Before Proceeding
+
+Confirm which Claude Code setup to audit before reading anything. Auditing the wrong
+scope (e.g., a project directory when the user wants their global setup) wastes their
+entire review cycle on irrelevant findings.
+
+- **Identify the target scope:** If the user didn't specify, default to `~/.claude/` (global
+  setup). If they named a project, use that project's directory.
+- **Verify `~/.claude/` exists and is non-empty:** Check that `~/.claude/` contains at
+  least one of: `CLAUDE.md`, a `skills/` directory, or a `projects/` directory with memory
+  files. If the directory is missing or empty, stop immediately and report it — running
+  5 audit dimensions against an empty setup produces only noise.
+
 ## The 5-Dimension Audit
 
 For every rule, instruction, and preference found, evaluate:

@@ -7,6 +7,19 @@ description: Use when analyzing Google Search Console data, SEO performance metr
 
 Analyze GSC data through BigQuery bulk exports using `bq` CLI. Replaces a 26-tool MCP server with direct SQL execution.
 
+## Step 0: Validate Before Proceeding
+
+Confirm the GCP target and auth state before running any query. A wrong project or
+expired credentials produces misleading data or cryptic errors that are much faster
+to catch upfront than mid-analysis.
+
+- **Confirm the GCP project ID and dataset name.** If the user hasn't specified both,
+  ask. Running queries against the wrong project returns either permission errors or
+  data from an unrelated property — both waste time and erode trust in the results.
+- **Verify `gcloud` auth is active and the dataset exists.** Run
+  `bq ls --project_id=<project_id>` before any query. An auth failure here gives a
+  clear error; the same failure inside a complex ML query is harder to diagnose.
+
 ## Prerequisites
 
 1. `bq` CLI available (comes with `gcloud` SDK)
