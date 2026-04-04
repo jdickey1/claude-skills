@@ -9,6 +9,22 @@ effort: high
 
 Fetch, analyze, and save any web content or local file to Obsidian with actionable recommendations.
 
+## Step 0: Validate Before Proceeding
+
+Confirm the input exists and is complete before classifying or fetching. Discovering a
+bad input mid-pipeline produces a confusing partial result rather than a clean early error.
+
+- **Confirm an input was provided.** If the user said "digest this" with no URL or file
+  path attached, ask explicitly — don't infer from conversation history, which may reference
+  multiple earlier links.
+- **For file paths: verify the file exists** before classifying input type. Run a quick
+  existence check (`ls -la <path>`). A missing file caught here avoids a confusing failure
+  buried inside the fetch or analysis step.
+- **For URLs: confirm the URL is complete.** A URL that doesn't start with `http://` or
+  `https://`, ends mid-domain, or has visible ellipsis (`...`) is likely a copy-paste
+  truncation. Ask for the full URL — truncated URLs return generic error pages that get
+  analyzed as if they were the intended content.
+
 ## 1. Overview
 
 Given any URL or local file path, this skill: classifies the input type, fetches/reads content using the appropriate strategy, performs structured analysis, saves a markdown file to Obsidian, and presents a concise summary with top recommendations.

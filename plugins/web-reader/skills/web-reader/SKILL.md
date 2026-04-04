@@ -9,6 +9,18 @@ effort: low
 
 Efficiently retrieve web page content as structured markdown using `npx playbooks get`.
 
+## Step 0: Validate Before Proceeding
+
+Confirm the fetch target before issuing any command. A missing or malformed URL means
+the fetch will either fail with a cryptic error or silently retrieve the wrong content.
+
+- **Confirm a URL was provided.** If the user said "read this page" or "check this" without
+  including a URL, ask for one. Do not infer a URL from earlier conversation context —
+  the user may have multiple pages in mind.
+- **Verify the URL starts with `http://` or `https://`.** Bare domains (`example.com`),
+  paths (`/docs/api`), or pasted text fragments are not valid inputs to `npx playbooks get`
+  and will return confusing errors rather than a meaningful page.
+
 ## When to Use
 
 Use `npx playbooks get <url>` instead of WebFetch any time the goal is to read the **text content and structure** of a web page. This returns clean markdown output that is more token-efficient and better structured than WebFetch.

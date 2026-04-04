@@ -37,6 +37,20 @@ The `context` field is the critical LLM signal — one sentence explaining why t
 
 Read `references/connection-schema.md` for full type definitions, reverse link pairs, and lifecycle rules.
 
+## Step 0: Validate Before Proceeding
+
+Verify the vault is accessible and worth auditing before dispatching any subagents.
+The audit scans hundreds of files across 4 parallel agents — discovering a problem
+after that work completes wastes significant compute and user time.
+
+- **Confirm the vault path is reachable via SSH.** Run a quick `ls` against the vault root
+  on `nonrootadmin` before proceeding. A failed SSH connection or missing directory is
+  faster to catch now than after 30 seconds of inventory planning.
+- **Check note count before committing to a full audit.** A vault with fewer than 10 `.md`
+  files has no meaningful connection graph to map. If the count is below 10, report the
+  count and ask the user whether they want to continue — don't run 4 phases against a
+  handful of stub notes.
+
 ## Phase 1: Inventory & Scan
 
 Run as a single orchestrator pass before dispatching subagents.
