@@ -1,7 +1,7 @@
 ---
 name: digest
 description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo) OR a local file path (PDF, text, markdown, Word doc, CSV, JSON, image), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", "digest this file", "analyze this PDF", or when a URL or file path appears in conversation context. Also triggers on /digest command. Handles all URL types and local files — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, local files are read directly, everything else uses web-reader.
-version: 1.8.0
+version: 1.9.0
 effort: high
 ---
 
@@ -64,7 +64,7 @@ Do NOT match GitHub issue, PR, or file URLs (those use general web fetch):
 
 ### For X/Twitter URLs
 
-X aggressively blocks scrapers, APIs, and headless fetchers. **dev-browser is the only reliable method** — start there, use APIs only for metadata.
+X aggressively blocks scrapers, APIs, and headless fetchers. Use twitter-cli first (fastest, most reliable), then fall back to dev-browser if needed.
 
 Extract `username` and `tweet_id` from the URL:
 
@@ -73,7 +73,23 @@ USERNAME=$(echo "$URL" | grep -oP '(?<=x\.com/|twitter\.com/)[^/]+')
 TWEET_ID=$(echo "$URL" | grep -oP '(?<=status/)[0-9]+')
 ```
 
-**Step 1: Fetch full content via dev-browser (PRIMARY)**
+**Step 1: Fetch full content via twitter-cli (PRIMARY)**
+
+twitter-cli uses cookie-based auth and TLS fingerprint impersonation. It handles single tweets, threads, X Articles, and search natively.
+
+```bash
+# Read a single tweet (includes full text, engagement stats, article content)
+twitter tweet "$URL"
+
+# For threads — twitter-cli auto-fetches the full thread
+twitter tweet "$URL"
+```
+
+twitter-cli outputs structured text with author, content, engagement metrics, and thread replies. If the tweet contains an X Article, the article content is included automatically.
+
+**If twitter-cli is not installed or fails** (e.g., cookies expired, auth error), fall back to Step 2.
+
+**Step 2: Fetch via dev-browser (FALLBACK)**
 
 Write a script file to `/tmp/fetch-x-digest.js` and run it with `dev-browser run`:
 
@@ -90,18 +106,27 @@ console.log(text);
 dev-browser run /tmp/fetch-x-digest.js
 ```
 
-This returns the full rendered page text including article content, thread replies, and engagement stats. It works because dev-browser uses a real browser session (not headless) that X treats as a normal user.
+This returns the full rendered page text. It works because dev-browser uses a real browser session that X treats as a normal user.
 
 **Important dev-browser rules:**
 - Always use `dev-browser run /path/to/script.js` — never heredocs or inline `-e` flags
 - Use `browser.getPage("xdigest")` to get/create a named page
 - Use `p.evaluate("document.body.innerText")` for text content
-- Use `p.snapshotForAI()` if you need structured DOM info (slower but more detail)
 - Allow 5 seconds after navigation for X's JS to render
 
-**Step 2: Metadata enrichment via Syndication API (PARALLEL)**
+For threads via dev-browser, extend the script to scroll:
 
-Run this in parallel with Step 1 to get structured metadata:
+```javascript
+const p = await browser.getPage("xdigest");
+await p.evaluate("window.scrollTo(0, document.body.scrollHeight)");
+await new Promise(r => setTimeout(r, 3000));
+const text = await p.evaluate("document.body.innerText");
+console.log(text);
+```
+
+**Step 3: Metadata enrichment via Syndication API (PARALLEL with Step 1 or 2)**
+
+Run this in parallel with the primary fetch to get structured metadata:
 
 ```bash
 curl -s "https://cdn.syndication.twimg.com/tweet-result?id=${TWEET_ID}&token=0"
@@ -111,9 +136,9 @@ Parse JSON for: `.text`, `.user.name`, `.user.screen_name`, `.favorite_count`, `
 
 This API is lightweight and usually works. Use it for metadata (likes, date, article title) — not for content fetching.
 
-**Step 3: Fallback — manual content from user**
+**Step 4: Fallback — manual content from user**
 
-If dev-browser fails (not installed, browser not running), ask the user to paste the content or share a ThreadReader/Typefully unrolled link.
+If both twitter-cli and dev-browser fail, ask the user to paste the content or share a ThreadReader/Typefully unrolled link.
 
 **Do NOT attempt these — they consistently fail on X:**
 - `npx playbooks get` (returns "Something went wrong" or cookie wall)
@@ -124,20 +149,9 @@ If dev-browser fails (not installed, browser not running), ask the user to paste
 #### Thread & Article Detection
 
 The syndication API response tells you the content type:
-- **X Article**: `article` field present with `title` and `preview_text` — the full article lives on the rendered page, dev-browser captures it automatically
-- **Thread**: `conversation_count` > 0 — dev-browser captures the parent tweet; scroll down in the script to capture self-replies if needed
-- **Single tweet**: No article field, low conversation_count — dev-browser innerText is sufficient
-
-For threads, extend the dev-browser script to scroll and capture replies:
-
-```javascript
-// After initial load, scroll to capture thread replies
-const p = await browser.getPage("xdigest");
-await p.evaluate("window.scrollTo(0, document.body.scrollHeight)");
-await new Promise(r => setTimeout(r, 3000));
-const text = await p.evaluate("document.body.innerText");
-console.log(text);
-```
+- **X Article**: `article` field present with `title` and `preview_text` — twitter-cli captures article content automatically; dev-browser captures it from the rendered page
+- **Thread**: `conversation_count` > 0 — twitter-cli auto-fetches the full thread; dev-browser requires scrolling to capture self-replies
+- **Single tweet**: No article field, low conversation_count — either tool handles this directly
 
 **Assembling thread content:**
 - Combine the parent tweet text with all same-author replies in order
@@ -556,7 +570,7 @@ Fail: Any target is a directory, any type is invalid, or any context is generic
 
 **EVAL 7: Thread replies fetched for X/Twitter posts**
 Question: For X/Twitter posts, were thread replies attempted before concluding the post is complete?
-Pass: dev-browser used as primary fetch method; thread/article content captured from rendered page
+Pass: twitter-cli or dev-browser used as fetch method; thread/article content captured
 Fail: Post dismissed as "engagement bait" or "missing promised content" without attempting to fetch replies
 
 **EVAL 8: Vault wikilinking attempted**
@@ -816,7 +830,7 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **Local file path ambiguity** — A string like `report.pdf` could be a relative path. If a bare filename is provided without a path prefix (`/`, `~/`, `./`), check the current working directory first, then ask the user to confirm the full path if not found.
 - **Large PDFs** — The Read tool has a 20-page-per-call limit for PDFs. For documents over 20 pages, loop through page ranges. For very large PDFs (100+ pages), read the first 40 pages and the last 10 pages, then summarize with a note about partial coverage.
 - **DOCX without tooling** — `pandoc` or `python-docx` may not be installed. Check availability before attempting conversion. If neither is available, escalate to the user.
-- **dev-browser is the only reliable X fetcher** — npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls. Always start with dev-browser for X/Twitter URLs. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
+- **twitter-cli is the preferred X fetcher** — use `twitter tweet URL` first. It handles auth, threads, articles, and search natively via cookie-based authentication. Falls back to dev-browser if twitter-cli is unavailable or fails. npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls — never use them. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
 - **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies. The syndication API only returns the parent tweet. Always attempt to fetch replies via Playwright or ThreadReaderApp before concluding a post lacks substance.
