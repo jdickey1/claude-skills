@@ -63,6 +63,9 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 | `gsc-report.mjs` | GSC data pull with period comparison | Monday 9 AM |
 | `content-brief.mjs` | Fetch SERP data and generate brief prompt | On demand |
 | `backlink-outreach.mjs` | Generate outreach queue (dry-run by default) | Wed + Fri 10 AM |
+| `validate-profile.mjs` | Validate seo-profile.json business config | Before pipeline runs |
+| `keyword-universe.mjs` | Expand seeds via DataforSEO + business relevance scoring | Monday 9 AM |
+| `keyword-cluster.mjs` | SERP-based Jaccard clustering with page mapping | After keyword-universe |
 
 ---
 

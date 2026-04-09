@@ -1,0 +1,8 @@
+# Business intelligence — do not commit to public repo
+seo-profile.json
+
+# API output data
+data/
+
+# Environment credentials
+.env
