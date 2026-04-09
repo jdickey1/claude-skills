@@ -38,8 +38,10 @@ Before investing in paid APIs, you can run a meaningful link building operation 
 | GSC Monitoring | Google Search Console API | Free | Weekly (Monday) |
 | Content Briefs | Serper API + Claude | ~$10/mo + Claude | On demand |
 | Backlink Outreach | Email automation | ~$25/mo | Wed + Fri |
+| Keyword Universe | DataForSEO (Keyword Ideas + SERP) | ~$6-8/mo | Weekly (Monday) |
+| Keyword Clustering | Jaccard similarity (local compute) | $0 | After keyword-universe |
 
-**Total: ~$75/month vs ~$1,500/month agency**
+**Total: ~$80-85/month vs ~$1,500/month agency**
 
 ## Paid Tier Components
 
