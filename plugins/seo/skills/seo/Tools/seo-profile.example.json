@@ -1,0 +1,43 @@
+{
+  "business": {
+    "description": "Apex Plumbing is a family-owned residential and light commercial plumbing company serving the greater Austin, TX metro area. We specialize in emergency repairs, drain cleaning, water heater installation, and whole-home repiping.",
+    "products": [
+      "emergency plumbing repair",
+      "drain cleaning and hydrojetting",
+      "water heater installation and replacement",
+      "whole-home repiping",
+      "leak detection and repair",
+      "sewer line inspection and repair",
+      "toilet and faucet installation",
+      "water softener installation"
+    ],
+    "currentAudience": "Homeowners aged 35-65 in Travis and Williamson counties who need reactive repairs — burst pipes, clogged drains, broken water heaters. Most find us through word-of-mouth or Google Maps.",
+    "aspirationalAudience": "Homeowners planning proactive upgrades (repiping, water softeners, tankless water heaters) and property managers overseeing 5-50 unit residential portfolios in the Austin metro."
+  },
+  "seeds": [
+    "plumber austin tx",
+    "emergency plumber austin",
+    "drain cleaning austin",
+    "water heater replacement austin",
+    "24 hour plumber austin",
+    "sewer line repair austin",
+    "tankless water heater installation austin",
+    "leak detection austin",
+    "repiping services austin",
+    "plumbing company near me"
+  ],
+  "competitors": [
+    "abcplumbingaustin.com",
+    "bluefrogplumbing.com",
+    "rotorooteratx.com",
+    "benjaminfranklinplumbing.com"
+  ],
+  "siteUrl": "apexplumbingaustin.com",
+  "targetLocation": "us",
+  "irrelevantTopics": [
+    "commercial construction plumbing",
+    "plumbing licensing courses",
+    "diy plumbing repair",
+    "plumbing supply wholesale"
+  ]
+}
