@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.2.0
+version: 2.3.0
 effort: high
 ---
 
@@ -26,10 +26,12 @@ Universal writing standards for all content. Format-specific guidance in referen
 Before writing any content, confirm you know:
 
 1. **Who is the audience?** (general public, developers, clients, voters, etc.)
-2. **What voice/brand?** (personal, company, publication — check CLAUDE.md for voice context from `/teach-writing`)
-3. **What format?** (X post, blog, newsletter, etc. — may already be clear from the command used)
+2. **What voice/brand?** (personal, company, publication; check CLAUDE.md for voice context from `/teach-writing`)
+3. **What format?** (X post, blog, newsletter, etc.; may already be clear from the command used)
 
-If voice/brand context exists in CLAUDE.md (via `/teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content — a casual tone for a law firm or formal tone for a podcast social account wastes a draft.
+If voice/brand context exists in CLAUDE.md (via `/teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content. A casual tone for a law firm or formal tone for a podcast social account wastes a draft.
+
+When captured voice context exists, it overrides universal defaults where they conflict (see rule #15). The universal rules are defaults, not mandates. Voice wins.
 
 Exception: if the user provides enough context in their prompt ("write a casual X post about datacenter cooling"), skip the check and go.
 
@@ -175,7 +177,7 @@ State key credentials, numbers, and authority markers with full specificity *onc
 - First mention: "one of only 16 fully recommended Newman Guide colleges in America"
 - Later: "as a Newman Guide university" (the reader already knows what that means)
 
-### 14. AI Slop Patterns (CRITICAL)
+### 13. AI Slop Patterns (CRITICAL)
 
 Beyond individual banned words, AI produces recognizable *structural* patterns that scream "a model wrote this." These are just as damaging as em dashes or buzzwords because readers pattern-match on them instantly.
 
@@ -198,9 +200,26 @@ Beyond individual banned words, AI produces recognizable *structural* patterns t
 
 **Scoring rule:** If a draft triggers 4+ patterns from the full list, it needs a rewrite, not a polish. The patterns compound: readers who spot one start looking for the rest.
 
-### 13. Earned Language Over Credential-Dropping
+### 14. Earned Language Over Credential-Dropping
 
 Don't just list what you are. Show that you earned it. "Diligence and fidelity to mission that earned a spot on the Newman Guide" is stronger than "a Newman Guide institution." The reader respects achievement more than status.
+
+### 15. Preserve Idiosyncrasies, Don't Auto-Smooth
+
+Captured voice beats generic "good writing." When a writer's voice context (from `/teach-writing`, project CLAUDE.md, or explicit instruction) contains deliberate stylistic quirks, preserve them even when they conflict with the universal rules above.
+
+**Examples of voice signals that override defaults:**
+
+- Short, uniform sentences as a deliberate cadence (e.g., non-native English speaker who writes direct and tight) → don't force rhythm variation per rule #4
+- Consistent avoidance of contractions for register reasons (legal, formal brand voice) → don't force contractions per rule #3
+- A recurring sentence starter, signature transition, or personal phrase that shows up across their corpus → keep it, don't edit it out as repetition
+- Idiomatic constructions that a grammar checker would flag → keep if they're part of the writer's pattern
+
+**The test:** Before applying a universal rule, check whether the writer's captured voice contradicts it. If yes, the voice wins. Default rules exist to prevent AI-generated mush, not to normalize humans toward an imaginary middle.
+
+**What's NOT an idiosyncrasy:** Em dashes (rule #1), banned AI buzzwords (rule #2), AI slop patterns (rule #13, throat-clearers, fake vulnerability, pivot hype, fake closers, etc.), and corrective reframing (rule #10) are always wrong. Those aren't voice choices, they're AI tells. Rule #15 protects deliberate human quirks, not AI artifacts. If a captured voice corpus contains these patterns, they're contamination from AI editing, not real voice. Strip them.
+
+**Why this rule exists:** Applying every universal rule maximally smooths output toward a generic "competent" register that reads as AI-processed even when it's technically "correct." The writer's quirks are the fingerprint. Don't polish them out.
 
 ## Hook Patterns (Universal)
 
@@ -228,7 +247,9 @@ Read the appropriate reference before writing:
 
 ## Binary Quality Checks
 
-When evaluating writing output quality (for autoresearch or manual review), use these binary yes/no checks:
+When evaluating writing output quality (for autoresearch or manual review), use these binary yes/no checks.
+
+**Voice context override:** EVAL 3 (contractions) and EVAL 4 (sentence rhythm) yield to captured voice context per rule #15. If the writer's voice signals dictate no contractions (formal register) or uniform short sentences (deliberate cadence), these evals are informational, not pass/fail. Evals 1, 2, 7, and 8 never yield: AI tells are always wrong regardless of voice.
 
 **EVAL 1: No em dashes**
 Question: Does the output contain zero em dashes (—)?
@@ -295,8 +316,9 @@ Before finalizing any content:
 - [ ] Specific numbers/names/examples (not abstractions)
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
-- [ ] Zero AI slop patterns (throat-clearers, false exclusivity, fake urgency, dramatic fragments, fake closers — see [ai-slop-patterns.md](references/ai-slop-patterns.md))
-- [ ] Zero corrective reframes ("That's not X. That's Y." and all variants) — one max, zero ideal
+- [ ] Zero AI slop patterns (throat-clearers, false exclusivity, fake urgency, dramatic fragments, fake closers; see [ai-slop-patterns.md](references/ai-slop-patterns.md))
+- [ ] Zero corrective reframes ("That's not X. That's Y." and all variants): one max, zero ideal
+- [ ] Captured voice idiosyncrasies preserved over generic defaults (rule #15: deliberate quirks in voice context kept, not smoothed)
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after
 - [ ] Achievements framed as earned, not just listed
@@ -306,7 +328,7 @@ Before finalizing any content:
 **STOP and ask the user before proceeding when:**
 - The content's intended audience or voice is unclear (writing for the user vs. writing for a brand/client)
 - The topic requires domain expertise you're uncertain about (legal claims, medical advice, financial figures)
-- The user's requested format conflicts with quality rules (e.g., "write a 50-word blog post" — too short to be useful)
+- The user's requested format conflicts with quality rules (e.g., "write a 50-word blog post" is too short to be useful)
 - Content involves named individuals who haven't been consulted (quotes, attributions, testimonials)
 - A banned AI pattern is the most natural way to express something and removing it significantly weakens the piece
 
@@ -340,10 +362,10 @@ Pre-publish checklist: {all passed / items failed}
 - **"Read aloud test" means actually evaluating rhythm and flow**, not just checking sentence length metrics.
 
 ## Gotchas
-- **Em dash verification must be literal** — Don't trust "I didn't use em dashes." Run `grep -c '—'` on the actual output. Claude's most common quality failure.
-- **Contractions conflict with formal tone** — The 3+ contractions/paragraph rule breaks legal, regulatory, or formal business content. Ask the user if formal tone is required before forcing contractions.
-- **Banned buzzword variants slip through** — "The modern digital landscape" contains "landscape" but Claude misses it because the exact phrase "In today's digital age" isn't present. Check each banned word independently, not as phrases.
-- **AI slop patterns are structural, not lexical** — You can't grep for "fake vulnerability." You have to read the draft and recognize the pattern. "Unpopular opinion:" is easy to catch; "I know this might be controversial, but..." is the same pattern in disguise. Check the full reference at `references/ai-slop-patterns.md` and match on intent, not exact wording.
+- **Em dash verification must be literal.** Don't trust "I didn't use em dashes." Run `grep -c '—'` on the actual output. Claude's most common quality failure.
+- **Contractions conflict with formal tone.** The 3+ contractions/paragraph rule breaks legal, regulatory, or formal business content. Ask the user if formal tone is required before forcing contractions.
+- **Banned buzzword variants slip through.** "The modern digital landscape" contains "landscape" but Claude misses it because the exact phrase "In today's digital age" isn't present. Check each banned word independently, not as phrases.
+- **AI slop patterns are structural, not lexical.** You can't grep for "fake vulnerability." You have to read the draft and recognize the pattern. "Unpopular opinion:" is easy to catch; "I know this might be controversial, but..." is the same pattern in disguise. Check the full reference at `references/ai-slop-patterns.md` and match on intent, not exact wording.
 
 ## Learning
 
@@ -351,7 +373,7 @@ When this skill runs, append observations to `.learnings.jsonl` in the skill dir
 
 ```json
 {"timestamp": "ISO-8601", "skill": "writing", "event_type": "user_correction", "context": "User corrected em dash that slipped through"}
-{"timestamp": "ISO-8601", "skill": "writing", "event_type": "edge_case", "context": "Legal content needed formal tone — contractions rule conflicted"}
+{"timestamp": "ISO-8601", "skill": "writing", "event_type": "edge_case", "context": "Legal content needed formal tone: contractions rule conflicted"}
 ```
 
 Track these patterns:
