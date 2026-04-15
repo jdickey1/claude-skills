@@ -111,6 +111,13 @@
       "source": "./plugins/autoreason",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "annealing-prompts",
+      "description": "Prompt optimization methodology for cheap-model LLM pipelines. Three-phase mutation diversity rules (bootstrap / generalize / polish), train/val/holdout splits, and overfitting-resistant graduation metrics for iteratively refining prompts that need Haiku-grade cost at Opus-grade quality.",
+      "source": "./plugins/annealing-prompts",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
     }
   ]
 }

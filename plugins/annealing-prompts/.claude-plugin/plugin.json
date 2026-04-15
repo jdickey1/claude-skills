@@ -1,0 +1,8 @@
+{
+  "name": "annealing-prompts",
+  "description": "Prompt optimization methodology for cheap-model LLM pipelines — three-phase mutation diversity rules, train/val/holdout splits, and overfitting-resistant graduation metrics for iteratively refining prompts that need Haiku-grade cost at Opus-grade quality.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
