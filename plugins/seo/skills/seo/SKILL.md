@@ -59,7 +59,8 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 | Script | Purpose | Schedule |
 |--------|---------|----------|
 | `keyword-research.mjs` | Expand seed keywords with volume/CPC data | Monday 9 AM |
-| `competitor-backlinks.mjs` | Scan competitor backlinks for opportunities | Wednesday 9 AM |
+| `competitor-backlinks.mjs` | Scan competitor backlinks for opportunities (paid — DataForSEO) | Wednesday 9 AM |
+| `commoncrawl-backlinks.sh` | Free competitive backlink audit + gap analysis (Common Crawl + DuckDB) | Quarterly (on new CC release) |
 | `gsc-report.mjs` | GSC data pull with period comparison | Monday 9 AM |
 | `content-brief.mjs` | Fetch SERP data and generate brief prompt | On demand |
 | `backlink-outreach.mjs` | Generate outreach queue (dry-run by default) | Wed + Fri 10 AM |
