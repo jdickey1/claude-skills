@@ -52,6 +52,49 @@ Before committing to paid APIs, these free tools cover core backlink research:
 - **Google Search Console Links report** — shows who links to you, your top linked pages, and top linking sites. Use the export-and-expand workflow above to turn existing backlinks into prospecting lists.
 - **Ahrefs Free Backlink Checker** (ahrefs.com/backlink-checker) — 100 backlink lookups per day per domain, no account required. Use it for quick competitor top-page analysis, broken link discovery, and content gap identification. Not automatable at scale, but effective for manual research.
 - **Google Search operators** — `"resource page" + [your niche]`, `"add a link" + [topic]`, `intitle:"useful links" + [industry]` to find link placement opportunities directly.
+- **Common Crawl + DuckDB** — scriptable, domain-level backlink data from Common Crawl's quarterly hyperlink graph. See **Common Crawl Backlink Audit** below for the full workflow. Free alternative to Ahrefs/SEMrush for the "who links to this domain" question. Best for competitive gap analysis (find domains linking to competitors but not to you) and one-shot audits. Limitations: quarterly refresh (not real-time), domain-level only (no URL/anchor detail), coverage biased toward larger sites.
+
+## Common Crawl Backlink Audit
+
+Common Crawl publishes a quarterly domain-level hyperlink graph as two gzipped TSV files (vertices + edges). With DuckDB you can query it locally in ~10-15 minutes after a one-time ~17 GB download. This is the free infrastructure that replaces paid API calls for competitive backlink analysis.
+
+**Use this when:**
+- You need a competitive backlink map for a client audit and don't have budget for Ahrefs/SEMrush.
+- You're quantifying the gap between a site and 3-10 named competitors.
+- You want to find "linked to competitors but not to us" prospecting targets at zero marginal cost.
+
+**When NOT to use this:**
+- You need per-URL or per-anchor-text data → Common Crawl only publishes domain-level edges.
+- You need fresh-this-week data → the graph refreshes quarterly.
+- You're checking a single backlink for indexation → use `site:url` or GSC.
+
+### Quick start
+
+Use the `Tools/commoncrawl-backlinks.sh` script (see Tools table in SKILL.md) — it handles DuckDB install, CC release discovery, caching, SQL generation, and backgrounded execution. Typical run on a modest VPS: 10-20 minute first-time download, then 10-15 minute query per multi-domain batch.
+
+Credit: the methodology is adapted from [Ben Word's (@retlehs) gist](https://gist.github.com/retlehs/cf0ac6c74476e766fba2f14076fff501), which demonstrated the base DuckDB + Common Crawl pattern for single-domain lookups. The script in this skill extends it to multi-domain competitive audits with gap analysis.
+
+### What you get
+
+For each target domain, per run:
+
+1. **Target resolution** — confirms the domain appears in the CC graph (some low-coverage domains won't resolve and return 0 backlinks; this is a data-coverage limit, not a real zero).
+2. **Backlink counts per target** — total linking domains + their aggregate host count (proxy for linking-domain size).
+3. **Top 25 linking domains per target** — ranked by host count (larger linking sites ~= higher authority).
+4. **Gap analysis** — domains that link to competitors but NOT to your target. These are your highest-confidence outreach targets.
+
+### Interpreting CC-derived backlink counts
+
+- **Counts are lower than Ahrefs/SEMrush** (often 10-30% of paid-tool numbers) because CC only indexes what its crawler reaches. Treat them as a consistent floor across all domains in a run, not an absolute truth.
+- **Zero or near-zero results for your target** usually means one of: (a) the site is too new/small for CC to have crawled widely, (b) most of your backlinks are on nofollowed/noindexed hosts CC skips, or (c) your site is correctly reporting that its real footprint is thin.
+- **Relative ranking between competitors is reliable** — if Competitor A shows 10× more CC backlinks than Competitor B, the real ratio is probably similar.
+- **Gap analysis is the highest-signal output** — an outreach list of domains linking to 2+ competitors but not you is directly actionable. Prioritize by linking-domain size.
+
+### Integrating with the rest of this skill
+
+- Run before or alongside `competitor-backlinks.mjs` (paid DataForSEO). The two sources complement each other: CC gives you the long tail of smaller linking sites; DataForSEO gives URL/anchor/dofollow granularity.
+- Feed the "gap analysis" output into `backlink-outreach.mjs` as an outreach queue seed.
+- Re-run quarterly as Common Crawl publishes new releases to track "new/lost backlinks this quarter" at zero marginal cost (cache both release cycles in the same parent directory).
 
 ## Content Types That Earn Links
 
