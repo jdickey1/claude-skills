@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.3.0
+version: 2.3.1
 effort: high
 ---
 
@@ -155,6 +155,21 @@ The "That's not X. That's Y." construction is an AI rhetorical crutch. It sounds
 - "Forget X. Think Y."
 - "Stop thinking of it as X. Start thinking of it as Y."
 
+**Split-form variants (same pattern, separate sentences):**
+
+The corrective reframe still triggers when the negation and the positive assertion are split across two or more sentences, including across a period, a fragment, or a paragraph break. These are the sneakiest form because a single-sentence grep won't catch them.
+
+- "That's not a lull. It's the staff work phase." (fragment negation + positive assertion)
+- "It wasn't a bug. The system was working exactly as designed." (past-tense split)
+- "Call this what you want. It's a reallocation of power." (deflection + positive assertion)
+- "Some will say this is routine. It isn't." (anticipatory negation + bare reversal)
+- "Is this a setback? No. It's the end of a chapter." (rhetorical question + correction)
+
+**Pattern match intent, not exact wording.** If one sentence says "this [is / isn't / is not] X" and the next sentence (or next fragment) says "[it / this / that] [is / really is / is actually] Y," you are reading a corrective reframe regardless of punctuation. Cut it the same way: state Y directly, without the negation of X.
+
+- Wrong: "State Affairs hasn't gaveled an interim hearing. That's not a lull. It's the staff work phase."
+- Right: "State Affairs hasn't gaveled an interim hearing. The work is happening offstage."
+
 **Why this is bad:** It's the writer stepping in front of the evidence to tell the reader how to interpret it. If your evidence is strong, the reframe is unnecessary. If your evidence is weak, the reframe won't save it. Either way, cut it.
 
 **What to do instead:** State the thing directly. Let evidence create the reframe in the reader's mind.
@@ -287,9 +302,9 @@ Pass: Zero instances of structural AI slop patterns (see references/ai-slop-patt
 Fail: Any throat-clearer ("Here's the thing:"), false exclusivity ("Nobody's talking about this"), urgency hook ("This changes everything"), dramatic fragment ("Let that sink in."), fake vulnerability ("Unpopular opinion:"), qualifier sandwich ("It's worth noting..."), pivot hype ("But here's where it gets interesting:"), fake closer ("Buckle up."), or template sentence detected
 
 **EVAL 8: No corrective reframing**
-Question: Does the output avoid the "That's not X. That's Y." pattern and its variants?
+Question: Does the output avoid the "That's not X. That's Y." pattern and its variants, including split-form versions across multiple sentences?
 Pass: Zero instances of corrective reframing (or at most one deliberate structural pivot)
-Fail: Any "That's not X. That's Y.", "This isn't X. It's Y.", "More than just X, it's Y.", "Forget X. Think Y.", or similar construct detected
+Fail: Any "That's not X. That's Y.", "This isn't X. It's Y.", "More than just X, it's Y.", "Forget X. Think Y.", or split-form where a negation sentence/fragment ("That's not a lull.", "It wasn't a bug.") is followed by a positive assertion ("It's the staff work phase.", "The system was working exactly as designed.") in the next sentence. Match on intent: if sentence 1 negates X and sentence 2 asserts Y as the correction, it is corrective reframing regardless of punctuation.
 
 ## Guard Assertions
 
