@@ -42,7 +42,7 @@ This is what makes the AEO audit actionable. For the target business:
 
 ## Critical Rules
 
-- Use Playwright to inspect live pages (snapshot, screenshot, evaluate DOM)
+- Use dev-browser (script files at `/tmp/*.js`, run via `dev-browser run /tmp/script.js`, never heredocs) to inspect live pages — evaluate DOM, read rendered HTML, screenshot
 - Check `robots.txt` directly with curl for AI bot directives
 - **Verify schema in raw HTML** — don't rely on content extractors for structured data findings
 - Check for `llms.txt` and `brand-facts.json` at their expected URLs
