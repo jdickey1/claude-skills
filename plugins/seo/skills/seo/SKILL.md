@@ -1,7 +1,7 @@
 ---
 name: seo
 description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR AEO OR answer engine optimization OR AI visibility OR AI citations OR ChatGPT ranking OR Perplexity optimization OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
-version: 2.3.0
+version: 2.4.0
 effort: high
 ---
 
@@ -72,7 +72,7 @@ Standalone scripts in `Tools/` for automation. All output JSON to `data/seo/YYYY
 
 ## DO (Core Principles)
 
-- **Use Playwright** to load and inspect live pages (snapshot, screenshot, evaluate DOM)
+- **Use dev-browser** (script files only, `dev-browser run /tmp/script.js` — never heredocs or inline `-e`) to load and inspect live pages: evaluate DOM, read rendered HTML, screenshot
 - **Use web-reader** (`npx playbooks get <url>`) for content extraction
 - **Check source HTML** for meta tags, schema, headers, canonical tags
 - **Crawl key pages** — homepage, service pages, location pages, blog (if exists)
@@ -177,7 +177,7 @@ For the full checklist with ~180 items, see `reference/audit-checklist.md`.
 
 ## Audit Tools
 
-- **Playwright browser tools** — Navigate, snapshot, screenshot, evaluate JavaScript on pages
+- **dev-browser** — Navigate, screenshot (`page.screenshot()`), evaluate JavaScript on the rendered DOM (`page.evaluate(...)`), and read full rendered HTML (`page.content()`). Script-file-only invocation: write to `/tmp/*.js`, run with `dev-browser run /tmp/script.js`; never use heredocs or inline `-e` flags (house rule, `feedback-dev-browser-scripts.md`).
 - **web-reader** — Extract page content as markdown for analysis
 - **WebSearch** — Check indexation (`site:domain.com`), search for business name, check competitors
 - **WebFetch** — Fetch robots.txt, sitemap.xml, specific URLs
