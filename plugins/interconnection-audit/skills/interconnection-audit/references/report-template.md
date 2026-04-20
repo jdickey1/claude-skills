@@ -30,7 +30,7 @@ Each uncleared `action-pending` item costs 1 point, floored at 0.
 score = max(0, 20 - (orphan_count * 0.5))
 ```
 
-Each orphan costs 0.5 points. Notes in `99-System/templates/` and `00-Inbox/` are excluded from orphan counting.
+Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` are excluded from orphan counting — these categories (system files, inbox staging, journal entries, agent logs) are not intended to carry cross-project connections.
 
 An orphan is a note with zero connections (existing + proposed) to notes outside its own directory.
 
