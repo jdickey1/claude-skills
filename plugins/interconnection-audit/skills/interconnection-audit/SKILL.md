@@ -125,7 +125,7 @@ After all subagents return (and Phase 2.5 enrichment, if available):
 
 1. **Deduplicate** — merge identical proposals, consolidate expected reverse pairs
 2. **Check reverse links** — per the reverse link pairs table, flag missing reverses
-3. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/templates/` and `00-Inbox/`)
+3. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` — these categories are not intended to carry project connections)
 4. **Detect stale connections** — broken targets or `action-pending` items older than 60 days
 5. **Score vault health** — calculate overall score out of 100 using five dimensions:
    - Connection coverage (30pts)
@@ -273,7 +273,7 @@ Report saved: {path}
 - **Health score dimensions must cite the actual counts** used in calculation, not just the final weighted score.
 - **"No same-directory connections" must be enforced programmatically**, not just by convention.
 - **Connection context strings must be specific and actionable** — verify each answers "why would someone following this link benefit?"
-- **Orphan detection must exclude 99-System/templates/ and 00-Inbox/** as documented in constraints.
+- **Orphan detection must exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/`** as documented in constraints. These categories (system files, inbox staging, journal entries, agent logs) are by design not connected to project content.
 
 ## References
 
