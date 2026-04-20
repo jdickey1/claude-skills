@@ -122,7 +122,7 @@ E-E-A-T is not a direct ranking factor but the framework that informs Google's a
 - [ ] **Phone number visible above the fold** (no scrolling required)
 - [ ] Phone number is clickable (`tel:` link) on mobile
 - [ ] **Physical address in website footer** on every page
-- [ ] NAP (Name, Address, Phone) is consistent across all pages
+- [ ] NAP consistency across website surfaces (homepage visible, footer, contact page, JSON-LD schema) — see NAP Consistency Procedure in `reference/local-seo.md`
 - [ ] **H1 includes primary keyword AND city/location**
 - [ ] Content targets "service + city" keywords, not informational "how to" queries
 - [ ] **Business name is clean** — no keyword stuffing in business name (Google suspends for "Best Plumber in Denver - 24/7 Emergency Plumbing"). Use legal business name only.
@@ -135,7 +135,7 @@ See `reference/local-seo.md` for full GBP optimization details.
 - [ ] GBP exists and is claimed/verified
 - [ ] Business name matches website exactly (no keyword stuffing in business name)
 - [ ] **Business category matches top 3 competitors ranking above you**
-- [ ] Address and phone match website NAP exactly
+- [ ] GBP address and phone match website NAP per NAP Consistency Procedure (see `reference/local-seo.md`)
 - [ ] **GBP links to location/service page, NOT homepage** (unless single-location)
 - [ ] Business hours are current and accurate
 - [ ] Business description is filled out with keywords naturally
@@ -185,7 +185,7 @@ See `reference/local-seo.md` for full citation details and quality hierarchy.
 - [ ] Listed on local Chamber of Commerce
 - [ ] Listed on industry-specific directories (highest value tier)
 - [ ] Pursue "Best of" lists and awards (expert-curated lists are #1 AI citation factor)
-- [ ] NAP is identical across all citations (exact match, no variations)
+- [ ] Citation NAP matches GBP per NAP Consistency Procedure (see `reference/local-seo.md`)
 - [ ] No duplicate listings on any platform
 
 ### B4 - Content Strategy

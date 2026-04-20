@@ -13,7 +13,7 @@ Audit and optimize the Google Business Profile for the provided business (`$ARGU
 2. Search for the business on Google to find their GBP listing
 3. Check each item in the GBP checklist
 4. Review their review profile (count, velocity, response patterns)
-5. Check NAP consistency against their website
+5. Run the **NAP Consistency Procedure** from `${CLAUDE_PLUGIN_ROOT}/skills/seo/reference/local-seo.md` (section: "NAP Consistency Procedure") — extract NAP from all canonical sources, emit the delta report, and assign severities from the procedure's severity table. The delta report is a required output block (see Output below). If dev-browser can't reach Google Maps, follow the procedure's user-paste fallback and mark the GBP row's confidence as `NEEDS VERIFICATION`.
 
 ## Checklist
 
@@ -40,3 +40,7 @@ Audit and optimize the Google Business Profile for the provided business (`$ARGU
 ## Output
 
 Report on each section with PASS/FAIL and specific recommendations. Include GBP update examples tailored to their business.
+
+### NAP Consistency Delta
+
+Include the full Markdown delta-report table produced by the NAP Consistency Procedure (sources-as-rows, NAP-fields-as-columns) plus the per-drift severity-rated findings. This block is required whenever a GBP listing exists. Drift findings emit into the overall PASS/FAIL at their mapped severity (CRITICAL suspension risks fail the Category & Setup section; HIGH / MEDIUM / LOW / INFO feed into their respective sections).
