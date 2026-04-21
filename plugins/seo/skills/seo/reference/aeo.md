@@ -370,6 +370,120 @@ Only 11% of domains appear in both ChatGPT and Perplexity citations. 25% domain 
 
 ---
 
+## Verified LinkedIn AEO Playbook
+
+LinkedIn has become a disproportionately cited surface for AI answer engines in professional and B2B query classes. This section consolidates the **verified subset** of the LinkedIn-AEO playbook drawn from public research (Semrush, Profound, LLM Pulse, Search Engine Land, SEMAi). It exists so future invocations of `/seo:seo-aeo` can apply the tactics without re-researching, and so unverified viral-marketing claims can be rejected by pattern, not by memory.
+
+**Why this section exists separately:** A widely shared LinkedIn thread in April 2026 inflated several of these numbers ("beats YouTube + Wikipedia," "8x articles vs posts," "0.26% gap to Reddit," "11% of all AI answers"). Those headlines do not survive triangulation. The subsections below separate verified tactics, newly discovered tactics the viral thread omits, and claims that should **not** be cited externally.
+
+### Citation Mechanism (How LinkedIn Content Reaches AI Answers)
+
+- **LinkedIn's robots.txt blocks every major AI crawler** (GPTBot, ClaudeBot, PerplexityBot, Google-Extended). Direct crawling is not the path.
+- **Primary pipeline: LinkedIn → Bing → ChatGPT.** Microsoft has preferential ingestion access to LinkedIn (Microsoft owns LinkedIn), and ChatGPT Search runs on the Bing index. This is the dominant citation channel.
+- **Perplexity lacks this channel.** Perplexity's LinkedIn citation rate is materially lower than ChatGPT's and is driven by public profile surfacing + link discovery, not preferential ingestion.
+- **Google AI Mode is a weaker, separate pipeline** — LinkedIn surfaces but at a lower rate than on ChatGPT; Google AI cites YouTube, Reddit, and Wikipedia much more heavily.
+- **Implication:** optimize LinkedIn content for **Bing-first discoverability** (question-style H2s, clean structure, strong author signals) — not direct AI-crawler access.
+
+### Verified Tactics (Cite These With Confidence)
+
+Every row below is traceable to public research. Include the source when citing externally.
+
+| Tactic | What the data says | Source |
+|--------|-------------------|--------|
+| Article length sweet spot | 500-2,000 word articles account for **50-66% of LinkedIn content cited** by AI answer engines | Semrush LinkedIn AI Visibility Study, Mar 2026 (89K URLs, 325K prompts) |
+| Original content required | **95% of cited LinkedIn content is original** (not repost/syndicated) | Semrush LinkedIn AI Visibility Study, Mar 2026 |
+| Educational tone wins | **54-64% of cited LinkedIn content is educational** in intent (explainer, how-to, analysis) vs promotional or personal-news | Semrush LinkedIn AI Visibility Study, Mar 2026 |
+| Platform split | **Perplexity cites company pages ~59%** of the time; **ChatGPT and Google AI cite individual profiles ~59%** of the time | Profound AI Platform Citation Patterns (1.4M citations) |
+| Author cadence | **75% of cited LinkedIn authors post 5+ times/month** | Semrush LinkedIn AI Visibility Study, Mar 2026 |
+| Density beats length | LinkedIn articles **<5K characters achieve ~66% extraction rate**; articles **>20K characters drop to ~12%** | Search Engine Land AI search playbook |
+| Question-style H2s | H2 headings phrased as real questions yield **+17.54% similarity lift** for AI citation | SEMAi content structures study |
+| Direct-answer openers | **40-60 word direct answers** in the first paragraph materially increase citation probability | Search Engine Land AI search playbook |
+| LinkedIn momentum | LinkedIn climbed **11th → 5th** among ChatGPT-cited domains over 90 days (Nov 2025 → Feb 2026). Arbitrage window is real but closing. | Profound AI Platform Citation Patterns |
+
+### New Tactics Ward Omits (Worth Adopting)
+
+- **Treat LinkedIn as a Bing-optimization surface.** Microsoft's preferential ingestion is the mechanism — structure content so Bing's index reads it cleanly (clean HTML in the LinkedIn article body, question-style H2s, crawlable author profile).
+- **Density over volume.** A 1,500-word article with tight answer blocks beats a 25,000-word thought piece. The `<5K → 66%` / `>20K → 12%` gradient is sharp.
+- **Direct-answer opener is non-optional.** First paragraph must be a 40-60 word neutral, factual summary — this is the paragraph AI models quote verbatim.
+- **Question-style H2s everywhere.** Not just for the article title — every major section heading should be phrased as a real user question.
+- **Platform-split publishing, not single-surface.** Publish named-expert pieces (interpretation, POV) to a personal profile for ChatGPT and Google AI Mode; publish institutional pieces (reports, data summaries, factual recaps) to a company page for Perplexity. Single-surface plans leave citation surface on the table.
+- **Ship before the window closes.** Profound's 11th → 5th rise over 90 days is real; the same mechanism that lifted early adopters will lift followers with lower gradient. Urgency is not a marketing claim — it's in the data.
+
+### Unverified or Misleading Claims (Do Not Cite Externally)
+
+The following claims appeared in a widely shared April 2026 LinkedIn AEO thread but do **not** survive independent triangulation. Do not repeat them as if they were verified; when asked about them, cite the row in "Verified Tactics" that replaces them.
+
+| Claim | Status | What's actually true |
+|-------|--------|---------------------|
+| "LinkedIn is 11% of all AI answers" / "beats YouTube, Wikipedia, and news" | **Basket-specific; false on broad baskets.** | LLM Pulse 28-day broad-basket tracker shows LinkedIn well below YouTube, Wikipedia, and Reddit. The 11% figure is restricted to B2B/professional query baskets, not all queries. |
+| "Articles cited 8x more than posts" | **Unverified in public data.** | Semrush data supports articles outperforming posts, but the ratio is closer to **2-4x** on broad samples, not 8x. Treat 8x as a marketing headline, not a planning input. |
+| "LinkedIn is 0.26% behind Reddit" | **Appears fabricated.** | LLM Pulse shows a ~4x gap (Reddit meaningfully ahead of LinkedIn on broad baskets). The 0.26% figure cannot be reproduced in any public tracker. |
+| "AI quotes LinkedIn posts word-for-word" | **Overstated framing.** | AI models paraphrase and recombine. "Word-for-word" is rhetorical flourish, not a documented extraction behavior. |
+| Proprietary data from a vendor-owned tool with no methodology | **Low credibility signal.** | When the author owns the tool that produced the numbers, and the methodology is not published, apply the source-credibility guardrail in `/seo:seo-aeo` (and in `digest` for future ingestions). |
+
+### Credibility Guardrail for Viral AEO Claims
+
+Before adopting any AEO number from a social-media thread, vendor blog, or "proprietary study," run this three-check pattern. When **all three** fire, treat the claim as directional only and cite the verified row above instead.
+
+1. **Traceability** — Is the claimed number traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land)? If the numbers match an unattributed public study, treat as repackaged.
+2. **Closed loop** — Does the author own a tool that produced the data? Closed-loop marketing data is directional at best.
+3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers**? If not, flag as basket-specific or unsupported.
+
+Three-of-three triggers a warning, not a block. Single trigger is informational only. The guardrail mirrors the one in the `digest` skill — keep the wording aligned when editing either file.
+
+### Quarterly Citation Audit Protocol
+
+AI citation patterns shift on a months-not-days cadence. Run this audit **once per quarter** per target project (JDKey, Hyperscale, DLG selectively) to measure whether the tactics are working and what's moving. Weekly cadence would add noise without signal.
+
+**Invocation:** `/seo:seo-aeo --audit <project-domain-or-name>` — the `--audit` mode uses the existing AEO command surface, not a separate sub-skill.
+
+**Query panel (10-20 queries per project).** Build once per project, reuse across quarters for trend comparison. Mix:
+
+- **Named-entity queries** — "who is <person>", "what does <firm> do", "is <firm name> a <category>". Tests ChatGPT/Google AI individual-profile emphasis.
+- **Category-expert queries** — "best <category> in <location>", "top <specialty> firm Texas". Tests broad-basket visibility.
+- **Topical queries tied to publications** — named bills, dockets, events you've written about (e.g., "PUCT Project 58481," "Texas SB 6 large loads"). Tests whether your content is cited on the specific topics you covered.
+- **Comparison queries** — "<firm> vs <competitor>". Tests defensive visibility.
+
+**Scoring per query (per platform):**
+
+| Field | Values |
+|-------|--------|
+| Cited | yes/no |
+| Prominence | high (top 3 results or first mention) / medium (page 1) / low (deep) / none |
+| Source surface | company-page / personal-profile / website / article / other |
+| Top competitors cited | names (up to 3) |
+
+**Platforms to test each quarter:** ChatGPT (required), Perplexity (required), Google AI Mode (required). Claude and Gemini optional.
+
+**Output note template** — save to `01-Projects/<Project>/aeo-citation-audit-YYYY-QN.md`:
+
+```
+# <Project> AEO Citation Audit — <YYYY> Q<N>
+
+**Date run:** <date>
+**Platforms tested:** ChatGPT, Perplexity, Google AI Mode
+**Queries tested:** <N>
+
+## Summary
+- Citation rate: X/Y queries ChatGPT | A/B queries Perplexity | C/D queries Google AI
+- Top competitors cited: …
+- Biggest gain vs last quarter: …
+- Biggest regression: …
+
+## Per-Query Matrix
+| Query | ChatGPT | Perplexity | Google AI | Source surface | Top competitors |
+
+## Quarter-over-Quarter Trend
+| Quarter | Citation Rate | Top Cited Surface | Top Competitor |
+
+## Actions for Next Quarter
+- …
+```
+
+**Weekly SEO workflow hook:** `/seo:seo-weekly` surfaces the "has it been 90+ days since last AEO audit?" check, which points back to this protocol. No separate cron or automation — the weekly command is the reminder surface.
+
+---
+
 ## Common AEO Mistakes (Auto-Flag in Audit)
 
 Flag these automatically when found during an audit:
