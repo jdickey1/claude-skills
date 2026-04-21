@@ -1,7 +1,7 @@
 ---
 name: digest
 description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo) OR a local file path (PDF, text, markdown, Word doc, CSV, JSON, image), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", "digest this file", "analyze this PDF", or when a URL or file path appears in conversation context. Also triggers on /digest command. Handles all URL types and local files — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, local files are read directly, everything else uses web-reader.
-version: 1.9.0
+version: 1.10.0
 effort: high
 ---
 
@@ -451,7 +451,32 @@ ssh nonrootadmin "find /home/obsidian/automation-vault -name '*.md' -not -path '
 
 If the vault query fails or returns empty, skip wikilinking silently — it's an enhancement, not a requirement.
 
-### 5b. Structured Analysis
+### 5b. Source Credibility Check (Viral-Marketing Content)
+
+Apply this check **before** writing Sentiment or Recommendations when both of these are true:
+
+1. The content is a **viral social thread** (X/LinkedIn/Threads) or a vendor blog that makes **quantitative claims** (specific percentages, citation counts, "X is Y% of Z").
+2. The content references a **"proprietary study," "our data," "we analyzed," or an unnamed private dataset**.
+
+When both triggers are present, run the three-check pattern:
+
+1. **Traceability** — Is the claimed number traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land, industry associations)? If the numbers match an unattributed public study, treat as **repackaged**.
+2. **Closed loop** — Does the author own a tool that produced the data? A vendor selling analytics of the category they're analyzing = **closed-loop marketing data, directional at best**.
+3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers or studies**? If not, flag as basket-specific, overstated, or unsupported.
+
+**Effect on output when the check triggers:**
+
+- **Sentiment** must include an explicit line: `Credibility: LOW / MEDIUM / HIGH — <one-sentence reason>`.
+  - LOW: all three checks fire (repackaged data from a closed loop with no triangulation).
+  - MEDIUM: two of three fire.
+  - HIGH: zero or one fires.
+- **Recommendations** must **not** propose action on unverified headline numbers. Where the content contains a tactical playbook, adopt the tactics only if they are directionally supported by the verified sources — and call out in each recommendation which specific numbers come from the underlying public research vs. the author's repackaging.
+
+**LinkedIn-AEO specific:** When the subject matter is LinkedIn AEO / LLM citation patterns / AI search visibility, the canonical verified equivalent lives at `~/Projects/claude-skills/plugins/seo/skills/seo/reference/aeo.md` → "Verified LinkedIn AEO Playbook." Point the user there for the triangulated version of what the viral thread claims. Keep the wording of this check aligned with the matching guardrail in the `seo-aeo` command — edit both when either changes.
+
+**Example trigger:** A thread stating "LinkedIn beats YouTube + Wikipedia for AI citations" from a vendor selling an AEO monitoring tool, citing "our data" with no public methodology. All three checks fire → Credibility: LOW. Recommendation adopts the article-length, platform-split, and educational-tone tactics (verified via Semrush/Profound) but does **not** cite the headline "beats YouTube + Wikipedia" number.
+
+### 5c. Structured Analysis
 
 Analyze the fetched content and produce all of the following:
 

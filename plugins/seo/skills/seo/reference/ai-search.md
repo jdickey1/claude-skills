@@ -83,3 +83,9 @@ See `reference/fan-out-queries.md` for the full framework, audit methodology, an
 - **ChatGPT (GPT 5.4)** — Uses Bing's index + `site:` fan-out queries. Wikipedia-heavy (47.9% of citations). Cites ~5.0 domains per response. Now searches directly within trusted domains, making on-site content depth critical. Bing SEO is foundational.
 - **Perplexity** — Most transparent/trackable. Indexes fresh content within hours. Only 11% domain overlap with ChatGPT citations.
 - **Voice assistants** — Only 1% answer overlap across Google, Siri, and Alexa. Must optimize for all platforms, not just Google.
+
+## LinkedIn as an AEO Surface
+
+LinkedIn is an increasingly cited surface for professional/B2B queries, driven by Microsoft's preferential ingestion into Bing (which feeds ChatGPT Search). **LinkedIn's own robots.txt blocks all major AI crawlers** — citations flow via the LinkedIn → Bing → ChatGPT pipeline, not direct crawling.
+
+For the verified playbook (article length sweet spot, platform split, density-beats-length, direct-answer openers, question-style H2s, cadence targets) and the list of viral-thread claims that should **not** be cited, see the **Verified LinkedIn AEO Playbook** section in `reference/aeo.md`.

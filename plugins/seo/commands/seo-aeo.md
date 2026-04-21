@@ -1,11 +1,45 @@
 ---
 description: Run a dedicated AEO (Answer Engine Optimization) audit to measure and improve AI search visibility across ChatGPT, Perplexity, Claude, Gemini, and Google AI Overviews
-argument-hint: <url>
+argument-hint: <url> | --audit <project>
 ---
 
 **First**: Use the `seo` skill for core philosophy, verification rules, and the Three-Layer Model (SEO + AEO + GEO).
 
+## Two Invocation Modes
+
+1. **Full AEO audit** — `$ARGUMENTS` is a target URL. Runs the 100-point scored assessment, Answer Intent Map, and 4-week implementation roadmap.
+2. **Quarterly citation audit** — `$ARGUMENTS` starts with `--audit` (e.g., `--audit jdkey.com`, `--audit hyperscale`). Runs the quarterly citation-presence matrix across ChatGPT / Perplexity / Google AI Mode against the project's stored query panel and produces a quarterly audit note.
+
+If no arguments are provided, ask the user which mode and what target.
+
+### Quarterly Citation Audit Mode (--audit)
+
+When invoked with `--audit`, follow the **"Quarterly Citation Audit Protocol"** in `${CLAUDE_PLUGIN_ROOT}/skills/seo/reference/aeo.md`. Key requirements:
+
+- Reuse the project's stored query panel from prior quarter (found in `01-Projects/<Project>/aeo-citation-audit-*.md`). If none exists, build one per the protocol's query-panel design and save it as the baseline.
+- Test every query across **ChatGPT, Perplexity, and Google AI Mode** (required). Claude/Gemini optional.
+- Per query, log: cited (yes/no), prominence (high/medium/low/none), source surface (company-page / personal-profile / website / article / other), and top competitors cited.
+- Write the per-quarter note to `01-Projects/<Project>/aeo-citation-audit-YYYY-QN.md` using the template from the protocol.
+- Include a quarter-over-quarter trend table when prior audits exist.
+- End with "Actions for Next Quarter" — 3-5 concrete content/surface moves driven by the citation gaps surfaced.
+
+Run the Source Credibility Check below before adopting any vendor-claimed numbers cited during the audit.
+
 Run a dedicated AEO audit on the provided URL (`$ARGUMENTS`). If no URL is provided, ask the user for a target website.
+
+## Source Credibility Check (Before Adopting Any Cited Number)
+
+Before adopting any AEO number that arrives via a social-media thread, vendor blog, or "proprietary study," run this three-check pattern. The canonical escape hatch for LinkedIn-AEO specifically is the **Verified LinkedIn AEO Playbook** in `${CLAUDE_PLUGIN_ROOT}/skills/seo/reference/aeo.md` — fall back to it when a viral claim fails triangulation.
+
+1. **Traceability** — Is the "proprietary study" traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land)? If the numbers match an unattributed public study, treat as repackaged.
+2. **Closed loop** — Does the author own a tool that produced the data? Closed-loop marketing data is directional at best.
+3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers**? If not, flag as basket-specific or unsupported.
+
+When **all three** fire, warn the user and cite the verified playbook instead of the viral number. Single trigger is informational only. The guardrail warns — it never blocks.
+
+**Reference test:** Given "Jake Ward says LinkedIn is 11% of AI answers — should we adopt?" — the command should surface the verified `aeo.md` row ("basket-specific; false on broad baskets per LLM Pulse"), warn that the headline is not triangulated, and return the verified tactics (500-2,000 word articles, 50-66% citation share; platform split; Bing-first mechanism) rather than the headline number.
+
+Keep the wording of this check aligned with the matching guardrail in the `digest` skill's Section 5 — they solve the same failure mode (closed-loop marketing data) and should stay in sync when either is edited.
 
 ## Process
 
