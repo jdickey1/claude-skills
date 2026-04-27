@@ -1,8 +1,10 @@
 ---
 title: "feat: Ship writing skill 2.4.0 (humanizer-derived enhancements)"
 type: feat
-status: active
+status: completed
 date: 2026-04-27
+completed: 2026-04-27
+shipped_in: 336003a
 ---
 
 # feat: Ship writing skill 2.4.0 (humanizer-derived enhancements)
