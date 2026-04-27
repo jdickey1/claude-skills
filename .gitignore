@@ -3,3 +3,4 @@
 node_modules/
 __pycache__/
 *.pyc
+plugins/writing/skills/writing-workspace/

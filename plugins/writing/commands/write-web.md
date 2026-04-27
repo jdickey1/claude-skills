@@ -14,13 +14,17 @@ Write website copy or a blog post for the provided topic (`$ARGUMENTS`). If no t
 3. If SEO matters, also use the `seo` skill for on-page optimization principles
 4. Write 5+ headline candidates first, select the best
 5. Draft the content following web copy structure from the reference
-6. Apply the pre-publish checklist from the writing skill
+6. **Run the mandatory self-audit pass** on the draft (writing skill: "Self-Audit Pass" section). Output 2–4 honest "still-AI" bullets, then revise to a FINAL version. Web/blog content under any brand identity (Hyperscale, JD Key, etc.) is mandatory; do not skip.
+7. Apply the pre-publish checklist from the writing skill against the FINAL version
 
 ## Key Rules
 
 - **Headline first** — write 5+ candidates before selecting (80% of the work)
 - **No em dashes.** No exceptions.
 - **No AI buzzwords.** Check the banned list.
+- **No copula avoidance** ("serves as", "stands as", "boasts" — see writing skill rule #16)
+- **No inline-header vertical lists** where the bold label just restates the line (rule #17)
+- **Self-audit pass is mandatory** for branded/public-facing pages — DRAFT → still-AI bullets → FINAL
 - **Scannable structure** — short paragraphs, clear H2/H3 headers, bullet points
 - **Evidence after claims** — every assertion backed within 1-2 sentences
 - **CTAs are clear and specific** — not just "learn more"

@@ -244,6 +244,85 @@ If your sentence fits one of these templates, rewrite it:
 9. "[X] that [verb] will thrive. [X] that don't will be left behind."
 10. "Your [X] is only as good as your [Y]."
 
+## Significance Inflation
+
+LLMs puff up the importance of arbitrary facts by adding "stands as / serves as / marks / underscores" claims. The structural pattern is broader than the buzzwords in the main writing skill. Even with the bad words swapped out, the shape persists.
+
+| Pattern |
+|---------|
+| "stands as a testament to..." |
+| "serves as a reminder that..." |
+| "marks a pivotal moment in..." |
+| "underscores the significance of..." |
+| "represents a shift toward..." |
+| "highlights the broader trend of..." |
+| "reflects deeply rooted values of..." |
+| "sets the stage for..." |
+| "leaves an indelible mark on..." |
+| "speaks to the enduring legacy of..." |
+
+**Fix:** Strip the inflation. State the fact directly. "The Statistical Institute of Catalonia was established in 1989 to publish regional statistics" beats "...marking a pivotal moment in the evolution of regional statistics in Spain."
+
+## Synonym Cycling (Elegant Variation)
+
+AI's repetition-penalty code makes it cycle through synonyms when humans would just repeat the noun. Three different ways to refer to the same person in three sentences is an AI fingerprint.
+
+| Pattern |
+|---------|
+| "The protagonist... the main character... the central figure... the hero..." |
+| "The company... the firm... the organization... the enterprise..." |
+| "Researchers... scientists... investigators... experts..." |
+| "The product... the offering... the solution... the platform..." |
+
+**Fix:** Pick the clearest noun and repeat it. Repetition is fine. Synonym cycling is a tell. The exception is genuine variety: if "researchers" and "scientists" mean different groups in your piece, fine; if they're the same people in different sentences, pick one.
+
+## Filler and Hedging Bloat
+
+Padding that adds words without adding meaning. Each pattern looks innocuous individually; together they balloon prose by 20-30% with zero new information.
+
+**Filler phrases → trims:**
+
+| Bloat | Trim |
+|-------|------|
+| "in order to" | "to" |
+| "due to the fact that" | "because" |
+| "at this point in time" | "now" |
+| "in the event that" | "if" |
+| "has the ability to" | "can" |
+| "it is important to note that" | (delete) |
+| "for the purpose of" | "to" |
+| "with regard to / in regards to" | "about" / "on" |
+| "the fact that" | (often deletable) |
+| "in spite of the fact that" | "although" |
+
+**Hedging stacks:**
+
+| Pattern |
+|---------|
+| "could potentially possibly..." |
+| "may have some impact on..." |
+| "might arguably be considered..." |
+| "tends to generally suggest that..." |
+| "appears to perhaps indicate..." |
+
+**Fix:** One hedge max per claim. "May" or "might," not both. Cut "potentially," "arguably," "generally" entirely unless they're load-bearing.
+
+## Curly Quotes and Em-Char Drift
+
+ChatGPT (and Word's autocorrect) substitutes Unicode "smart" characters for ASCII. In drafts that pass through AI, the giveaway is mixed quote styles: straight quotes the human typed, curly quotes the AI generated.
+
+**Watch for:**
+
+- Curly double quotes (`U+201C` / `U+201D`) instead of straight `"`
+- Curly single quotes / apostrophes (`U+2018` / `U+2019`) instead of straight `'`
+- Ellipsis character (`U+2026`) instead of three periods `...`
+- En dash (`U+2013`) instead of hyphen `-`
+- Non-breaking space (`U+00A0`) instead of regular space (often invisible)
+
+**Fix:** Run a literal grep on the final draft. Use ASCII straight quotes and three-period ellipsis unless the brand style guide explicitly requires otherwise. Some long-form web publications style-guide curly quotes in; most platforms (X, LinkedIn, plain email) should use straight.
+
+**Greppable check:** `grep -P '[\x{2018}\x{2019}\x{201C}\x{201D}\x{2013}\x{2014}\x{2026}]' draft.md` — any output flags AI residue.
+
 ## Self-Assessment
 
 Count how many of these patterns appear in a draft:
