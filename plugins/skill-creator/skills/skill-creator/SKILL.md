@@ -83,6 +83,32 @@ After capturing intent, classify which design pattern best fits the skill. This 
 
 Present your classification to the user: "This looks like a Generator skill — it produces a structured digest from a template. I'll use the Generator template from skill-structure.md as the starting point." If uncertain, state the top two candidates and ask.
 
+### Destination Triage
+
+Before planning or drafting, decide **where this skill will live**. The destination affects manifest files, marketplace registration, naming conventions, license, and what gets committed where. Getting this wrong means moving files later and reworking trigger surfaces.
+
+**Common destinations:**
+
+| Destination | When to use |
+|---|---|
+| **Public marketplace plugin repo** | Skill is generally useful, no proprietary content, you want others to install it |
+| **Private marketplace plugin repo** | Skill embeds client-confidential workflows, proprietary patterns, or org-internal tooling |
+| **Personal global skills folder** (`~/.claude/skills/`) | Solo experimentation, not yet ready to publish, no plugin packaging needed |
+| **Workspace-scoped** (`.claude/skills/` in a project) | Only relevant inside one project; never needed elsewhere |
+| **Existing plugin in either repo** | Skill is a natural extension of an already-installed plugin (e.g., a sibling skill that shares context) |
+| **One-off / throwaway** | Single-session use; don't persist |
+
+**How to decide:**
+
+1. **Check user memory and project files first.** Many users have a stored convention ("all my skills go in repo X by default unless Y"). Read `MEMORY.md`, `CLAUDE.md`, and any feedback memories before asking — pulling the user's existing convention from memory beats re-asking it every session.
+2. **Ask the user only if the destination is genuinely ambiguous** after checking memory. Recommend a default based on what you found, then confirm.
+3. **Surface the trade-off explicitly** when the answer matters: "This skill embeds [client name] domain knowledge — recommend the private repo. OK?"
+4. **Decide whether it deserves its own plugin or fits inside an existing one.** A new plugin gets its own marketplace entry, trigger surface, and namespace. Adding to an existing plugin is lighter but dilutes that plugin's description and triggering precision.
+
+**Why this matters:** Public repos are visible to anyone — confidential client patterns, proprietary methods, or internal-only conventions don't belong there even by accident. Conversely, defaulting everything to private hides work that's meant to be shared. The destination is a one-way door once you commit and push, so make the decision deliberate.
+
+**Save the convention.** If the user states a destination rule for the first time ("everything goes in repo X unless Y"), save it as a feedback memory so future sessions don't have to re-ask.
+
 ---
 
 ## Phase 1.5: Plan the Skill

@@ -1,0 +1,8 @@
+{
+  "name": "system-compare",
+  "description": "Head-to-head comparison of two skills, plugins, tools, or systems. Forces a WHO-WINS verdict per dimension, scores both on 10 fitness vectors, and produces a ranked steal list. Use when deciding keep/merge/deprecate, evaluating an external repo against your stack, or asking whether something is actually a skill or a system.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
