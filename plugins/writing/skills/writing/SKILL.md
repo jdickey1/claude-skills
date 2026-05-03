@@ -276,6 +276,14 @@ The "**Bold Label:** sentence that just restates the label" pattern is one of th
 
 **Why:** AI loves this format because it looks organized while requiring no actual structure. It also pads token count without adding signal.
 
+### 18. Pressure-Test Drafts Against Editor Reflexes
+
+The lexical rules catch wrong words. The structural rules catch named AI constructions. Real editors still cut a third category: defensive disclaimers, hedging epilogues, false-neutral conclusions, two-sentence balance beats, clever "the question isn't X, it's Y" closers. These pass the other rules but a careful editor cuts them on first pass.
+
+Before finalizing branded or long-form content, scan for the eight editorial-edit patterns in [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md). Each is documented with a real before/after from an editorial revision pass.
+
+**Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics — the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip.
+
 ## Hook Patterns (Universal)
 
 The first line of anything has one job: stop the scroll. Patterns that work:
@@ -294,6 +302,7 @@ Read the appropriate reference before writing:
 - **Headlines & titles (START HERE)**: See [references/headlines.md](references/headlines.md)
 - **X/Twitter posts**: See [references/x-posts.md](references/x-posts.md) (algorithm & strategy) and [references/x-writing-craft.md](references/x-writing-craft.md) (quality & voice)
 - **AI slop patterns (anti-patterns)**: See [references/ai-slop-patterns.md](references/ai-slop-patterns.md)
+- **Editorial edit patterns (revision-pass posture catches)**: See [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md)
 - **X Articles (long-form)**: See [references/x-articles.md](references/x-articles.md)
 - **LinkedIn posts & articles**: See [references/linkedin.md](references/linkedin.md)
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)
