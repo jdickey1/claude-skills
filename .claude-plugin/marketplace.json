@@ -125,6 +125,13 @@
       "source": "./plugins/system-compare",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "hearing-transcript",
+      "description": "Clean up auto-generated transcripts of legislative hearings (committee, council, board). Builds a domain glossary from the witness list and committee membership, fixes ASR errors, disambiguates the roll call deterministically (Chair, Vice Chair, then alphabetical by last name), and produces a manual-review report with video timestamps.",
+      "source": "./plugins/hearing-transcript",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
     }
   ]
 }

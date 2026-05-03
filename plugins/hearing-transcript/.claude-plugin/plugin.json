@@ -1,0 +1,8 @@
+{
+  "name": "hearing-transcript",
+  "description": "Clean up auto-generated transcripts of legislative hearings (committee, council, board). Builds a domain glossary from the witness list and committee membership, fixes ASR errors, disambiguates the roll call deterministically, and produces a manual-review report with video timestamps.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
