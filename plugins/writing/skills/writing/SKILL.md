@@ -355,7 +355,7 @@ FINAL:
 
 When evaluating writing output quality (for autoresearch or manual review), use these binary yes/no checks.
 
-**Voice context override:** EVAL 3 (contractions) and EVAL 4 (sentence rhythm) yield to captured voice context per rule #15. If the writer's voice signals dictate no contractions (formal register) or uniform short sentences (deliberate cadence), these evals are informational, not pass/fail. Evals 1, 2, 7, 8, and 9 never yield: AI tells are always wrong regardless of voice. EVAL 10 yields to channel context: mandatory only for branded / public-facing channels.
+**Voice context override:** EVAL 3 (contractions) and EVAL 4 (sentence rhythm) yield to captured voice context per rule #15. If the writer's voice signals dictate no contractions (formal register) or uniform short sentences (deliberate cadence), these evals are informational, not pass/fail. Evals 1, 2, 7, 8, 9, and 11 never yield: AI tells are always wrong regardless of voice. EVAL 10 yields to channel context: mandatory only for branded / public-facing channels.
 
 **EVAL 1: No em dashes**
 Question: Does the output contain zero em dashes (—)?
@@ -409,6 +409,12 @@ Pass: Self-audit bullets shown + revised FINAL version produced
 Fail: Single-pass output for a mandatory channel
 N/A: Internal drafts, conversational replies, dev-facing docs
 
+**EVAL 11: No editorial-edit posture tics**
+Question: Does the output avoid defensive disclaimers, section-end hedging epilogues, and "the question isn't X, it's Y" closers?
+Pass: Zero defensive disclaimer openings ("None of that is...", "That's not to say...", "While reasonable people may..."), zero section-final hedging epilogues ("the principle is contestable...", "time will tell..."), and no "the question isn't X, it's Y" closing line
+Fail: Any of the above patterns present (see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) for the full taxonomy of eight patterns; this eval covers the binary-checkable subset)
+Greppable: `grep -iE "none of that is|that's not to say|while reasonable people|the principle is contestable|the question isn'?t.*it'?s"`
+
 ## Guard Assertions
 
 When optimizing writing quality, these guards prevent regressions:
@@ -439,6 +445,7 @@ Before finalizing any content:
 - [ ] Zero copula avoidance ("serves as", "stands as", "boasts", "features" — see rule #16)
 - [ ] Zero inline-header vertical lists where the bold label just restates the line (rule #17)
 - [ ] Self-audit pass completed (mandatory for X, LinkedIn, web/blog, newsletter, branded content; see Self-Audit Pass section)
+- [ ] Editorial-edit pressure-test passed (no defensive disclaimers, no hedging epilogues at section closes, no false-neutral conclusions, no clever "the question isn't X, it's Y" closer; see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) and rule #18)
 - [ ] Captured voice idiosyncrasies preserved over generic defaults (rule #15: deliberate quirks in voice context kept, not smoothed)
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after
