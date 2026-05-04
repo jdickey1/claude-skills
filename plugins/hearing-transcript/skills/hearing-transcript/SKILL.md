@@ -1,6 +1,6 @@
 ---
 name: hearing-transcript
-description: Use when the user provides an auto-generated transcript file (.sbv, .vtt, .srt, .txt) of a legislative or government hearing — committee, council, board, commission, or similar — and asks to clean it up, fix errors, revise, correct, or improve it. Also triggers on phrases like "fix the transcript", "this hearing transcript has errors", "clean up these captions", or when a YouTube auto-caption file from a public meeting is in scope. Triggers on /clean-hearing.
+description: Use when the user provides an auto-generated transcript file (.sbv, .vtt, .srt, .txt) of a legislative or government meeting — committee, council, board, commission, or YouTube auto-captions of a public hearing — and asks to clean, fix, correct, edit, revise, or improve it. A bare path to such a file pasted into conversation also triggers when surrounding context is about a hearing or public meeting. Slash command: /clean-hearing.
 version: 0.1.0
 effort: high
 ---
@@ -51,13 +51,28 @@ Ask the user only for what cannot be inferred from conversation context, the tra
 Assemble the correct vocabulary for this hearing in one pass, before any edits. The glossary has four sections:
 
 - **Committee membership** — Chair, Vice Chair, all members. Pull from the official committee roster (state/federal legislature website, council page, board minutes). Note party affiliations only if relevant for context.
-- **Witness list** — Every person who testified. Pull from the bill analysis, witness card filings, hearing notice, or a news writeup of the hearing. Include their organization affiliations.
+- **Witness list** — Every person who testified. Pull from the bill analysis, witness card filings, hearing notice, or a news writeup of the hearing. Include their organization affiliations. **For Texas legislative hearings the canonical source is the Texas Legislature Online (TLO) witness list URL pattern**: `https://capitol.texas.gov/tlodocs/<SESSION>/witlistmtg/html/C<COMMITTEE_CODE><YYYYMMDD>10001.htm` (e.g., House State Affairs 89R 2026-04-23 → `C4502026042310001.htm`; committee code 450 = House State Affairs). Fetch this page first; it gives every witness name with the spelling the clerk recorded, plus their employer/organization. Without it, witness-name corrections are phonetic guesses.
 - **Organizations and proper nouns** — Every company, agency, utility, regulator, NGO, university, or named project mentioned in the hearing's subject area. For an energy hearing in Texas: Oncor, ERCOT, PUCT, CenterPoint, Vistra, Constellation, Calpine, Lancium, Crusoe, Skybox, Stack, Aligned, etc. Cast wide.
 - **Technical vocabulary and acronyms** — Domain-specific terms the ASR will mangle. Spell out the acronym on first reference: ERCOT = Electric Reliability Council of Texas, PUCT = Public Utility Commission of Texas. Include unit notations (MW, GW, kWh), regulatory references, and term-of-art phrases (closed-loop cooling, evaporative cooling, capacity market, ancillary services).
 
 Save the glossary to a temp file alongside the transcript (e.g., `<transcript-name>-glossary.md`). It is both an input to Phase 3 and an artifact in the final report.
 
 If you cannot find an authoritative committee roster or witness list, say so and proceed with what is verifiable. Do not fabricate either list.
+
+### Phase 2.5: Pull a Second-ASR Cross-Reference (when available)
+
+Whenever a second, independent ASR transcription of the same hearing exists, pull it before substituting. Disagreement between two ASR engines on the same passage is the highest-yield manual-review signal you can get for free.
+
+For Texas legislative hearings, a Deepgram-processed transcript pipeline writes pre-cleaned transcripts to iDrive E2 at `idrivee2:tlo-pipeline/<YYYY-MM-DD>-<slug>/`. Each folder contains `transcript.md` (with `[HH:MM:SS] Speaker N` markers), `transcript.json` (word-level timestamps), `speaker-map.json`, and a few other artifacts. Check before doing anything else:
+
+```bash
+rclone ls idrivee2:tlo-pipeline/ | grep <YYYY-MM-DD>
+rclone copy idrivee2:tlo-pipeline/<YYYY-MM-DD>-<slug>/transcript.md /tmp/
+```
+
+If present, grep both transcripts for ambiguous tokens and prioritize the disagreements in the manual-review queue (Phase 6). Caveat: Deepgram still mangles proper names independently, and its diarization sometimes mixes adjacent witnesses on a panel — trust the text content, not the speaker label, for unmapped witnesses. Also: pipeline audio often starts 15–25 minutes after the YouTube video begins (the pipeline skips housekeeping), so timestamps between the two will not align directly without computing the offset first.
+
+If no second ASR source exists, skip this phase and proceed to Phase 3 with single-source caveats noted in the final report.
 
 ### Phase 3: Backup and Format Audit
 
@@ -85,12 +100,26 @@ For each substitution:
 
 Common ASR error patterns to scan for, even when not flagged by the glossary:
 
-- **Single-syllable misreads of company names**: "Stack" → "stock", "Aligned" → "a line", "Crusoe" → "crew so".
-- **Acronyms spelled phonetically**: "ERCOT" → "air cot", "PUCT" → "puct" (correct, but check capitalization), "HARC" → "hark" / "Heart".
+- **Single-syllable misreads of company names**: "Stack" → "stock", "Aligned" → "a line", "Crusoe" → "crew so" / "Caruso".
+- **Acronyms spelled phonetically**: "ERCOT" → "air cot", "PUCT" → "puct" (correct, but check capitalization), "HARC" → "hark" / "Heart", "TEPRI" → "Tepper".
 - **Utility and grid operator names**: "Oncor" → "encore" / "anchor", "CenterPoint" → "center point" (split), "Vistra" → "Vista" / "vest era".
-- **Witness surnames pronounced unusually**: Spanish-origin surnames (Guillen → "Ian", Anchía → "an chia") and surnames with silent letters are highest-risk.
+- **Witness surnames pronounced unusually**: Spanish-origin surnames (Guillen → "Ian", Anchía → "an chia") and surnames with silent letters are highest-risk. Persian/Arabic-origin surnames also fail predictably (Poursoltan → "porcelain" / "Sultan" / "Persoltan"; Fakhoury → "Fakhouri").
+- **First-name-only address from the dais ≠ casual reference.** When a chair or member addresses a witness as ">> Cameron." or "Cameron, with the Data Center Coalition?", the ASR has dropped the surname, not the speaker. The first name being used alone in a question/handoff position is a near-certain signal that the surname needs to be filled in from the witness list. Replace with the surname (or "Mr./Ms. <Surname>") rather than leaving the first-name-only form.
+- **Hyphenated surnames lose the hyphen.** "Collier-Brown" → "Collier Brown" routinely; sometimes also splits across two caption lines. Always restore the hyphen during substitution.
+- **Phonetic substitution variants of unfamiliar names within one hearing.** A single witness's surname can appear in 3–6 different garbled forms in the same transcript (e.g., "Cameron porcelain" / "Cameron Sultan" / "Cameron Persoltan" / bare "Cameron"). Glossary substitution must enumerate every variant observed in the file, not just the most frequent one — phonetically related variants do not collapse under a single `replace_all`.
 - **Bill numbers and citations**: "HB 1500" → "HP 1500", "Senate Bill 6" → "Senate bill six". Standardize to the form used in official record.
 - **Number-and-unit pairs**: "2.45 GW" → "two point four five gigawatts" or "2.45 G W". Preserve the form the speaker used (digits if digits, words if words) — this is a transcription, not a stylebook conversion.
+
+#### Parallel sectioning for long files
+
+For transcripts longer than ~5,000 lines, dispatch one subagent per ~5,000-line section in parallel rather than processing serially. A 20,000-line SBV cleaned this way completes in roughly the time of a single section.
+
+Critical rules when sectioning:
+
+1. **Each section gets a non-overlapping line range.** Each subagent reads its range with `Read` `offset`/`limit`, identifies errors only within that range, and applies edits.
+2. **`Edit` `old_string` must anchor on the timestamp line above the cue text, not on cue text alone.** SBV's rolling overlap means the same cue text can appear in 2–3 adjacent blocks, and the same garbled phrase can recur across sections. Without timestamp anchoring, a section-1 agent's edit can collide with a section-3 agent's `old_string` match.
+3. **Use `Edit`, not whole-file rewrites.** The first parallel agent to use a Python atomic write (read whole file → modify → write whole file) will silently overwrite changes another agent has just committed. Stick to `Edit` calls — they merge cleanly even under concurrent dispatch. (Field-tested failure mode: an agent reported applying 16 corrections via atomic write; verification showed only 6 had landed because the other 10 were overwritten by a sibling agent's later atomic write.)
+4. **Always verify after dispatch.** Once all subagents report completion, grep the file for the original garbled forms. Trust nothing that wasn't independently verified — subagents report what they intended to do, not what survived in the final file.
 
 Resist the urge to repunctuate or restructure sentences. ASR often runs sentences together; that is part of the verbatim record. Speaker labels (`>>`) and line breaks are meaningful — preserve them.
 
