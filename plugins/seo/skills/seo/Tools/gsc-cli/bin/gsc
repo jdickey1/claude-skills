@@ -11,6 +11,7 @@ import { authLogin, authStatusCmd, authLogout } from '../commands/auth.mjs';
 import { sitesList, sitesDelete } from '../commands/sites.mjs';
 import { sitemapList, sitemapSubmit, sitemapDelete } from '../commands/sitemap.mjs';
 import { pullCmd } from '../commands/pull.mjs';
+import { inspectCmd } from '../commands/inspect.mjs';
 
 function parseArgs(argv) {
   const flags = {};
@@ -46,6 +47,14 @@ const HELP = `gsc — Google Search Console CLI
     Pull search analytics for all verified sites (or one) into seo_db.
     Default window: last 7 days, ending 2 days ago (GSC data lag).
 
+  gsc inspect <url>                                URL Inspection for one URL (auto-detects site)
+  gsc inspect --site <site> <url>                  URL Inspection with explicit site
+  gsc inspect --site <site> --top N                Inspect top N pages by impressions (last 28d)
+  gsc inspect --site <site> --top N --request-indexing
+    Also publish URL_UPDATED to Indexing API (best-effort; officially scoped
+    to JobPosting/BroadcastEvent). Use after a major content update to nudge
+    a recrawl. Pacing default 500ms; override with --pace-ms.
+
   Site format: 'sc-domain:jdkey.com' (Domain property) or 'https://jdkey.com/' (URL prefix property)
 `;
 
@@ -64,6 +73,19 @@ async function main() {
   const positional = parsed.positional.slice(2);
 
   try {
+    // `inspect` takes free-form positional args (URLs), so its sub is not a sub-command.
+    // Route it before the switch to avoid the "${group} ${sub}" key collision.
+    if (group === 'inspect') {
+      return inspectCmd({
+        site: flags.site,
+        top: flags.top,
+        all: flags.all,
+        requestIndexing: flags['request-indexing'],
+        json: flags.json,
+        paceMs: flags['pace-ms'],
+        positional: parsed.positional.slice(1),
+      });
+    }
     switch (`${group} ${sub || ''}`.trim()) {
       case 'auth login':   return authLogin();
       case 'auth status':  return authStatusCmd();
