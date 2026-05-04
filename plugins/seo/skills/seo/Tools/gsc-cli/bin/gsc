@@ -13,6 +13,10 @@ import { sitemapList, sitemapSubmit, sitemapDelete } from '../commands/sitemap.m
 import { pullCmd } from '../commands/pull.mjs';
 import { inspectCmd } from '../commands/inspect.mjs';
 
+// Flags that never take a value — without this, `--request-indexing https://...`
+// would consume the URL as the flag's value and lose the positional arg.
+const BOOLEAN_FLAGS = new Set(['json', 'all', 'request-indexing']);
+
 function parseArgs(argv) {
   const flags = {};
   const positional = [];
@@ -20,6 +24,7 @@ function parseArgs(argv) {
     const a = argv[i];
     if (a.startsWith('--')) {
       const key = a.slice(2);
+      if (BOOLEAN_FLAGS.has(key)) { flags[key] = true; continue; }
       const next = argv[i + 1];
       if (next && !next.startsWith('--')) { flags[key] = next; i++; }
       else { flags[key] = true; }
