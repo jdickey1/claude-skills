@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.jdkey.seo-cli</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/james/Projects/claude-skills/plugins/seo/skills/seo/Tools/gsc-cli/bin/gsc-weekly.sh</string>
+  </array>
+
+  <!-- Mondays at 7:00am, local time. launchd uses the system's local timezone,
+       which is America/Chicago on this Mac mini. -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>7</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>HOME</key>
+    <string>/Users/james</string>
+  </dict>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/james/Projects/claude-skills/plugins/seo/skills/seo/Tools/gsc-cli</string>
+
+  <!-- Do NOT run on load; we only want the calendar trigger.
+       Run manually with `launchctl kickstart -k gui/$(id -u)/com.jdkey.seo-cli`. -->
+  <key>RunAtLoad</key>
+  <false/>
+
+  <!-- Kill if it ever runs longer than an hour (full sweep should be ~5 min). -->
+  <key>ExitTimeOut</key>
+  <integer>3600</integer>
+
+  <key>StandardOutPath</key>
+  <string>/Users/james/Library/Logs/gsc-cli/launchd-stdout.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/james/Library/Logs/gsc-cli/launchd-stderr.log</string>
+</dict>
+</plist>
