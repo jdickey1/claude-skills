@@ -185,10 +185,18 @@ Wait 7 days for fresh GSC data, then prioritize:
 3. **AI Overview eating clicks** — Pages at pos 4-7 with 0 clicks ("real estate attorney" 588 imp/pos 4, "estate planning" 262 imp/pos 4.2, "texas estate tax 2026" 280 imp/pos 7.1). Likely AIO suppression; not a fix but an awareness item — track over time.
 4. **Junk traffic to deprioritize** — "civil law attorney" 1,855 imp/pos 105: ignore.
 
-### Phase 4 — `gsc inspect`
-URL Inspection API for top N pages per site (configurable). Writes `gsc_inspections`. Rate-limited (2,000/day quota); pace at 1 inspection / 0.5s.
+### Phase 4 — `gsc inspect` (DONE 2026-05-04, commit `7d6070b`)
+URL Inspection API for one URL or top N pages per site. Writes `gsc_inspections` (PK includes `inspected_at`, so re-inspections accumulate history). Rate-limited at 500ms between calls.
 
-**Sequencing:** Don't run dlg inspections until ~2026-05-11 (one full week post-DNS-cutover) — current GSC data still reflects the Zyro-served era and any inspection results would be invalidated when GSC re-crawls the new origin. Other sites (jdkey, hyperscale, winning, etc.) can be inspected immediately.
+**Forms:**
+- `gsc inspect <url>` — auto-detects site
+- `gsc inspect --site <site> <url>` — explicit site
+- `gsc inspect --site <site> --top N` — top N by impressions, last 28d
+- `gsc inspect ... --request-indexing` — also publish URL_UPDATED to Indexing API (best-effort; officially scoped to JobPosting/BroadcastEvent)
+
+**Smoke test:** ran against the just-rewritten dlg estate-tax post. Result: PASS, "Submitted and indexed", last crawl 2026-04-21 (pre-rewrite). Confirms the new content isn't yet known to Google — `--request-indexing` is the right next move when ready.
+
+**Sequencing:** Bulk dlg inspections still held until ~2026-05-11 (one full week post-DNS-cutover). Single-URL inspections on dlg are fine ad-hoc — that's the post-content-update use case. Other sites (jdkey, hyperscale, winning) can be bulk-inspected immediately.
 
 ### Phase 5 — `gsc digest`
 Per-site weekly summary. Pulls last-7-days vs prior-7-days from `gsc_perf`. Composes Brevo email **drafts only** (per global rule) with top movers, top losers, top queries, top pages, sitemap state.
