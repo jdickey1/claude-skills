@@ -117,6 +117,24 @@ Threads get ~63% higher engagement than single tweets. Use them for the stronges
 - Final tweet: specific debatable question + project mention (link in self-reply)
 - Each tweet must create forward momentum (reader needs the next one)
 
+### Soft Transitions Across Tweets
+
+Cold openers ("A 'zero-water' closed-loop facility...") read as discrete posts. **Threading words like "But" or "And" at the start of pivot tweets binds the thread into a continuous argument:**
+
+- Cold opener T5: "A 'zero-water' closed-loop datacenter fed by a coal plant..."
+- Soft transition T5: "**But** a 'zero-water' closed-loop datacenter fed by a coal plant..."
+
+Use soft transitions when a tweet pivots from positive cases to a counter-case (T5 in a 6-tweet thread typically does this), or when a tweet extends an argument from the previous one. **One or two soft transitions per thread is the limit.** Every tweet starting with "But" reads as a list of contradictions.
+
+### Hook Signals Continuation
+
+T1's hook tweet ends with the thread emoji 🧵, but the line before it should *also* signal continuation. A period feels terminal; a colon explicitly promises the next tweet:
+
+- Period (terminal): "Two operating Texas datacenters show the spread. 🧵"
+- Colon (continuation): "Two operating Texas datacenters show the spread: 🧵"
+
+Small change, real lift on the click-through to T2.
+
 ## Format Mixing
 
 Don't post the same structure every day. Mix across days:

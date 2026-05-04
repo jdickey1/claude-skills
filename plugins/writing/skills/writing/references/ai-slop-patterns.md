@@ -2,6 +2,32 @@
 
 Comprehensive catalog of AI-generated writing patterns to actively avoid. Sourced from the AISLOPOPEDIA by @Saboo_Shubham_ and expanded with observed patterns.
 
+## Contents
+
+| # | Pattern | What it is |
+|---|---|---|
+| 1 | [Throat-Clearers](#throat-clearers) | Phrases that delay the actual point |
+| 2 | [False Exclusivity Hooks](#false-exclusivity-hooks) | "Nobody's talking about this" framing |
+| 3 | [Manufactured Urgency](#manufactured-urgency) | "This changes everything" hype |
+| 4 | [Dramatic Fragmentation](#dramatic-fragmentation) | "Let that sink in." reader-direction |
+| 5 | [Fake Vulnerability](#fake-vulnerability) | "Unpopular opinion:" performative humility |
+| 6 | [False Agency](#false-agency) | Crediting non-agent things with action |
+| 7 | [Ladder of Escalation](#ladder-of-escalation) | "Not just X, but Y, but Z" tower |
+| 8 | [Pivot Phrases](#pivot-phrases) | "But here's where it gets interesting:" |
+| 9 | [Parallel-Clause Moralistic Punchlines](#parallel-clause-moralistic-punchlines) | "Survey the X, miss the Y" snap |
+| 10 | [Qualifier Sandwiches](#qualifier-sandwiches) | "It's worth noting that..." hedging |
+| 11 | [Call-to-Action Slop](#call-to-action-slop) | "Drop a comment below" begging |
+| 12 | [Fake Philosophical Closers](#fake-philosophical-closers) | "We're still early." mock-profound |
+| 13 | [AI Adverbs (Flag Words)](#ai-adverbs-flag-words) | literally / incredibly / fundamentally |
+| 14 | [AI Adjectives (Empty Intensifiers)](#ai-adjectives-empty-intensifiers) | profound / remarkable / unprecedented |
+| 15 | [AI Verbs (Sounds Smart, Says Nothing)](#ai-verbs-sounds-smart-says-nothing) | delve / unpack / leverage |
+| 16 | [Fill-in-the-Blank Templates](#fill-in-the-blank-templates) | "[X] is the new [Y]." |
+| 17 | [Significance Inflation](#significance-inflation) | Treating ordinary things as historic |
+| 18 | [Synonym Cycling (Elegant Variation)](#synonym-cycling-elegant-variation) | Renaming the same thing every paragraph |
+| 19 | [Filler and Hedging Bloat](#filler-and-hedging-bloat) | "in order to" / "the fact that" |
+| 20 | [Curly Quotes and Em-Char Drift](#curly-quotes-and-em-char-drift) | Typographic AI fingerprints |
+| 21 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
+
 ## Throat-Clearers
 
 Phrases that exist solely to delay the actual point by one sentence. Cut them entirely.
@@ -147,6 +173,26 @@ How AI moves between paragraphs when it has no actual connective logic.
 | "Enter: [X]." |
 
 **Fix:** If the next paragraph is interesting, it'll show. Transition with logic, not hype.
+
+## Parallel-Clause Moralistic Punchlines
+
+A close cousin of the corrective reframe (rule #10), without the explicit negation. The writer compresses a moral into a "[verb A], [verb B]" parallel where the second clause exposes what the first misses.
+
+| Pattern |
+|---------|
+| "Survey the datacenter, miss the gas plant." |
+| "Watch the speaker, miss the policy." |
+| "Trust the headline, lose the story." |
+| "Read the contract, miss the fine print." |
+| "Hire the resume, lose the candidate." |
+| "Fix the symptom, ignore the cause." |
+| "Optimize the metric, miss the goal." |
+
+The shape is the tell: short, balanced, two clauses, second clause is the "gotcha." It feels earned by the medium (especially on X, where compression is a virtue) but it's the same AI rhetorical move as "That's not X. That's Y.": the writer telling the reader what to take away instead of letting the evidence do the work.
+
+**Fix:** State the principle directly. "Most of the water cost sits upstream of the facility" is what the punchline was trying to compress. The plainer line lands harder because it's a claim, not a snap. If the evidence in the surrounding tweets/paragraphs is doing its job, the moral follows without the gotcha.
+
+**Test:** If the second clause is doing all the rhetorical work and the first clause is just a setup, you've got a punchline, not a sentence. Rewrite as a claim.
 
 ## Qualifier Sandwiches
 
