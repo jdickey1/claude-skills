@@ -1,0 +1,96 @@
+#!/usr/bin/env node
+// gsc — Google Search Console + Indexing CLI for multi-site portfolios
+// Usage:
+//   gsc auth login | status | logout
+//   gsc sites [--json]
+//   gsc sitemap list --site <site> [--json]
+//   gsc sitemap submit --site <site> <feedpath>
+//   gsc sitemap delete --site <site> <feedpath>
+
+import { authLogin, authStatusCmd, authLogout } from '../commands/auth.mjs';
+import { sitesList, sitesDelete } from '../commands/sites.mjs';
+import { sitemapList, sitemapSubmit, sitemapDelete } from '../commands/sitemap.mjs';
+import { pullCmd } from '../commands/pull.mjs';
+
+function parseArgs(argv) {
+  const flags = {};
+  const positional = [];
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith('--')) {
+      const key = a.slice(2);
+      const next = argv[i + 1];
+      if (next && !next.startsWith('--')) { flags[key] = next; i++; }
+      else { flags[key] = true; }
+    } else {
+      positional.push(a);
+    }
+  }
+  return { flags, positional };
+}
+
+const HELP = `gsc — Google Search Console CLI
+
+  gsc auth login                          Run OAuth2 consent flow
+  gsc auth status                         Show authenticated identity
+  gsc auth logout                         Remove stored credentials
+
+  gsc sites [--json]                      List GSC-verified properties
+  gsc sites delete --site <site>          Remove a property from this account's GSC view
+
+  gsc sitemap list --site <site> [--json]
+  gsc sitemap submit --site <site> <feedpath>
+  gsc sitemap delete --site <site> <feedpath>
+
+  gsc pull [--days N] [--type web|image|video|news|discover] [--site <site>]
+    Pull search analytics for all verified sites (or one) into seo_db.
+    Default window: last 7 days, ending 2 days ago (GSC data lag).
+
+  Site format: 'sc-domain:jdkey.com' (Domain property) or 'https://jdkey.com/' (URL prefix property)
+`;
+
+async function main() {
+  const [, , ...rest] = process.argv;
+  if (rest.length === 0 || rest[0] === '-h' || rest[0] === '--help') {
+    console.log(HELP);
+    return;
+  }
+  // Parse first, then take command path from leading positional args so that
+  // `gsc sites --json` (one-word command + flag) doesn't consume `--json` as the sub.
+  const parsed = parseArgs(rest);
+  const { flags } = parsed;
+  const group = parsed.positional[0];
+  const sub = parsed.positional[1];
+  const positional = parsed.positional.slice(2);
+
+  try {
+    switch (`${group} ${sub || ''}`.trim()) {
+      case 'auth login':   return authLogin();
+      case 'auth status':  return authStatusCmd();
+      case 'auth logout':  return authLogout();
+      case 'sites':        return sitesList({ json: flags.json });
+      case 'sites delete': return sitesDelete({ site: flags.site });
+      case 'sitemap list': return sitemapList({ site: flags.site, json: flags.json });
+      case 'sitemap submit': {
+        const [feedpath] = positional;
+        return sitemapSubmit({ site: flags.site, feedpath });
+      }
+      case 'sitemap delete': {
+        const [feedpath] = positional;
+        return sitemapDelete({ site: flags.site, feedpath });
+      }
+      case 'pull':
+        return pullCmd({ days: flags.days, type: flags.type, site: flags.site });
+      default:
+        console.error(`Unknown command: ${group} ${sub || ''}\n`);
+        console.log(HELP);
+        process.exitCode = 1;
+    }
+  } catch (e) {
+    console.error(`Error: ${e.message}`);
+    if (process.env.DEBUG) console.error(e.stack);
+    process.exitCode = 1;
+  }
+}
+
+main();

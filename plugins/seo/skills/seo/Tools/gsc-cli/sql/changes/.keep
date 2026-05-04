@@ -1,0 +1,3 @@
+Migration files go here, named: YYYY-MM-DD-NNN-description.sql
+schema.sql is the canonical "what the DB should look like now". changes/ is the
+ordered audit log of how it got there.
