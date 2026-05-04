@@ -45,6 +45,8 @@ Structure for one-second scanning:
 
 **Language:** Conversational, like a mentor to students. "use" not "utilize". "help" not "facilitate". "get better" not "optimize performance". Could a 14-year-old understand this?
 
+**First person:** Avoid "I" / "me" / "my" in body tweets. They read as self-promotion. **First-person plural ("we") is OK in closers** when the speaker is part of the audience's community ("the level of conversation we need to have"). "We" places the speaker inside the tribe; "I" places them outside it. For policy/industry/regional threads where the writer belongs to the audience's world, the closer's "we" is earned voice, not a first-person violation.
+
 ## Voice Development
 
 Develop 3-4 recognizable patterns used consistently but not formulaically:
@@ -54,6 +56,29 @@ Develop 3-4 recognizable patterns used consistently but not formulaically:
 - Using "tbh" or "honestly" before controversial takes
 
 Mix up order and context while keeping patterns recognizable.
+
+### Typo-Style Informalities (X-Specific)
+
+Polished punctuation reads as copywriter-edited. One deliberate small informality per thread signals hand-typed authenticity:
+
+- "?s" or "?'s" for "questions"
+- "&" for "and" in tight closers
+- Sentence fragments ending the closer ("Ask the right ?s.")
+- Lowercase "i" for "I" (carefully; context-dependent on persona)
+- Missing apostrophes in casual contractions ("dont", "wont"), only if the persona supports it
+
+**One per thread is signal. Three is noise.** The goal is to break the polish slightly so the closer reads as someone typing on a phone, not editing in Google Docs. Confine these to X. LinkedIn and web copy stay polished.
+
+### Audience Calibration: Frame Principle, Not Fingered Actor
+
+When writing for ideologically-broad or community-aligned audiences (industry, policy, regional), prefer principle-statements over actor-specific blame in the screenshot/synthesis tweet:
+
+- Narrower (politically loaded): "Survey the datacenter, miss the gas plant."
+- Broader (principle-stated): "The full picture includes more than what's on site."
+
+Actor-naming punchlines ("the gas plant," "Big Tech," "the lobbyists") are fine for advocacy threads where the audience already shares the framing. They cost reach in policy/industry threads where the audience needs to absorb the principle without political friction. The broader version invites readers across the ideological aisle to nod along; the narrower version makes them check sides first.
+
+Not a universal rule. It depends on the speaker's stance and the audience's makeup. For Hyperscale-style infrastructure-policy threads aimed at a Texas Republican policy audience, principle wins. For an environmental-advocacy thread aimed at climate readers, naming the failure mode is the point.
 
 ## Engagement Structure Templates
 
@@ -97,6 +122,32 @@ curious what you'd change
 
 or if you've tried [alternative]
 ```
+
+### Policy / Community-Aligned Closer
+
+When the speaker belongs to the audience's policy or industry community, a conversational closer outperforms a clean rhetorical parallel. The clean parallel reads as copywriter-polished; the conversational closer reads as a colleague talking.
+
+```
+The misleading "[bland claim]" won some [outcome].
+But the details on [topic] make all the difference.
+[Audience name] know to consider all of what matters.
+With [domain], that's the level of conversation we need to have.
+[Action fragment.]
+```
+
+Pattern elements:
+
+- **Quote the misleading claim**: signals you've heard it, not lecturing the reader
+- **Soft "But"** transition: conversational, not corrective
+- **Audience-flatter** ("Texas leaders know to..."): places competence in the audience, not the writer
+- **First-person plural** ("we need to have"): speaker as part of the audience's tribe
+- **CTA fragment** ("Ask the right ?s."): typo-style informality signals hand-typed authenticity
+
+This beats the clean three-line parallel ("The X wins. The Y wins. Z chooses.") for policy thread engagement. The clean parallel is technically cleaner and more X-quotable, but it can read as too rhetorically-tight: a copywriter showing off rather than a peer talking. When the speaker is inside the audience's world, the conversational version converts better.
+
+**When to use which:**
+- Clean rhetorical parallel: outsider analyst, journalist looking in, advocacy with clear protagonist/antagonist
+- Conversational closer: insider analyst, peer-to-peer policy, audience-aligned commentary
 
 ## Writing Process
 

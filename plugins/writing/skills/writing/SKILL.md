@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.4.0
+version: 2.5.0
 effort: high
 ---
 
@@ -155,6 +155,15 @@ The "That's not X. That's Y." construction is an AI rhetorical crutch. It sounds
 - "Forget X. Think Y."
 - "Stop thinking of it as X. Start thinking of it as Y."
 
+**Also catch parallel-clause moralistic punchlines.** These don't use explicit negation but compress the same rhetorical move into a "[verb A], [verb B]" parallel where the second clause exposes what the first misses:
+
+- "Survey the datacenter, miss the gas plant."
+- "Watch the speaker, miss the policy."
+- "Trust the headline, lose the story."
+- "Read the contract, miss the fine print."
+
+Same family as "X isn't Y, it's Z": the writer compressing a moral into a punchline instead of letting evidence carry it. State the principle directly ("Most of the water cost sits upstream of the facility") instead of compressing to a moralistic two-clause snap. Particularly common in X drafts where the punchiness feels earned by the medium; it's still the AI shape.
+
 **Why this is bad:** It's the writer stepping in front of the evidence to tell the reader how to interpret it. If your evidence is strong, the reframe is unnecessary. If your evidence is weak, the reframe won't save it. Either way, cut it.
 
 **What to do instead:** State the thing directly. Let evidence create the reframe in the reader's mind.
@@ -231,6 +240,14 @@ Then mirror those signals in the rewrite. Don't just remove AI patterns, replace
 **What's NOT an idiosyncrasy:** Em dashes (rule #1), banned AI buzzwords (rule #2), AI slop patterns (rule #13, throat-clearers, fake vulnerability, pivot hype, fake closers, etc.), corrective reframing (rule #10), copula avoidance (rule #16), and inline-header vertical lists (rule #17) are always wrong. Those aren't voice choices, they're AI tells. Rule #15 protects deliberate human quirks, not AI artifacts. If a captured voice corpus contains these patterns, they're contamination from AI editing, not real voice. Strip them.
 
 **Why this rule exists:** Applying every universal rule maximally smooths output toward a generic "competent" register that reads as AI-processed even when it's technically "correct." The writer's quirks are the fingerprint. Don't polish them out.
+
+**Channel context modifies voice-mirror.** Voice-mirror beats AI mush, but on conversational channels (X, SMS, casual newsletter, DMs), plainness often beats voice-mirror. A literary phrase that lands in a print article can read as overwritten in 280 chars. If a phrase mirrors the parent piece's voice but adds friction at thread cadence, swap it down a register for the conversational version.
+
+- Parent piece: "They aren't the same kind of object."
+- X draft mirroring it: "Different objects."
+- Live X (better): "Very different."
+
+Both are correct for their channels. The literary mirror feels overwritten on X; the plain phrase feels underwritten in print. Calibrate to where the reader is. The published voice can carry deliberate idiosyncrasies into a thread (signature transitions, sentence fragments, abbreviations), but a single literary turn that requires a reader's full attention is the kind of thing that gets edited down on the live post.
 
 ### 16. No Copula Avoidance
 
@@ -351,79 +368,11 @@ FINAL:
 
 **Why this exists:** Lexical rules (banned buzzwords, em dashes, contractions) catch words. Structural rules (rules #10, #13, #16, #17) catch named constructions. The self-audit catches the residual *shape* of AI prose — patterns we haven't yet named — and cuts them before content goes public. Anything Hyperscale, JD Key, or any other brand publishes hits readers who pattern-match on AI output instantly; the audit is the last guard against that signal.
 
-## Binary Quality Checks
+## Quality Checks and Guards
 
-When evaluating writing output quality (for autoresearch or manual review), use these binary yes/no checks.
+For autoresearch evals, manual review, or pre-publish gates, use the **eleven binary quality checks** in [references/quality-checks.md](references/quality-checks.md). The reference defines: voice/channel context overrides, EVAL 1-11 (em dashes, banned buzzwords, contractions, rhythm, evidence, opener, AI slop, corrective reframing, copula avoidance, self-audit, editorial-edit tics), greppable patterns where checkable, and the two guard assertions (word-count vs. quality, format-specific rule preservation).
 
-**Voice context override:** EVAL 3 (contractions) and EVAL 4 (sentence rhythm) yield to captured voice context per rule #15. If the writer's voice signals dictate no contractions (formal register) or uniform short sentences (deliberate cadence), these evals are informational, not pass/fail. Evals 1, 2, 7, 8, 9, and 11 never yield: AI tells are always wrong regardless of voice. EVAL 10 yields to channel context: mandatory only for branded / public-facing channels.
-
-**EVAL 1: No em dashes**
-Question: Does the output contain zero em dashes (—)?
-Pass: Not a single em dash in the entire text
-Fail: Any em dash present
-
-**EVAL 2: No banned buzzwords**
-Question: Does the output contain zero words from the banned phrases list?
-Pass: None of the banned phrases appear anywhere
-Fail: Any banned phrase detected
-
-**EVAL 3: Contractions present**
-Question: Does the output average 3+ contractions per paragraph?
-Pass: Most paragraphs use natural contractions (don't, can't, won't, isn't, etc.)
-Fail: Fewer than 3 contractions per paragraph on average
-
-**EVAL 4: Sentence rhythm**
-Question: Does the output include varied sentence lengths?
-Pass: Mix of short (<10 words), medium (10-25 words), and long (>25 words) sentences
-Fail: Most sentences are similar length
-
-**EVAL 5: Specific evidence**
-Question: Does every claim include specific numbers, names, or examples within 1-2 sentences?
-Pass: No abstract assertions without supporting specifics
-Fail: Any unsupported claim detected
-
-**EVAL 6: Strong opener**
-Question: Does the first sentence reference a specific time, place, number, or provoke curiosity?
-Pass: Opening isn't generic
-Fail: Generic opening (e.g., "In today's world..." or "Communication is key...")
-
-**EVAL 7: No AI slop patterns**
-Question: Does the output avoid throat-clearers, false exclusivity hooks, manufactured urgency, dramatic fragmentation, fake vulnerability, qualifier sandwiches, pivot hype, fake closers, and fill-in-the-blank templates?
-Pass: Zero instances of structural AI slop patterns (see references/ai-slop-patterns.md)
-Fail: Any throat-clearer ("Here's the thing:"), false exclusivity ("Nobody's talking about this"), urgency hook ("This changes everything"), dramatic fragment ("Let that sink in."), fake vulnerability ("Unpopular opinion:"), qualifier sandwich ("It's worth noting..."), pivot hype ("But here's where it gets interesting:"), fake closer ("Buckle up."), or template sentence detected
-
-**EVAL 8: No corrective reframing**
-Question: Does the output avoid the "That's not X. That's Y." pattern and its variants?
-Pass: Zero instances of corrective reframing (or at most one deliberate structural pivot)
-Fail: Any "That's not X. That's Y.", "This isn't X. It's Y.", "More than just X, it's Y.", "Forget X. Think Y.", or similar construct detected
-
-**EVAL 9: No copula avoidance**
-Question: Does the output avoid "serves as / stands as / functions as / acts as / boasts / features / offers" as substitutes for "is" and "has"?
-Pass: Zero copula-avoidance phrases (≤1 acceptable when context demands it, e.g., legal boilerplate)
-Fail: Multiple copula-avoidance phrases detected
-Greppable: `grep -iE 'serves as|stands as|functions as|acts as|boasts a|features a|offers a'`
-
-**EVAL 10: Self-audit pass completed (mandatory channels only)**
-Question: For X, LinkedIn, web, newsletter, or branded content, did the draft go through an explicit "what's still AI?" self-audit and revision pass?
-Pass: Self-audit bullets shown + revised FINAL version produced
-Fail: Single-pass output for a mandatory channel
-N/A: Internal drafts, conversational replies, dev-facing docs
-
-**EVAL 11: No editorial-edit posture tics**
-Question: Does the output avoid defensive disclaimers, section-end hedging epilogues, and "the question isn't X, it's Y" closers?
-Pass: Zero defensive disclaimer openings ("None of that is...", "That's not to say...", "While reasonable people may..."), zero section-final hedging epilogues ("the principle is contestable...", "time will tell..."), and no "the question isn't X, it's Y" closing line
-Fail: Any of the above patterns present (see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) for the full taxonomy of eight patterns; this eval covers the binary-checkable subset)
-Greppable: `grep -iE "none of that is|that's not to say|while reasonable people|the principle is contestable|the question isn'?t.*it'?s"`
-
-## Guard Assertions
-
-When optimizing writing quality, these guards prevent regressions:
-
-**GUARD 1: Word count constraints don't sacrifice quality**
-Tightening word count must not cut the headline, CTA, or key evidence. If brevity hurts impact, revert.
-
-**GUARD 2: Format-specific rules preserved**
-Each format (X post, LinkedIn, newsletter, web) has its own constraints. Optimizing for one format must not break another's rules.
+The pre-publish checklist below is the human-facing version of these checks; the quality-checks.md reference is the machine-checkable version.
 
 ## Pre-Publish Checklist
 
@@ -489,6 +438,25 @@ Pre-publish checklist: {all passed / items failed}
 - **Specific claims (numbers, dates, names) must be sourced** from the user's input or verified reference material. Never fabricate statistics.
 - **"Read aloud test" means actually evaluating rhythm and flow**, not just checking sentence length metrics.
 
+## Rationalization Defense (Discipline-Skill Bulletproofing)
+
+These are the rationalizations the skill must refuse, with the counter to apply:
+
+| Rationalization | Counter |
+|---|---|
+| "User said keep it short, so I skipped the headline candidates." | Headlines are 80% of the work (rule #9). Generate 5+ candidates, pick one, then trim the body if needed. Never compress by skipping candidate generation. |
+| "The em dashes in the parent piece show the user wants them." | Em dashes in source material are AI contamination, not voice (see rule #15: "What's NOT an idiosyncrasy"). Strip them. |
+| "Skipping contractions sounds more authoritative for this topic." | If the user requested formal register, that's voice context (rule #15) and EVAL 3 yields. If they didn't, the rule applies. Default to contractions. |
+| "The corrective reframe lands really well, so I'll keep this one." | Rule #10: zero is ideal, one is the absolute max. If the evidence is strong the reframe is unnecessary; if the evidence is weak the reframe won't save it. |
+| "I'm under word-count pressure, so I skipped the self-audit." | The self-audit is mandatory for branded channels (Self-Audit Pass section). Cut elsewhere; never skip the audit. |
+| "I don't see any AI tells in this draft." | A first-draft audit with zero bullets in step 2 means the audit was skipped, not passed. Name 2-4 honest tells before revising. |
+| "This buzzword isn't on the exact-match list." | Rule #2 applies to the word, not the phrase. "The modern digital landscape" contains "landscape" even though the exact phrase isn't listed. Check each banned word independently. |
+| "The parallel-clause punchline is punchier on X, so it's earned." | Rule #10's parallel-clause moralistic punchline subsection: same AI rhetorical move as "X isn't Y, it's Z" without the negation. State the principle directly. |
+| "Voice context says no contractions, but rule #3 says use them." | Voice wins (rule #15). Captured voice context overrides universal defaults where they conflict. EVAL 3 yields to formal register. |
+| "The user's draft already used 'serves as,' so it must be voice." | If the captured voice contains AI tells (em dashes, copula avoidance, corrective reframes), it's contamination from prior AI editing. Strip them. Rule #15 protects deliberate human quirks, not AI artifacts. |
+
+If a rationalization isn't on this list, write it down before acting on it. New rationalizations are the most valuable signal for the next skill iteration.
+
 ## Gotchas
 - **Em dash verification must be literal.** Don't trust "I didn't use em dashes." Run `grep -c '—'` on the actual output. Claude's most common quality failure.
 - **Contractions conflict with formal tone.** The 3+ contractions/paragraph rule breaks legal, regulatory, or formal business content. Ask the user if formal tone is required before forcing contractions.
@@ -500,15 +468,32 @@ Pre-publish checklist: {all passed / items failed}
 
 ## Learning
 
-When this skill runs, append observations to `.learnings.jsonl` in the skill directory:
+When executing this skill, append a JSON line to `<skill-dir>/.learnings.jsonl` when:
 
-```json
-{"timestamp": "ISO-8601", "skill": "writing", "event_type": "user_correction", "context": "User corrected em dash that slipped through"}
-{"timestamp": "ISO-8601", "skill": "writing", "event_type": "edge_case", "context": "Legal content needed formal tone: contractions rule conflicted"}
+- **The user corrects your output** (`event_type: user_correction`). Capture the original AI phrasing and the user's revised version. Examples: em dash that slipped through, banned buzzword the user replaced, corrective reframe the user rewrote, AI tic the user cut.
+- **You encounter a scenario not covered by this skill** (`event_type: edge_case`). Capture the new register, channel, or constraint. Examples: legal content needed formal tone (contractions rule conflicted), regional dialect required different cadence, accessibility constraint required different sentence structure.
+- **A rationalization comes up that isn't in the Rationalization Defense table** (`event_type: edge_case`, with context `"new_rationalization"`). The new rationalizations are the most valuable signal for skill iteration. Capture the verbatim rationalization the model considered.
+- **A self-audit catches a residual AI tell that none of the lexical or structural rules named** (`event_type: edge_case`, with context `"unnamed_pattern"`). These are the patterns the next skill iteration will name and add to ai-slop-patterns.md.
+- **The skill produces a successful unconventional choice that the user accepted without pushback** (`event_type: user_correction` with `original` showing the rule-following draft and `corrected` showing the accepted variant). Validates voice-overrides-default rule #15 in the wild.
+
+### Event format
+
+```jsonl
+{"timestamp":"2026-05-04T11:42:00Z","skill":"writing","event_type":"user_correction","context":"Survey-the-X-miss-the-Y parallel punchline; user swapped for plain principle statement","original":"Survey the datacenter, miss the gas plant.","corrected":"The full picture includes more than what's on site."}
+{"timestamp":"2026-05-04T13:10:00Z","skill":"writing","event_type":"edge_case","context":"unnamed_pattern: literary 'Different objects' mirrored parent piece but felt overwritten on X; user swapped for 'Very different'"}
+{"timestamp":"2026-05-04T14:30:00Z","skill":"writing","event_type":"edge_case","context":"new_rationalization: 'The parallel-clause punchline is X-native, so it's earned'"}
 ```
 
-Track these patterns:
-- Which banned phrases slip through most often?
-- Which formats (X, LinkedIn, web) trigger the most corrections?
-- When do contractions hurt rather than help? (formal contexts)
+### Promotion to skill iteration
+
+Periodically run `python -m scripts.promote_learnings` (skill-creator script) on the journal. Group events by theme and propose targeted patches: new banned-pattern entries for ai-slop-patterns.md, new rationalization-counter pairs for the Rationalization Defense table, new examples in the relevant rule sections.
+
+Patterns to watch:
+- Which banned phrases slip through most often? (suggests the buzzword list needs synonym expansion)
+- Which formats (X, LinkedIn, web) trigger the most corrections? (suggests the format reference needs sharpening)
+- When do contractions hurt rather than help? (suggests rule #15 examples to add)
+- Which rationalizations recur? (suggests new rows in the defense table)
+- Which channel-context overrides surface most? (suggests rule #15's "channel context modifies voice-mirror" needs more channels named)
+
+The journal is per-installation data, not source code. `.learnings.jsonl` is gitignored at the skill root.
 - Which rules conflict with each other under pressure?

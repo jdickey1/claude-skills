@@ -4,3 +4,5 @@ node_modules/
 __pycache__/
 *.pyc
 plugins/writing/skills/writing-workspace/
+plugins/writing/skills/*/.skill-snapshot/
+plugins/*/skills/*/.learnings.jsonl
