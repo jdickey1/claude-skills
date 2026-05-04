@@ -12,6 +12,7 @@ import { sitesList, sitesDelete } from '../commands/sites.mjs';
 import { sitemapList, sitemapSubmit, sitemapDelete } from '../commands/sitemap.mjs';
 import { pullCmd } from '../commands/pull.mjs';
 import { inspectCmd } from '../commands/inspect.mjs';
+import { digestCmd } from '../commands/digest.mjs';
 
 // Flags that never take a value — without this, `--request-indexing https://...`
 // would consume the URL as the flag's value and lose the positional arg.
@@ -59,6 +60,11 @@ const HELP = `gsc — Google Search Console CLI
     Also publish URL_UPDATED to Indexing API (best-effort; officially scoped
     to JobPosting/BroadcastEvent). Use after a major content update to nudge
     a recrawl. Pacing default 500ms; override with --pace-ms.
+
+  gsc digest [--site <site>] [--days N] [--top N] [--out <dir>] [--json]
+    Per-site weekly digest from seo_db: top movers, losers, queries, pages,
+    sitemap state, recent inspections. Writes HTML + Markdown to
+    ~/Library/Logs/gsc-cli/digest-YYYY-MM-DD/ (drafts only — no email send).
 
   Site format: 'sc-domain:jdkey.com' (Domain property) or 'https://jdkey.com/' (URL prefix property)
 `;
@@ -108,6 +114,14 @@ async function main() {
       }
       case 'pull':
         return pullCmd({ days: flags.days, type: flags.type, site: flags.site });
+      case 'digest':
+        return digestCmd({
+          days: flags.days,
+          top: flags.top,
+          site: flags.site,
+          out: flags.out,
+          json: flags.json,
+        });
       default:
         console.error(`Unknown command: ${group} ${sub || ''}\n`);
         console.log(HELP);

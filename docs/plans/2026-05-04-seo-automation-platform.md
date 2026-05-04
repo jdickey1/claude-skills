@@ -198,8 +198,27 @@ URL Inspection API for one URL or top N pages per site. Writes `gsc_inspections`
 
 **Sequencing:** Bulk dlg inspections still held until ~2026-05-11 (one full week post-DNS-cutover). Single-URL inspections on dlg are fine ad-hoc — that's the post-content-update use case. Other sites (jdkey, hyperscale, winning) can be bulk-inspected immediately.
 
-### Phase 5 — `gsc digest`
-Per-site weekly summary. Pulls last-7-days vs prior-7-days from `gsc_perf`. Composes Brevo email **drafts only** (per global rule) with top movers, top losers, top queries, top pages, sitemap state.
+### Phase 5 — `gsc digest` (DONE 2026-05-04)
+Per-site weekly summary. Reads `gsc_perf` last 7d vs prior 7d, plus `gsc_sitemap_log` and `gsc_inspections`. Renders HTML + Markdown to `~/Library/Logs/gsc-cli/digest-YYYY-MM-DD/<display_name>.{html,md}` plus an `INDEX.md` so the user has one entry point per week.
+
+**Drafts-only interpretation:** Phase 5 doesn't email anything — it writes static files to disk. The user opens `INDEX.md` (or the per-site HTML) in a browser, reviews, and decides whether to share. This is the strictest possible reading of the project rule "never send emails directly". Brevo / IMAP draft delivery can be added later as an opt-in flag without changing the data path.
+
+**Forms:**
+- `gsc digest` — all active sites
+- `gsc digest --site <site>` — one site
+- `gsc digest --days N` — override window length (default 7)
+- `gsc digest --top N` — per-section row cap (default 10)
+- `gsc digest --out <dir>` — override output dir
+- `gsc digest --json` — print structured digests to stdout instead of writing files
+
+**Sections per site:** Totals (clicks/impressions/CTR/avg position with deltas), Top Movers, Top Losers, Top Queries, Top Pages, Sitemap State (last 10 events), Recent URL Inspections.
+
+**Implementation notes:**
+- Window A: last `numDays` complete days ending 2 days ago (GSC lag). Window B: the prior `numDays` immediately before A.
+- Movers/losers use a full outer join across the two windows so queries that appeared in only one period still surface (i.e. a query that disappeared shows as a loser).
+- Position is impression-weighted across rows (`sum(position * impressions) / sum(impressions)`), since `gsc_perf` is broken down by all 5 dimensions.
+- Per-site failures are logged to `gsc_run_log` with `status='error'` but don't abort the run.
+- Smoke test (2026-05-04): all 7 sites generated successfully. dlg shows the recent estate-tax page in top queries at impression-weighted position 6.2 with 0 clicks — confirms the digest correctly surfaces the "sleeping giant" pattern that prompted the rewrite.
 
 ### Phase 6 — Cron / LaunchAgent
 `launchd/com.jdkey.seo-cli.plist` runs Mondays 7am CT. Calls `gsc pull && gsc inspect && gsc digest` on Mac mini. Logs to `~/Library/Logs/gsc-cli/`.
