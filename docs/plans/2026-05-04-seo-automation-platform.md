@@ -220,8 +220,28 @@ Per-site weekly summary. Reads `gsc_perf` last 7d vs prior 7d, plus `gsc_sitemap
 - Per-site failures are logged to `gsc_run_log` with `status='error'` but don't abort the run.
 - Smoke test (2026-05-04): all 7 sites generated successfully. dlg shows the recent estate-tax page in top queries at impression-weighted position 6.2 with 0 clicks — confirms the digest correctly surfaces the "sleeping giant" pattern that prompted the rewrite.
 
-### Phase 6 — Cron / LaunchAgent
-`launchd/com.jdkey.seo-cli.plist` runs Mondays 7am CT. Calls `gsc pull && gsc inspect && gsc digest` on Mac mini. Logs to `~/Library/Logs/gsc-cli/`.
+### Phase 6 — Cron / LaunchAgent (DONE 2026-05-04)
+`launchd/com.jdkey.seo-cli.plist` runs Mondays 7am CT on Mac mini. Wraps `bin/gsc-weekly.sh` which:
+
+1. `gsc pull` (all sites)
+2. Per-site `gsc inspect --site <site> --top 50` (loops over `seo_db.sites where active=true`, falls back to GSC API if seo_db unreachable)
+3. `gsc digest` (all sites)
+
+**dlg hold:** built-in date gate skips `sc-domain:dickeylawgroup.com` until `GSC_DLG_HOLD_UNTIL` (default `2026-05-11`). First scheduled run is 2026-05-11, so the gate transitions exactly on the day dlg becomes eligible.
+
+**Resilience:** Per-step failures are logged and counted, but later steps still run. Exit code is non-zero if anything failed so launchd sees it.
+
+**Logging:**
+- Per-run: `~/Library/Logs/gsc-cli/cron-YYYY-MM-DD.log` (full stdout+stderr from the wrapper)
+- launchd's own: `~/Library/Logs/gsc-cli/launchd-stdout.log` and `launchd-stderr.log`
+- Database: each command also writes to `gsc_run_log`
+
+**Install/uninstall:**
+- `launchd/install.sh` — copies plist to `~/Library/LaunchAgents/`, `launchctl bootout` then `bootstrap` (idempotent)
+- `launchd/uninstall.sh` — removes from `~/Library/LaunchAgents/`
+- Manual kick: `launchctl kickstart -k gui/$(id -u)/com.jdkey.seo-cli`
+
+Installed and verified loaded on Mac mini at 2026-05-04 17:05 CT. First fire: Monday 2026-05-11 07:00 CT.
 
 ---
 
