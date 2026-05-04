@@ -367,7 +367,7 @@ ChatGPT (and Word's autocorrect) substitutes Unicode "smart" characters for ASCI
 
 **Fix:** Run a literal grep on the final draft. Use ASCII straight quotes and three-period ellipsis unless the brand style guide explicitly requires otherwise. Some long-form web publications style-guide curly quotes in; most platforms (X, LinkedIn, plain email) should use straight.
 
-**Greppable check:** `grep -P '[\x{2018}\x{2019}\x{201C}\x{201D}\x{2013}\x{2014}\x{2026}]' draft.md` — any output flags AI residue.
+**Greppable check:** `grep -P '[\x{2018}\x{2019}\x{201C}\x{201D}\x{2013}\x{2014}\x{2026}]' draft.md`. Any output flags AI residue.
 
 ## Self-Assessment
 

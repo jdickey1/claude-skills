@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.5.0
+version: 2.5.1
 effort: high
 ---
 
@@ -299,7 +299,7 @@ The lexical rules catch wrong words. The structural rules catch named AI constru
 
 Before finalizing branded or long-form content, scan for the eight editorial-edit patterns in [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md). Each is documented with a real before/after from an editorial revision pass.
 
-**Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics — the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip.
+**Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics: the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip.
 
 ## Hook Patterns (Universal)
 
@@ -366,7 +366,7 @@ FINAL:
 
 **Don't fake the audit.** "I see no AI tells in this draft" is not a valid step-2 answer on a first draft. Honest bullets always exist. The point is to expose them, not to declare victory.
 
-**Why this exists:** Lexical rules (banned buzzwords, em dashes, contractions) catch words. Structural rules (rules #10, #13, #16, #17) catch named constructions. The self-audit catches the residual *shape* of AI prose — patterns we haven't yet named — and cuts them before content goes public. Anything Hyperscale, JD Key, or any other brand publishes hits readers who pattern-match on AI output instantly; the audit is the last guard against that signal.
+**Why this exists:** Lexical rules (banned buzzwords, em dashes, contractions) catch words. Structural rules (rules #10, #13, #16, #17) catch named constructions. The self-audit catches the residual *shape* of AI prose, patterns we haven't yet named, and cuts them before content goes public. Anything Hyperscale, JD Key, or any other brand publishes hits readers who pattern-match on AI output instantly; the audit is the last guard against that signal.
 
 ## Quality Checks and Guards
 
@@ -391,7 +391,7 @@ Before finalizing any content:
 - [ ] Read aloud: does it sound human?
 - [ ] Zero AI slop patterns (throat-clearers, false exclusivity, fake urgency, dramatic fragments, fake closers; see [ai-slop-patterns.md](references/ai-slop-patterns.md))
 - [ ] Zero corrective reframes ("That's not X. That's Y." and all variants): one max, zero ideal
-- [ ] Zero copula avoidance ("serves as", "stands as", "boasts", "features" — see rule #16)
+- [ ] Zero copula avoidance ("serves as", "stands as", "boasts", "features"; see rule #16)
 - [ ] Zero inline-header vertical lists where the bold label just restates the line (rule #17)
 - [ ] Self-audit pass completed (mandatory for X, LinkedIn, web/blog, newsletter, branded content; see Self-Audit Pass section)
 - [ ] Editorial-edit pressure-test passed (no defensive disclaimers, no hedging epilogues at section closes, no false-neutral conclusions, no clever "the question isn't X, it's Y" closer; see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) and rule #18)

@@ -53,6 +53,14 @@ The reader should feel **incomplete after every paragraph**. If they can stop re
 - "List then conclude" structure (readers jump to the conclusion and leave)
 - Front-loading all the interesting data (nothing left to discover)
 
+### Standalone Punchline Paragraphs
+
+When a paragraph ends with a punchy summary line or fragment ("Same word on the agenda.", "Four orders of magnitude apart in water intensity."), break it onto its own paragraph. Tail-of-paragraph punchlines get buried in the body's text density; standalone ones get the dwell-time bump from the white space, and they fill the synthesis role each paragraph should already be doing per the four-paragraph framework above.
+
+**Counter-test:** If you can't justify why the punchline shares a paragraph with the body, split them. The tail-of-paragraph version reads as the writer running out of room. The standalone version reads as deliberate emphasis.
+
+This is LinkedIn-specific. On X, the 280-char limit forces compression; tail-of-tweet punchlines work fine because the white space between tweets does the same job as paragraph breaks here. On LinkedIn, paragraph breaks are the only white space available, so they have to do more work.
+
 ## Hook Rules (First 140 Characters)
 
 The hook must pass two tests:
