@@ -38,7 +38,7 @@ export function buildOAuthClient(
     throw new AuthSetupError({
       kind: "missing_client_id",
       message:
-        "OAuth client_id not found. Run `bun run auth` with " +
+        "OAuth client_id not found. Run `npx -p @jdickey1/mcp-gmail mcp-gmail-auth` with " +
         "GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET set, " +
         "or set MCP_GMAIL_CLIENT_ID in the environment. See README.md.",
     });
@@ -48,7 +48,7 @@ export function buildOAuthClient(
     throw new AuthSetupError({
       kind: "missing_client_secret",
       message:
-        "OAuth client_secret not found. Run `bun run auth` with " +
+        "OAuth client_secret not found. Run `npx -p @jdickey1/mcp-gmail mcp-gmail-auth` with " +
         "GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET set, " +
         "or set MCP_GMAIL_CLIENT_SECRET in the environment. See README.md.",
     });
@@ -58,7 +58,7 @@ export function buildOAuthClient(
     throw new AuthSetupError({
       kind: "missing_refresh_token",
       message:
-        "Refresh token not found. Run `bun run auth` to authorize, " +
+        "Refresh token not found. Run `npx -p @jdickey1/mcp-gmail mcp-gmail-auth` to authorize, " +
         "or set MCP_GMAIL_REFRESH_TOKEN in the environment.",
     });
   }
