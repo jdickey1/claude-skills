@@ -79,7 +79,7 @@
     },
     {
       "name": "setup-audit",
-      "description": "Audit Claude Code setup for dead weight — default behavior overlap, contradictions, redundancy, one-off fixes, and vagueness across CLAUDE.md files, skills, and memories.",
+      "description": "Audit Claude Code setup for dead weight — default-behavior overlap, contradictions, redundancy, one-off fixes, and vagueness across CLAUDE.md files, skills, and memories. Semantic review of whether your rules earn their keep; pair with skill-doctor for mechanical static lint of skill files.",
       "source": "./plugins/setup-audit",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
@@ -151,6 +151,13 @@
       "name": "google-contacts-mcp",
       "description": "Google Contacts MCP server. Six tools (search, get, list labels, apply label, remove label, update contact). Grants OAuth scopes contacts.readonly + contacts.other.readonly + contacts (full write); mutations are tool-limited to label CRUD and additive-only field updates. OAuth credentials live in the macOS keychain — no tokens in your config.",
       "source": "./plugins/google-contacts-mcp",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "skill-doctor",
+      "description": "Static lint over Claude Code skill files. Catches invalid frontmatter, broken script references, orphan scripts, description collisions (Jaccard ≥ 0.5), and dark skills (no trigger phrases). Mechanical checks only — pair with setup-audit for semantic review of whether your rules earn their keep. Includes an optional routing-eval CLI that tests whether Claude actually picks the right skill for real intents.",
+      "source": "./plugins/skill-doctor",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
     }

@@ -1,0 +1,8 @@
+{
+  "name": "skill-doctor",
+  "description": "Static lint over Claude Code skill files. Catches invalid frontmatter, broken script references, orphan scripts, description collisions (Jaccard ≥ 0.5), and dark skills (no trigger phrases). Mechanical checks only — pair with setup-audit for semantic review of whether your rules earn their keep. Includes an optional routing-eval CLI that tests whether Claude actually picks the right skill for real intents.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
