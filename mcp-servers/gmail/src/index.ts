@@ -11,7 +11,7 @@ import { buildOAuthClient, AuthSetupError } from "./auth.js";
 import { searchEmails, readEmail, getThread, listLabels } from "./tools.js";
 
 const SERVER_NAME = "gmail";
-const SERVER_VERSION = "0.1.0";
+const SERVER_VERSION = "0.1.1";
 
 function jsonContent(value: unknown): { content: Array<{ type: "text"; text: string }> } {
   return { content: [{ type: "text", text: JSON.stringify(value, null, 2) }] };

@@ -1,6 +1,6 @@
 {
   "name": "@jdickey1/mcp-gmail",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read-only Gmail MCP server. Searches and reads messages over the official Gmail API. Designed to be small, auditable, and easy to set up.",
   "license": "MIT",
   "author": "James Dickey",
