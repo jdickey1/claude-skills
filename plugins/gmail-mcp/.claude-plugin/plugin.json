@@ -1,0 +1,15 @@
+{
+  "name": "gmail-mcp",
+  "description": "Read-only Gmail MCP server. Searches and reads messages over the official Gmail API. Four tools: search_emails, read_email, get_thread, list_labels. OAuth credentials live in the OS keychain (macOS) or a 0600 file (Linux/Windows); no tokens in your config.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  },
+  "homepage": "https://github.com/jdickey1/claude-skills/tree/main/mcp-servers/gmail",
+  "mcpServers": {
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@jdickey1/mcp-gmail"]
+    }
+  }
+}

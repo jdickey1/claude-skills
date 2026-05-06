@@ -132,6 +132,13 @@
       "source": "./plugins/hearing-transcript",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "gmail-mcp",
+      "description": "Read-only Gmail MCP server. Search and read messages over the official Gmail API. Four tools: search_emails, read_email, get_thread, list_labels. OAuth credentials live in the OS keychain or a 0600 file — no tokens in your config.",
+      "source": "./plugins/gmail-mcp",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
     }
   ]
 }
