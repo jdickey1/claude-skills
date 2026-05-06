@@ -9,7 +9,7 @@ import {
   extractBody,
   extractHeaders,
   type ParsedAttachment,
-} from "./mime.ts";
+} from "./mime.js";
 
 export interface SearchHit {
   readonly id: string;

@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 // Gmail MCP server entry point. Reads OAuth credentials from the credential
 // store (macOS keychain by default), constructs an authenticated Gmail client,
 // and exposes four read-only tools over stdio.
@@ -7,8 +7,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { google } from "googleapis";
 import { z } from "zod";
-import { buildOAuthClient, AuthSetupError } from "./auth.ts";
-import { searchEmails, readEmail, getThread, listLabels } from "./tools.ts";
+import { buildOAuthClient, AuthSetupError } from "./auth.js";
+import { searchEmails, readEmail, getThread, listLabels } from "./tools.js";
 
 const SERVER_NAME = "gmail";
 const SERVER_VERSION = "0.1.0";

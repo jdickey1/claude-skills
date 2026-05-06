@@ -10,6 +10,7 @@
 import { homedir, platform } from "node:os";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync, chmodSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { spawnSync } from "node:child_process";
 
 export interface CredentialStore {
   store(key: string, value: string): void;
@@ -24,9 +25,9 @@ class KeychainStore implements CredentialStore {
   constructor(private readonly account: string) {}
 
   store(key: string, value: string): void {
-    const r = Bun.spawnSync({
-      cmd: [
-        "security",
+    const r = spawnSync(
+      "security",
+      [
         "add-generic-password",
         "-s",
         `${SERVICE_PREFIX}.${key}`,
@@ -36,18 +37,17 @@ class KeychainStore implements CredentialStore {
         value,
         "-U",
       ],
-      stderr: "pipe",
-    });
-    if (r.exitCode !== 0) {
-      const err = new TextDecoder().decode(r.stderr);
-      throw new Error(`keychain store failed for ${key}: ${err.trim()}`);
+      { encoding: "utf-8" },
+    );
+    if (r.status !== 0) {
+      throw new Error(`keychain store failed for ${key}: ${(r.stderr ?? "").trim()}`);
     }
   }
 
   read(key: string): string | null {
-    const r = Bun.spawnSync({
-      cmd: [
-        "security",
+    const r = spawnSync(
+      "security",
+      [
         "find-generic-password",
         "-s",
         `${SERVICE_PREFIX}.${key}`,
@@ -55,24 +55,24 @@ class KeychainStore implements CredentialStore {
         this.account,
         "-w",
       ],
-      stderr: "pipe",
-    });
-    if (r.exitCode !== 0) return null;
-    return new TextDecoder().decode(r.stdout).replace(/\n+$/, "");
+      { encoding: "utf-8" },
+    );
+    if (r.status !== 0) return null;
+    return (r.stdout ?? "").replace(/\n+$/, "");
   }
 
   delete(key: string): void {
-    Bun.spawnSync({
-      cmd: [
-        "security",
+    spawnSync(
+      "security",
+      [
         "delete-generic-password",
         "-s",
         `${SERVICE_PREFIX}.${key}`,
         "-a",
         this.account,
       ],
-      stderr: "pipe",
-    });
+      { encoding: "utf-8" },
+    );
   }
 }
 

@@ -4,21 +4,41 @@
   "description": "Read-only Gmail MCP server. Searches and reads messages over the official Gmail API. Designed to be small, auditable, and easy to set up.",
   "license": "MIT",
   "author": "James Dickey",
+  "homepage": "https://github.com/jdickey1/claude-skills/tree/main/mcp-servers/gmail",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jdickey1/claude-skills",
+    "url": "git+https://github.com/jdickey1/claude-skills.git",
     "directory": "mcp-servers/gmail"
   },
+  "bugs": {
+    "url": "https://github.com/jdickey1/claude-skills/issues"
+  },
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "bin": {
-    "mcp-gmail-auth": "cli/auth.ts"
+    "mcp-gmail": "dist/src/index.js",
+    "mcp-gmail-auth": "dist/cli/auth.js"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
-    "auth": "bun run cli/auth.ts",
-    "start": "bun run src/index.ts",
-    "test": "bun test",
-    "typecheck": "tsc --noEmit"
+    "auth": "tsx cli/auth.ts",
+    "start": "tsx src/index.ts",
+    "test": "tsx --test src/**/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/src/index.js dist/cli/auth.js",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
@@ -26,7 +46,8 @@
     "zod": "^3.23.0"
   },
   "devDependencies": {
-    "@types/bun": "latest",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },
   "keywords": [

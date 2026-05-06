@@ -1,10 +1,11 @@
 // Unit tests for the gmail MCP tool layer. The Gmail client is mocked so
 // tests run in milliseconds and don't need any auth or network.
 
-import { describe, expect, test } from "bun:test";
+import { describe, test } from "node:test";
+import assert from "node:assert/strict";
 import type { gmail_v1 } from "googleapis";
-import { searchEmails, readEmail, getThread, listLabels } from "./tools.ts";
-import { decodeBase64Url, extractBody, extractHeaders } from "./mime.ts";
+import { searchEmails, readEmail, getThread, listLabels } from "./tools.js";
+import { decodeBase64Url, extractBody, extractHeaders } from "./mime.js";
 
 // ---------- helpers ----------
 
@@ -59,13 +60,13 @@ describe("searchEmails", () => {
   test("returns empty array for empty query", async () => {
     const gmail = mockGmail({});
     const result = await searchEmails(gmail, "");
-    expect(result).toEqual([]);
+    assert.deepEqual(result, []);
   });
 
   test("returns empty array when list has no results", async () => {
     const gmail = mockGmail({ list: () => ({ messages: [] }) });
     const result = await searchEmails(gmail, "from:nobody@nowhere");
-    expect(result).toEqual([]);
+    assert.deepEqual(result, []);
   });
 
   test("projects a single hit with headers and snippet", async () => {
@@ -80,15 +81,15 @@ describe("searchEmails", () => {
       }),
     });
     const result = await searchEmails(gmail, "subject:Hello");
-    expect(result).toHaveLength(1);
+    assert.equal(result.length, 1);
     const hit = result[0]!;
-    expect(hit.id).toBe("abc");
-    expect(hit.thread_id).toBe("t1");
-    expect(hit.from).toBe("Foo <foo@example.com>");
-    expect(hit.subject).toBe("Hello");
-    expect(hit.snippet).toBe("It's a test");
-    expect(hit.label_ids).toEqual(["INBOX", "UNREAD"]);
-    expect(hit.has_attachment).toBe(false);
+    assert.equal(hit.id, "abc");
+    assert.equal(hit.thread_id, "t1");
+    assert.equal(hit.from, "Foo <foo@example.com>");
+    assert.equal(hit.subject, "Hello");
+    assert.equal(hit.snippet, "It's a test");
+    assert.deepEqual(hit.label_ids, ["INBOX", "UNREAD"]);
+    assert.equal(hit.has_attachment, false);
   });
 
   test("flags has_attachment when payload contains a filename part", async () => {
@@ -108,7 +109,7 @@ describe("searchEmails", () => {
       }),
     });
     const result = await searchEmails(gmail, "has:attachment");
-    expect(result[0]!.has_attachment).toBe(true);
+    assert.equal(result[0]!.has_attachment, true);
   });
 
   test("caps max at 100", async () => {
@@ -120,7 +121,7 @@ describe("searchEmails", () => {
       },
     });
     await searchEmails(gmail, "x", 9999);
-    expect(received).toBe(100);
+    assert.equal(received, 100);
   });
 
   test("clamps max at 1", async () => {
@@ -132,7 +133,7 @@ describe("searchEmails", () => {
       },
     });
     await searchEmails(gmail, "x", 0);
-    expect(received).toBe(1);
+    assert.equal(received, 1);
   });
 });
 
@@ -154,9 +155,9 @@ describe("readEmail", () => {
       }),
     });
     const result = await readEmail(gmail, "abc");
-    expect(result.body_text).toBe("Hello, world.");
-    expect(result.body_html).toBe("");
-    expect(result.attachments).toEqual([]);
+    assert.equal(result.body_text, "Hello, world.");
+    assert.equal(result.body_html, "");
+    assert.deepEqual(result.attachments, []);
   });
 
   test("walks multipart/alternative and extracts text + html", async () => {
@@ -176,8 +177,8 @@ describe("readEmail", () => {
       }),
     });
     const result = await readEmail(gmail, "abc");
-    expect(result.body_text).toBe("plain text");
-    expect(result.body_html).toBe("<p>html</p>");
+    assert.equal(result.body_text, "plain text");
+    assert.equal(result.body_html, "<p>html</p>");
   });
 
   test("collects attachment metadata", async () => {
@@ -201,8 +202,8 @@ describe("readEmail", () => {
       }),
     });
     const result = await readEmail(gmail, "abc");
-    expect(result.attachments).toHaveLength(1);
-    expect(result.attachments[0]).toEqual({
+    assert.equal(result.attachments.length, 1);
+    assert.deepEqual(result.attachments[0], {
       filename: "report.pdf",
       mime_type: "application/pdf",
       size: 9001,
@@ -223,7 +224,7 @@ describe("readEmail", () => {
       }),
     });
     const result = await readEmail(gmail, "abc", "raw");
-    expect(result.raw).toBe("From: foo\r\n\r\nbody bytes");
+    assert.equal(result.raw, "From: foo\r\n\r\nbody bytes");
   });
 });
 
@@ -267,11 +268,11 @@ describe("getThread", () => {
       }),
     });
     const thread = await getThread(gmail, "t1");
-    expect(thread.id).toBe("t1");
-    expect(thread.history_id).toBe("999");
-    expect(thread.messages).toHaveLength(2);
-    expect(thread.messages[0]!.body_text).toBe("first message");
-    expect(thread.messages[1]!.subject).toBe("Re: Hello");
+    assert.equal(thread.id, "t1");
+    assert.equal(thread.history_id, "999");
+    assert.equal(thread.messages.length, 2);
+    assert.equal(thread.messages[0]!.body_text, "first message");
+    assert.equal(thread.messages[1]!.subject, "Re: Hello");
   });
 });
 
@@ -289,9 +290,9 @@ describe("listLabels", () => {
       }),
     });
     const labels = await listLabels(gmail);
-    expect(labels).toHaveLength(2);
-    expect(labels[0]).toEqual({ id: "INBOX", name: "INBOX", type: "system" });
-    expect(labels[1]).toEqual({ id: "Label_42", name: "Clients", type: "user" });
+    assert.equal(labels.length, 2);
+    assert.deepEqual(labels[0], { id: "INBOX", name: "INBOX", type: "system" });
+    assert.deepEqual(labels[1], { id: "Label_42", name: "Clients", type: "user" });
   });
 });
 
@@ -299,25 +300,25 @@ describe("listLabels", () => {
 
 describe("decodeBase64Url", () => {
   test("decodes standard base64url", () => {
-    expect(decodeBase64Url(b64url("hello"))).toBe("hello");
+    assert.equal(decodeBase64Url(b64url("hello")), "hello");
   });
 
   test("decodes content with padding restored", () => {
-    expect(decodeBase64Url(b64url("a"))).toBe("a");
-    expect(decodeBase64Url(b64url("ab"))).toBe("ab");
-    expect(decodeBase64Url(b64url("abc"))).toBe("abc");
+    assert.equal(decodeBase64Url(b64url("a")), "a");
+    assert.equal(decodeBase64Url(b64url("ab")), "ab");
+    assert.equal(decodeBase64Url(b64url("abc")), "abc");
   });
 
   test("decodes utf-8 multibyte content", () => {
-    expect(decodeBase64Url(b64url("café — 日本語"))).toBe("café — 日本語");
+    assert.equal(decodeBase64Url(b64url("café — 日本語")), "café — 日本語");
   });
 });
 
 describe("extractHeaders", () => {
   test("returns empty strings when payload is undefined", () => {
     const headers = extractHeaders(undefined);
-    expect(headers.from).toBe("");
-    expect(headers.subject).toBe("");
+    assert.equal(headers.from, "");
+    assert.equal(headers.subject, "");
   });
 
   test("is case-insensitive on header names", () => {
@@ -327,17 +328,17 @@ describe("extractHeaders", () => {
         { name: "SUBJECT", value: "loud" },
       ],
     });
-    expect(headers.from).toBe("lower@case");
-    expect(headers.subject).toBe("loud");
+    assert.equal(headers.from, "lower@case");
+    assert.equal(headers.subject, "loud");
   });
 });
 
 describe("extractBody", () => {
   test("returns empty when payload is undefined", () => {
     const body = extractBody(undefined);
-    expect(body.text).toBe("");
-    expect(body.html).toBe("");
-    expect(body.attachments).toEqual([]);
+    assert.equal(body.text, "");
+    assert.equal(body.html, "");
+    assert.deepEqual(body.attachments, []);
   });
 
   test("joins multiple text/plain parts with double newline", () => {
@@ -348,6 +349,6 @@ describe("extractBody", () => {
         { mimeType: "text/plain", body: { data: b64url("part two") } },
       ],
     });
-    expect(body.text).toBe("part one\n\npart two");
+    assert.equal(body.text, "part one\n\npart two");
   });
 });
