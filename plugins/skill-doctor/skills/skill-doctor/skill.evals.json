@@ -1,0 +1,21 @@
+{
+  "positives": [
+    "skill doctor",
+    "audit my skills",
+    "check skill health",
+    "find dark skills",
+    "check for skill collisions",
+    "verify my skill frontmatter",
+    "find orphan scripts in my plugins",
+    "are any of my skills broken",
+    "which of my skills won't route correctly",
+    "run a static audit on my claude code skills"
+  ],
+  "negatives": [
+    "fix this bug in my typescript code",
+    "write me a poem about cats",
+    "deploy my app to production",
+    "what's the weather today",
+    "summarize this pdf"
+  ]
+}
