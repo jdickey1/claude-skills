@@ -1,0 +1,15 @@
+{
+  "name": "google-contacts-mcp",
+  "description": "Google Contacts MCP server. Six tools: search_contacts, get_contact, list_label_groups, apply_label, remove_label, update_contact. Grants OAuth scopes contacts.readonly, contacts.other.readonly, and contacts (full write) — the write surface is tool-limited to label apply/remove and additive-only field updates, but the scope grant itself is not narrowed. OAuth credentials live in the macOS keychain; no tokens in your config.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  },
+  "homepage": "https://github.com/jdickey1/claude-skills/tree/main/plugins/google-contacts-mcp",
+  "mcpServers": {
+    "google-contacts": {
+      "command": "npx",
+      "args": ["-y", "@jdickey1/mcp-google-contacts"]
+    }
+  }
+}
