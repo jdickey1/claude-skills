@@ -146,6 +146,13 @@
       "source": "./plugins/grill-me",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
+    },
+    {
+      "name": "google-contacts-mcp",
+      "description": "Google Contacts MCP server. Six tools (search, get, list labels, apply label, remove label, update contact). Grants OAuth scopes contacts.readonly + contacts.other.readonly + contacts (full write); mutations are tool-limited to label CRUD and additive-only field updates. OAuth credentials live in the macOS keychain — no tokens in your config.",
+      "source": "./plugins/google-contacts-mcp",
+      "category": "productivity",
+      "homepage": "https://github.com/jdickey1/claude-skills"
     }
   ]
 }
