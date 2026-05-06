@@ -1,0 +1,8 @@
+{
+  "name": "grill-me",
+  "description": "Socratic pressure-testing skill. Asks one focused question at a time about a plan, design, or decision until the user has named the real tradeoffs, failure modes, and what would change their mind. Different from plan-review (one-shot audit) and brainstorming (generative). Trigger with /grill-me or phrases like 'grill me on', 'pressure-test this', 'stress-test my thinking'.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}
