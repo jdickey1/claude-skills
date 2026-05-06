@@ -1,6 +1,6 @@
 ---
 name: digest
-description: This skill should be used when the user pastes any URL (web page, article, blog post, X/Twitter link, GitHub repo) OR a local file path (PDF, text, markdown, Word doc, CSV, JSON, image), says "digest this", "analyze this link", "read this page", "save this article", "check out this repo", "digest this file", "analyze this PDF", or when a URL or file path appears in conversation context. Also triggers on /digest command. Handles all URL types and local files — X/Twitter posts get specialized fetch logic, GitHub repos get cloned and security-reviewed, local files are read directly, everything else uses web-reader.
+description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest command.
 version: 1.10.0
 effort: high
 ---
