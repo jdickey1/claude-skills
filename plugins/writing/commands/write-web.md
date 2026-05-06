@@ -12,10 +12,11 @@ Write website copy or a blog post for the provided topic (`$ARGUMENTS`). If no t
 1. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/web-copy.md` for web writing optimization
 2. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/headlines.md` for headline formulas
 3. If SEO matters, also use the `seo` skill for on-page optimization principles
-4. Write 5+ headline candidates first, select the best
-5. Draft the content following web copy structure from the reference
-6. **Run the mandatory self-audit pass** on the draft (writing skill: "Self-Audit Pass" section). Output 2–4 honest "still-AI" bullets, then revise to a FINAL version. Web/blog content under any brand identity (Hyperscale, JD Key, etc.) is mandatory; do not skip.
-7. Apply the pre-publish checklist from the writing skill against the FINAL version
+4. **Decide the structure**: if the page targets AI answer engines (informational query, "what is/how to/X vs Y", or AEO is an explicit goal), use the **Answer-First Article Structure** in `web-copy.md`. Otherwise use the standard Blog Post Template. The "When to use answer-first vs standard" table in `web-copy.md` is the decision guide.
+5. Write 5+ headline candidates first, select the best
+6. Draft the content following the chosen structure from the reference
+7. **Run the mandatory self-audit pass** on the draft (writing skill: "Self-Audit Pass" section). Output 2–4 honest "still-AI" bullets, then revise to a FINAL version. Web/blog content under any brand identity (Hyperscale, JD Key, etc.) is mandatory; do not skip.
+8. Apply the pre-publish checklist from the writing skill against the FINAL version
 
 ## Key Rules
 
