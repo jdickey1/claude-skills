@@ -135,12 +135,92 @@ function checkFrontmatter(s) {
   if (len > 600) add('warn', s.id, 'frontmatter', `Description is ${len} chars — unusually long (may dilute routing signal)`);
 }
 
+// Languages whose fenced blocks may contain real shell invocations. Anything
+// else (json, yaml, markdown, toml, html, etc.) is treated as a documentation
+// example regardless of any script-looking strings inside.
+const SHELL_FENCE_LANGS = new Set(['', 'bash', 'sh', 'shell', 'zsh', 'console']);
+
+const INVOKE_PATTERN = /(?:bash|sh|node|python3?|bun|deno|\.\/|\$\{CLAUDE_PLUGIN_ROOT\}\/)\s*((?:scripts|bin|lib)\/[\w.\/-]+\.(?:sh|mjs|js|py|ts))/g;
+
+// Walk the body line-by-line, tracking fenced code-block context, and collect
+// only the script refs that look like real invocations this skill performs.
+// The previous implementation matched anywhere in the body, which false-flagged
+// SKILL.md files that teach plugin authoring (their bodies contain example
+// manifests, slash-command escapes, and prose snippets).
+// Headings whose content tells the reader "what follows is a worked example
+// of something else", not "what this skill does". Refs inside these sections
+// are pedagogical and should not require existence on disk.
+const PEDAGOGICAL_HEADING = /\b(example|examples|demo|demonstration|walkthrough|walk-through|tutorial|test|testing|configure|configuration|reference|sample)\b/i;
+
+function collectScriptRefs(body) {
+  const lines = body.split('\n');
+  const blocks = [];
+  let cur = null;
+  for (let i = 0; i < lines.length; i++) {
+    const fence = lines[i].match(/^```(\w*)/);
+    if (fence) {
+      if (cur === null) {
+        cur = { start: i + 1, lang: fence[1].toLowerCase(), shebang: false };
+      } else {
+        cur.end = i - 1;
+        blocks.push(cur);
+        cur = null;
+      }
+    } else if (cur !== null && /^#!/.test(lines[i])) {
+      cur.shebang = true;
+    }
+  }
+  const blockFor = (idx) => blocks.find(b => idx >= b.start && idx <= b.end) || null;
+
+  // For each line, the nearest preceding heading text (or '' if none yet).
+  const nearestHeading = new Array(lines.length).fill('');
+  let lastHeading = '';
+  for (let i = 0; i < lines.length; i++) {
+    const h = lines[i].match(/^#{1,6}\s+(.*)/);
+    if (h) lastHeading = h[1];
+    nearestHeading[i] = lastHeading;
+  }
+
+  const refs = new Set();
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const block = blockFor(i);
+
+    // Fenced documentation examples — non-shell langs (json, yaml, markdown, …)
+    // and shell blocks that show a script being authored (shebang present)
+    // never produce real invocations.
+    if (block && !SHELL_FENCE_LANGS.has(block.lang)) continue;
+    if (block && block.shebang) continue;
+
+    // JSON manifest snippets often appear inline in prose without a fence;
+    // the `"command":` key is the unambiguous signal.
+    if (/"command"\s*:/.test(line)) continue;
+
+    // Slash-command escape syntax (`!`...`) — only meaningful inside a slash
+    // command file, never a real invocation in a SKILL.md body.
+    if (/!\s*`/.test(line)) continue;
+
+    // Sections explicitly framed as examples/tutorials/test-walkthroughs are
+    // teaching the reader, not invoking from this skill. The most reliable
+    // residual false positive came from "### Test Hook Scripts" sections in
+    // plugin-dev — generic enough to skip wholesale.
+    if (PEDAGOGICAL_HEADING.test(nearestHeading[i])) continue;
+
+    for (const m of line.matchAll(INVOKE_PATTERN)) {
+      // In prose lines (not in a fenced block), refs wrapped in single
+      // backticks are pedagogical mentions, not invocations.
+      if (!block) {
+        const ticksBefore = (line.slice(0, m.index).match(/`/g) || []).length;
+        if (ticksBefore % 2 === 1) continue;
+      }
+      refs.add(m[1]);
+    }
+  }
+  return [...refs];
+}
+
 function checkScripts(s) {
-  // Only flag actual invocations, not prose mentions. An invocation is:
-  //   - preceded by a runner (bash|sh|node|python|python3|bun|deno|./|./ via ${CLAUDE_PLUGIN_ROOT}/)
-  //   - or inside a fenced bash/sh code block (handled by the runner prefix rule — bare mentions in prose stay ignored)
-  const invokePattern = /(?:bash|sh|node|python3?|bun|deno|\.\/|\$\{CLAUDE_PLUGIN_ROOT\}\/)\s*((?:scripts|bin|lib)\/[\w.\/-]+\.(?:sh|mjs|js|py|ts))/g;
-  const refs = [...new Set([...((s.body || '').matchAll(invokePattern))].map(m => m[1]))];
+  const refs = collectScriptRefs(s.body || '');
   s.scriptRefs = refs;
   const skillDir = dirname(s.path);
   for (const ref of refs) {
