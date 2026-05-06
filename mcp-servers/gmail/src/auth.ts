@@ -9,7 +9,7 @@ import {
   KEY_CLIENT_SECRET,
   KEY_REFRESH_TOKEN,
   type CredentialStore,
-} from "./credential-store.ts";
+} from "./credential-store.js";
 
 export const GMAIL_READONLY_SCOPE = "https://www.googleapis.com/auth/gmail.readonly";
 

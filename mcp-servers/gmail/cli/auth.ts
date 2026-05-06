@@ -1,10 +1,11 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 // One-time OAuth Desktop flow for the gmail MCP server. Stores client
 // credentials and refresh token in the configured credential store
 // (macOS keychain by default, file-backed elsewhere).
 
 import http from "node:http";
 import { URL } from "node:url";
+import { spawnSync } from "node:child_process";
 import { google } from "googleapis";
 import {
   defaultCredentialStore,
@@ -12,8 +13,8 @@ import {
   KEY_CLIENT_SECRET,
   KEY_REFRESH_TOKEN,
   type CredentialStore,
-} from "../src/credential-store.ts";
-import { GMAIL_READONLY_SCOPE } from "../src/auth.ts";
+} from "../src/credential-store.js";
+import { GMAIL_READONLY_SCOPE } from "../src/auth.js";
 
 const PORT_CANDIDATES = [44331, 44332, 44333];
 const CALLBACK_TIMEOUT_MS = 5 * 60_000;
@@ -69,7 +70,7 @@ function readClientCredentials(store: CredentialStore): {
     [
       "Missing OAuth client credentials.",
       "First-run usage:",
-      "  GOOGLE_OAUTH_CLIENT_ID=<id> GOOGLE_OAUTH_CLIENT_SECRET=<secret> bun run auth",
+      "  GOOGLE_OAUTH_CLIENT_ID=<id> GOOGLE_OAUTH_CLIENT_SECRET=<secret> npx -p @jdickey1/mcp-gmail mcp-gmail-auth",
       "Source: GCP console → APIs & Services → Credentials → OAuth 2.0 Client IDs (Desktop app).",
       "See README.md for the full setup walkthrough.",
     ].join("\n"),
@@ -78,13 +79,14 @@ function readClientCredentials(store: CredentialStore): {
 }
 
 function openBrowser(url: string): void {
-  const cmd =
+  const [command, ...args] =
     process.platform === "darwin"
       ? ["open", url]
       : process.platform === "win32"
         ? ["cmd", "/c", "start", "", url]
         : ["xdg-open", url];
-  Bun.spawnSync({ cmd, stderr: "pipe" });
+  if (!command) return;
+  spawnSync(command, args, { encoding: "utf-8", stdio: "ignore" });
 }
 
 async function awaitCallback(server: http.Server, redirectUri: string): Promise<string> {
