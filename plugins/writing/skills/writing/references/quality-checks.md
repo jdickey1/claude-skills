@@ -37,9 +37,10 @@ Eleven yes/no checks for evaluating writing output quality (autoresearch evals, 
 **Fail:** Generic opening (e.g., "In today's world..." or "Communication is key...").
 
 ## EVAL 7: No AI slop patterns
-**Question:** Does the output avoid throat-clearers, false exclusivity hooks, manufactured urgency, dramatic fragmentation, fake vulnerability, qualifier sandwiches, pivot hype, fake closers, and fill-in-the-blank templates?
+**Question:** Does the output avoid throat-clearers, time-deixis (self-reference to the medium), false exclusivity hooks, manufactured urgency, dramatic fragmentation, fake vulnerability, qualifier sandwiches, pivot hype, fake closers, call-to-action slop, two-part engagement questions, fill-in-the-blank templates, significance inflation, spectacle framing around failure, and fractional-magnitude precision?
 **Pass:** Zero instances of structural AI slop patterns (see [ai-slop-patterns.md](ai-slop-patterns.md)).
-**Fail:** Any throat-clearer ("Here's the thing:"), false exclusivity ("Nobody's talking about this"), urgency hook ("This changes everything"), dramatic fragment ("Let that sink in."), fake vulnerability ("Unpopular opinion:"), qualifier sandwich ("It's worth noting..."), pivot hype ("But here's where it gets interesting:"), fake closer ("Buckle up."), or template sentence detected.
+**Fail:** Any throat-clearer ("Here's the thing:"), time-deixis ("today's newsletter dives into..."), false exclusivity ("Nobody's talking about this"), urgency hook ("This changes everything"), dramatic fragment ("Let that sink in."), fake vulnerability ("Unpopular opinion:"), qualifier sandwich ("It's worth noting..."), pivot hype ("But here's where it gets interesting:"), fake closer ("Buckle up."), two-part engagement question ("Should X, or does Y?"), template sentence ("[X] is the new [Y]."), spectacle framing ("The deal cratered. Vendors walked."), or fractional-magnitude precision ("$5.27B" where "$5B" suffices) detected.
+**Greppable (partial):** `grep -iE "(today's|this (week|month)'s) (newsletter|post|brief|article|episode|edition)"` flags time-deixis; `grep -iE ', or (does|is|will|are|do|has|have|should|could) '` flags two-part engagement question candidates (verify each lands in a question line). Spectacle framing, fractional-magnitude precision, and the rest require a structural read.
 
 ## EVAL 8: No corrective reframing
 **Question:** Does the output avoid the "That's not X. That's Y." pattern and its variants?
