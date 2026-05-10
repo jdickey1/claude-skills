@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.5.1
+version: 2.6.0
 effort: high
 ---
 
@@ -301,6 +301,25 @@ Before finalizing branded or long-form content, scan for the eight editorial-edi
 
 **Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics: the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip.
 
+### 19. Order Lists by Magnitude and Recognizability
+
+When you list deals, proof-points, numeric receipts, or competing examples, the first item anchors the reader. Smallest-first or least-recognizable-first or foreign-spelling-first weakens the hook before the thesis lands. Order largest-first by magnitude; break ties by recognizability; avoid leading with a foreign-spelling brand unless it is the single most-recognized name in its category.
+
+- Wrong: "Wärtsilä committed 412 MW, PROENERGY 650 MW, and INNIO 1.25 GW to the buildout."
+- Right: "INNIO committed 1.25 GW, PROENERGY 650 MW, and Wärtsilä 412 MW to the buildout."
+
+**Tiebreakers (in order):**
+
+1. **Magnitude.** Largest-first when the unit is comparable: dollars, megawatts, square footage, headcount, market cap, vote totals, revenue.
+2. **Recognizability.** Among comparable magnitudes, lead with the name the audience knows best. For US business audiences, that usually means mainstream / domestic brands ahead of regional or foreign ones.
+3. **Foreign-spelling exception.** Names with umlauts, accents, or diacritics (Wärtsilä, Mærsk, Citroën) are visually disruptive at the start of a list. Move them mid-list unless the brand is the single most-recognized name in its category.
+
+**Where this matters:** Deal lists, news roundups, project budgets, candidate slates, vendor comparisons, conference rosters, awards write-ups. Anywhere three or more named items appear in prose. Comma-separated runs in a sentence count too, not just bulleted lists.
+
+**Where this doesn't matter:** Genuine alphabetical indexes (glossaries, contributor credits), chronological lists where the date is the structure, and rankings where another ordering is load-bearing (final standings, search results).
+
+**Why:** The first list item is the anchor; the rest of the list lives in its shadow. Magnitude order tells the reader "this is the size of the thing." Recognizability order tells the reader "this is the shape of the thing." Either beats alphabetical or arrival order, which were never editorial choices in the first place.
+
 ## Hook Patterns (Universal)
 
 The first line of anything has one job: stop the scroll. Patterns that work:
@@ -390,9 +409,14 @@ Before finalizing any content:
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
 - [ ] Zero AI slop patterns (throat-clearers, false exclusivity, fake urgency, dramatic fragments, fake closers; see [ai-slop-patterns.md](references/ai-slop-patterns.md))
+- [ ] Zero time-deixis (no "today's newsletter," "in today's post," "this week's brief"; open with substance, see [ai-slop-patterns.md](references/ai-slop-patterns.md))
+- [ ] Zero two-part engagement questions ("Should X, or does Y?"): single-clause questions only (see [ai-slop-patterns.md](references/ai-slop-patterns.md))
+- [ ] Zero spectacle framing around failure (no "cratered," "vendors walked," "lesson writes itself"; mechanics over spectacle, see [ai-slop-patterns.md](references/ai-slop-patterns.md))
+- [ ] Zero fractional-magnitude precision ("$5B" not "$5.27B" unless the digits carry meaning, see [ai-slop-patterns.md](references/ai-slop-patterns.md))
 - [ ] Zero corrective reframes ("That's not X. That's Y." and all variants): one max, zero ideal
 - [ ] Zero copula avoidance ("serves as", "stands as", "boasts", "features"; see rule #16)
 - [ ] Zero inline-header vertical lists where the bold label just restates the line (rule #17)
+- [ ] Lists ordered by magnitude and recognizability (largest-first; foreign-spelling brand never first unless single most-recognized in category, see rule #19)
 - [ ] Self-audit pass completed (mandatory for X, LinkedIn, web/blog, newsletter, branded content; see Self-Audit Pass section)
 - [ ] Editorial-edit pressure-test passed (no defensive disclaimers, no hedging epilogues at section closes, no false-neutral conclusions, no clever "the question isn't X, it's Y" closer; see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) and rule #18)
 - [ ] Captured voice idiosyncrasies preserved over generic defaults (rule #15: deliberate quirks in voice context kept, not smoothed)

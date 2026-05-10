@@ -7,26 +7,30 @@ Comprehensive catalog of AI-generated writing patterns to actively avoid. Source
 | # | Pattern | What it is |
 |---|---|---|
 | 1 | [Throat-Clearers](#throat-clearers) | Phrases that delay the actual point |
-| 2 | [False Exclusivity Hooks](#false-exclusivity-hooks) | "Nobody's talking about this" framing |
-| 3 | [Manufactured Urgency](#manufactured-urgency) | "This changes everything" hype |
-| 4 | [Dramatic Fragmentation](#dramatic-fragmentation) | "Let that sink in." reader-direction |
-| 5 | [Fake Vulnerability](#fake-vulnerability) | "Unpopular opinion:" performative humility |
-| 6 | [False Agency](#false-agency) | Crediting non-agent things with action |
-| 7 | [Ladder of Escalation](#ladder-of-escalation) | "Not just X, but Y, but Z" tower |
-| 8 | [Pivot Phrases](#pivot-phrases) | "But here's where it gets interesting:" |
-| 9 | [Parallel-Clause Moralistic Punchlines](#parallel-clause-moralistic-punchlines) | "Survey the X, miss the Y" snap |
-| 10 | [Qualifier Sandwiches](#qualifier-sandwiches) | "It's worth noting that..." hedging |
-| 11 | [Call-to-Action Slop](#call-to-action-slop) | "Drop a comment below" begging |
-| 12 | [Fake Philosophical Closers](#fake-philosophical-closers) | "We're still early." mock-profound |
-| 13 | [AI Adverbs (Flag Words)](#ai-adverbs-flag-words) | literally / incredibly / fundamentally |
-| 14 | [AI Adjectives (Empty Intensifiers)](#ai-adjectives-empty-intensifiers) | profound / remarkable / unprecedented |
-| 15 | [AI Verbs (Sounds Smart, Says Nothing)](#ai-verbs-sounds-smart-says-nothing) | delve / unpack / leverage |
-| 16 | [Fill-in-the-Blank Templates](#fill-in-the-blank-templates) | "[X] is the new [Y]." |
-| 17 | [Significance Inflation](#significance-inflation) | Treating ordinary things as historic |
-| 18 | [Synonym Cycling (Elegant Variation)](#synonym-cycling-elegant-variation) | Renaming the same thing every paragraph |
-| 19 | [Filler and Hedging Bloat](#filler-and-hedging-bloat) | "in order to" / "the fact that" |
-| 20 | [Curly Quotes and Em-Char Drift](#curly-quotes-and-em-char-drift) | Typographic AI fingerprints |
-| 21 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
+| 2 | [Time-Deixis (Self-Reference to the Medium)](#time-deixis-self-reference-to-the-medium) | "Today's newsletter dives into..." medium-pointing |
+| 3 | [False Exclusivity Hooks](#false-exclusivity-hooks) | "Nobody's talking about this" framing |
+| 4 | [Manufactured Urgency](#manufactured-urgency) | "This changes everything" hype |
+| 5 | [Dramatic Fragmentation](#dramatic-fragmentation) | "Let that sink in." reader-direction |
+| 6 | [Fake Vulnerability](#fake-vulnerability) | "Unpopular opinion:" performative humility |
+| 7 | [False Agency](#false-agency) | Crediting non-agent things with action |
+| 8 | [Ladder of Escalation](#ladder-of-escalation) | "Not just X, but Y, but Z" tower |
+| 9 | [Pivot Phrases](#pivot-phrases) | "But here's where it gets interesting:" |
+| 10 | [Parallel-Clause Moralistic Punchlines](#parallel-clause-moralistic-punchlines) | "Survey the X, miss the Y" snap |
+| 11 | [Qualifier Sandwiches](#qualifier-sandwiches) | "It's worth noting that..." hedging |
+| 12 | [Call-to-Action Slop](#call-to-action-slop) | "Drop a comment below" begging |
+| 13 | [Two-Part Engagement Questions](#two-part-engagement-questions) | "Should X, or does Y?" balanced-question tic |
+| 14 | [Fake Philosophical Closers](#fake-philosophical-closers) | "We're still early." mock-profound |
+| 15 | [AI Adverbs (Flag Words)](#ai-adverbs-flag-words) | literally / incredibly / fundamentally |
+| 16 | [AI Adjectives (Empty Intensifiers)](#ai-adjectives-empty-intensifiers) | profound / remarkable / unprecedented |
+| 17 | [AI Verbs (Sounds Smart, Says Nothing)](#ai-verbs-sounds-smart-says-nothing) | delve / unpack / leverage |
+| 18 | [Fill-in-the-Blank Templates](#fill-in-the-blank-templates) | "[X] is the new [Y]." |
+| 19 | [Significance Inflation](#significance-inflation) | Treating ordinary things as historic |
+| 20 | [Spectacle Framing Around Failure](#spectacle-framing-around-failure) | "The deal cratered. Vendors walked." pile-up |
+| 21 | [Fractional-Magnitude Precision](#fractional-magnitude-precision) | "$5.27B" when "$5B" is the signal |
+| 22 | [Synonym Cycling (Elegant Variation)](#synonym-cycling-elegant-variation) | Renaming the same thing every paragraph |
+| 23 | [Filler and Hedging Bloat](#filler-and-hedging-bloat) | "in order to" / "the fact that" |
+| 24 | [Curly Quotes and Em-Char Drift](#curly-quotes-and-em-char-drift) | Typographic AI fingerprints |
+| 25 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
 
 ## Throat-Clearers
 
@@ -47,6 +51,29 @@ Phrases that exist solely to delay the actual point by one sentence. Cut them en
 **The formula:** "Here's + [dramatic noun]" = nothing interesting to open with.
 
 **Fix:** Delete the throat-clearer. Start with the actual point.
+
+## Time-Deixis (Self-Reference to the Medium)
+
+A throat-clearer in disguise. The opener points at the medium itself ("today's newsletter," "today's post," "in this brief we'll explore...") instead of the substance. It signals AI scaffolding, adds zero information for the reader who already opened the email or clicked the post, and dates the content the moment the next issue ships.
+
+| Pattern |
+|---------|
+| "Today's newsletter dives into..." |
+| "In today's post, we'll explore..." |
+| "This week's brief covers..." |
+| "Today's edition is all about..." |
+| "In this article we'll discuss..." |
+| "Today's episode breaks down..." |
+| "In today's brief, we look at..." |
+
+**Fix:** Open with the substance directly.
+
+- Wrong: "Today's newsletter dives into the Texas datacenter water question."
+- Right: "Texas datacenter operators returned 1M gallons a day. They pulled 11,000."
+
+**Why:** Self-reference to the medium is a ramp-up the writer hides behind because the real opener feels too cold. The reader already knows what they opened. Cut the framing and start where the story starts.
+
+**Greppable check:** `grep -iE "(today's|this (week|month)'s) (newsletter|post|brief|article|episode|edition)|in (today's|this) (post|article|newsletter|brief|episode)" draft.md`. Any hit flags AI scaffolding to delete.
 
 ## False Exclusivity Hooks
 
@@ -231,6 +258,27 @@ LinkedIn's final boss. Engagement farming disguised as conversation.
 
 **Fix:** If your content is good, people engage. If it's not, begging won't help. One natural CTA max per piece.
 
+## Two-Part Engagement Questions
+
+A close cousin of Call-to-Action Slop. The closer asks a rhetorical question, then bolts on a second clause that "balances" the first ("Should X, or does Y?" / "Should X, or is Y?" / "Will X, or are we just Y?"). The second clause dilutes the prompt and exposes the AI move: every question must hedge itself.
+
+| Pattern |
+|---------|
+| "Should X replace Y, or does the price point only pencil at scale?" |
+| "Is this the future, or are we kidding ourselves?" |
+| "Will X happen, or will Y get there first?" |
+| "Should we worry, or is this just noise?" |
+| "Is X overhyped, or have we under-counted Y?" |
+
+**Fix:** Cut everything from the comma onward. One clean rhetorical move beats a balanced one.
+
+- Wrong: "Should fuel cell microgrids replace gas turbines as the default behind-the-meter spec, or does the price point only pencil at hyperscaler scale?"
+- Right: "Should fuel cell microgrids replace gas turbines as the default behind-the-meter spec?"
+
+**Why:** Real human questions land as a single move. The "or does Y" tail is the model trying to cover both sides because it can't commit to the prompt. The shape is the tell; you can spot it without reading the content.
+
+**Greppable check:** `grep -iE ', or (does|is|will|are|do|has|have|should|could) ' draft.md`. Inspect each hit; any that lands inside a question (line ending in `?`) is this pattern. False positives in declarative sentences are fine.
+
 ## Fake Philosophical Closers
 
 Ending with a profound-sounding sentence that says absolutely nothing.
@@ -308,6 +356,52 @@ LLMs puff up the importance of arbitrary facts by adding "stands as / serves as 
 | "speaks to the enduring legacy of..." |
 
 **Fix:** Strip the inflation. State the fact directly. "The Statistical Institute of Catalonia was established in 1989 to publish regional statistics" beats "...marking a pivotal moment in the evolution of regional statistics in Spain."
+
+## Spectacle Framing Around Failure
+
+When a person, company, or project stumbles, AI reaches for cinematic vocabulary that turns the failure into the subject of a case study. Pile-up verbs (*cratered, unraveled, walked, empty dirt*), cascade framing (*everything else followed, body count*), wry asides (*the market noticed, lesson writes itself*), and cautionary/teachable/object-lesson positioning all signal the same move: the writer narrating *at* the failure instead of reporting *through* it.
+
+| Pattern |
+|---------|
+| "The deal cratered." |
+| "Vendors walked." |
+| "Then everything else followed." |
+| "The lesson writes itself." |
+| "It's a cautionary tale." |
+| "A textbook case of [thing]." |
+| "And the market noticed." |
+| "Just empty dirt now." |
+| "A teachable moment for [industry]." |
+| "The body count piled up." |
+
+**Fix:** The fact gets one plain clause. The story is the mechanics. Name what was actually committed (anchor tenants, secured generation, signed contracts, queue position, regulatory approvals) and let the reader infer where the gap is. The struggling subject is a data point, not the protagonist of a parable.
+
+- Wrong: "The deal cratered. Vendors walked. Then everything else followed. The lesson writes itself."
+- Right: "Three of five anchor tenants pulled out by Q2; the project lost transmission priority when the interconnect deadline slipped."
+
+**Why:** Spectacle framing makes the writer the storyteller of someone else's loss. Readers feel the rubbernecking. Mechanics-first writing respects both the subject and the reader, and it scales: the same posture works for business failures, political losses, product flops, and personnel exits.
+
+## Fractional-Magnitude Precision
+
+AI preserves fractional precision in dollar magnitudes that adds no information ("$1.43B," "$847M," "$5.27B"). Human business writing rounds to whole units with the right magnitude suffix. The over-precise number is the tell: a model copy-pasting from source data instead of editing for the reader.
+
+| Pattern |
+|---------|
+| "$1.43B committed to..." |
+| "Aligned committed $5.27B to the buildout..." |
+| "Earmarked $847M for..." |
+| "A $2.31B raise..." |
+| "$632M in capex..." |
+| "$11.84B market cap..." |
+
+**Fix:** Round aggressively. One decimal max for $1B–$10B; whole units below $100M unless the digits carry meaning.
+
+- Wrong: "Aligned committed $5.27B to the Project Caprock buildout, with $1.43B earmarked for substation upgrades."
+- Right: "Aligned committed $5B to Project Caprock, with $1.4B for substation upgrades."
+
+**Why:** Fractional precision implies a level of accounting the reader rarely needs and the writer rarely has. Round numbers signal that the writer made an editorial choice. Two-decimal numbers signal that the writer didn't.
+
+**Exception:** When the precise digits do work (a quarterly earnings number where the cent matters, a court ruling where the exact award is the story, a regulatory cap set to the dollar), keep them. The test: does removing the decimal change what the reader knows? If yes, keep it. If not, round.
 
 ## Synonym Cycling (Elegant Variation)
 
