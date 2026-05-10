@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest command.
-version: 1.10.0
+version: 1.11.0
 effort: high
 ---
 
@@ -559,6 +559,62 @@ Analyze the fetched content and produce all of the following:
   - No same-directory connections (digest files are all in `web-analyses/`, so never link to other `web-analyses/` files)
   - Consider reverse links: if this digest `informs` a project doc, that project doc could get a `source-for` back to this digest during the next `/interconnection-audit` run
 
+### 5d. Vault Adoption Pass (conditional)
+
+The digest by itself catalogues *what was learned*. The adoption pass turns that into *what to change in our vault*. It is gated to avoid spending reads on digests that don't carry transferable patterns.
+
+**Trigger conditions — run the pass only when ALL are true:**
+
+1. The digest produced a non-empty **Frameworks** section (i.e., the content named or clearly structured at least one reusable pattern).
+2. At least one project connection was generated with type `action-pending` (frameworks that only `inform` or are `source-for` don't propose change to existing systems).
+3. The content is not breaking news, single-fact reportage, or pure commentary — it must carry a workflow, mental model, technique, or rubric that could be applied somewhere.
+
+If any condition fails, skip the pass silently. Pure-news digests stay fast.
+
+**What the pass does:**
+
+For each `action-pending` connection target (cap at **5** to bound cost):
+
+1. Read the target doc from the vault.
+2. For each Framework in the digest, decide one of three verdicts:
+   - **Hit** — the target has a concrete gap this framework fills. Cite the specific section/heading where the change would land and propose a one-sentence file-level edit.
+   - **Partial** — the target already addresses the same goal differently, OR has shipped something in the same shape but not identical. Note the overlap and what's still missing.
+   - **No-op** — the framework looks adjacent but doesn't actually transfer (e.g., the target's volume/architecture/audience makes the pattern wrong-shaped). Say so explicitly with one sentence of reasoning. No-ops are valuable: they record "we considered this and chose not to."
+3. If the target appears in fewer than half of the digest's frameworks, that's normal — not every framework needs to land everywhere.
+
+**What the pass does NOT do:**
+
+- **It does not auto-edit project docs.** The digest is a knowledge artifact + a proposal. The user retains the decision to apply, defer, or reject each recommendation.
+- It does not invent new connection targets. Only the targets already justified in Project Connections are eligible.
+- It does not exceed the 5-target cap. If more than 5 `action-pending` connections exist, prioritize by specificity of the framework match and note in the Adoption Recommendations section that some targets were deferred.
+
+**Output:**
+
+Append a new section titled **`## Adoption Recommendations`** to the digest (between Recommendations and Raw Content). Structure:
+
+```markdown
+## Adoption Recommendations
+
+> Vault adoption pass — read N target docs against M frameworks. K hits, P partials, Q no-ops.
+
+### {target file name} — `{relative/path/to/target.md}`
+- **{Framework name} → Hit.** {One-sentence rationale.} **Edit:** {specific file-level proposal — section to add, heading to modify, etc.}
+- **{Framework name} → Partial.** {What overlaps, what's still missing.}
+- **{Framework name} → No-op.** {Why it doesn't transfer.}
+
+### {next target file name} — `{path}`
+...
+```
+
+Always include `No-op` and `Partial` results, not just `Hits`. Hiding them hides the reasoning that prevents over-applying patterns next time.
+
+**Anti-patterns specific to the adoption pass:**
+
+- Don't propose a Hit unless you can cite the target doc's current state. "Could add X" without referencing what's already there is speculation, not adoption analysis.
+- Don't read more than 5 target docs per digest, even if more `action-pending` connections exist. If the digest has 8 actionable connections, the adoption pass is the wrong granularity — note the overflow and stop.
+- Don't suppress No-ops. A clean No-op is the most valuable output for cross-domain pattern transfer; without it, the pass becomes a yes-machine.
+- Don't auto-apply edits to project docs. Even on Hits, the recommendation goes in the digest only.
+
 ## Binary Quality Checks
 
 When evaluating digest output quality, use these binary checks:
@@ -602,6 +658,11 @@ Fail: Post dismissed as "engagement bait" or "missing promised content" without 
 Question: Was the vault queried for existing notes and wikilinks inserted where concepts match?
 Pass: Vault note list was fetched; wikilinks appear in Summary and/or Key Claims for matching concepts
 Fail: No vault query attempted, or wikilinks are missing despite obvious matches (e.g., content mentions "Model Context Protocol" and that note exists)
+
+**EVAL 9: Vault adoption pass when triggered**
+Question: When the trigger conditions in Section 5d hold (Frameworks section non-empty AND at least one `action-pending` connection AND content carries a transferable pattern), was the adoption pass performed?
+Pass: Adoption Recommendations section appended with Hit/Partial/No-op verdicts for each (framework × target) cell, capped at 5 target docs, including at least one No-op or Partial when applicable
+Fail: Pass was skipped despite triggers firing, OR pass ran but only reported Hits (suppressing No-ops), OR pass exceeded the 5-target cap, OR pass auto-edited a project doc instead of recording recommendations in the digest
 
 ## Anti-Patterns
 
@@ -687,6 +748,16 @@ connections:
 ### Project Connections
 - {mapping to user's projects}
 
+## Adoption Recommendations
+{Conditional — see Section 5d. Include only when ALL trigger conditions hold (Frameworks section non-empty AND at least one `action-pending` connection AND content carries a transferable pattern). Skip the section silently otherwise.}
+
+> Vault adoption pass — read N target docs against M frameworks. K hits, P partials, Q no-ops.
+
+### {target file name} — `{relative/path/to/target.md}`
+- **{Framework name} → Hit.** {One-sentence rationale citing target's current state.} **Edit:** {specific file-level proposal — section to add, heading to modify, etc.}
+- **{Framework name} → Partial.** {What overlaps with what's already there, what's still missing.}
+- **{Framework name} → No-op.** {One sentence on why it doesn't transfer.}
+
 ---
 
 ## README
@@ -748,6 +819,16 @@ connections:
 ### Project Connections
 - {mapping to user's projects}
 
+## Adoption Recommendations
+{Conditional — see Section 5d. Include only when ALL trigger conditions hold (Frameworks section non-empty AND at least one `action-pending` connection AND content carries a transferable pattern). Skip the section silently otherwise.}
+
+> Vault adoption pass — read N target docs against M frameworks. K hits, P partials, Q no-ops.
+
+### {target file name} — `{relative/path/to/target.md}`
+- **{Framework name} → Hit.** {One-sentence rationale citing target's current state.} **Edit:** {specific file-level proposal — section to add, heading to modify, etc.}
+- **{Framework name} → Partial.** {What overlaps with what's already there, what's still missing.}
+- **{Framework name} → No-op.** {One sentence on why it doesn't transfer.}
+
 ---
 
 ## Raw Content
@@ -805,6 +886,16 @@ connections:
 
 ### Project Connections
 - {mapping to user's projects}
+
+## Adoption Recommendations
+{Conditional — see Section 5d. Include only when ALL trigger conditions hold (Frameworks section non-empty AND at least one `action-pending` connection AND content carries a transferable pattern). Skip the section silently otherwise.}
+
+> Vault adoption pass — read N target docs against M frameworks. K hits, P partials, Q no-ops.
+
+### {target file name} — `{relative/path/to/target.md}`
+- **{Framework name} → Hit.** {One-sentence rationale citing target's current state.} **Edit:** {specific file-level proposal — section to add, heading to modify, etc.}
+- **{Framework name} → Partial.** {What overlaps with what's already there, what's still missing.}
+- **{Framework name} → No-op.** {One sentence on why it doesn't transfer.}
 
 ---
 
