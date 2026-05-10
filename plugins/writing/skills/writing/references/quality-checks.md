@@ -37,9 +37,26 @@ Eleven yes/no checks for evaluating writing output quality (autoresearch evals, 
 **Fail:** Generic opening (e.g., "In today's world..." or "Communication is key...").
 
 ## EVAL 7: No AI slop patterns
-**Question:** Does the output avoid throat-clearers, time-deixis (self-reference to the medium), false exclusivity hooks, manufactured urgency, dramatic fragmentation, fake vulnerability, qualifier sandwiches, pivot hype, fake closers, call-to-action slop, two-part engagement questions, fill-in-the-blank templates, significance inflation, spectacle framing around failure, and fractional-magnitude precision?
-**Pass:** Zero instances of structural AI slop patterns (see [ai-slop-patterns.md](ai-slop-patterns.md)).
-**Fail:** Any throat-clearer ("Here's the thing:"), time-deixis ("today's newsletter dives into..."), false exclusivity ("Nobody's talking about this"), urgency hook ("This changes everything"), dramatic fragment ("Let that sink in."), fake vulnerability ("Unpopular opinion:"), qualifier sandwich ("It's worth noting..."), pivot hype ("But here's where it gets interesting:"), fake closer ("Buckle up."), two-part engagement question ("Should X, or does Y?"), template sentence ("[X] is the new [Y]."), spectacle framing ("The deal cratered. Vendors walked."), or fractional-magnitude precision ("$5.27B" where "$5B" suffices) detected.
+**Question:** Does the output avoid all of the following structural AI slop patterns?
+
+- Throat-clearers ("Here's the thing:")
+- Time-deixis / self-reference to the medium ("today's newsletter dives into...")
+- False exclusivity hooks ("Nobody's talking about this")
+- Manufactured urgency ("This changes everything")
+- Dramatic fragmentation ("Let that sink in.")
+- Fake vulnerability ("Unpopular opinion:")
+- Qualifier sandwiches ("It's worth noting...")
+- Pivot hype ("But here's where it gets interesting:")
+- Fake closers ("Buckle up.")
+- Call-to-action slop
+- Two-part engagement questions ("Should X, or does Y?")
+- Fill-in-the-blank templates ("[X] is the new [Y].")
+- Significance inflation
+- Spectacle framing around failure ("The deal cratered. Vendors walked.")
+- Fractional-magnitude precision ("$5.27B" where "$5B" suffices)
+
+**Pass:** Zero instances detected (see [ai-slop-patterns.md](ai-slop-patterns.md) for full taxonomy).
+**Fail:** Any pattern above detected.
 **Greppable (partial):** `grep -iE "(today's|this (week|month)'s) (newsletter|post|brief|article|episode|edition)"` flags time-deixis; `grep -iE ', or (does|is|will|are|do|has|have|should|could) '` flags two-part engagement question candidates (verify each lands in a question line). Spectacle framing, fractional-magnitude precision, and the rest require a structural read.
 
 ## EVAL 8: No corrective reframing

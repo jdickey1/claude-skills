@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.6.0
+version: 2.6.1
 effort: high
 ---
 
@@ -303,22 +303,12 @@ Before finalizing branded or long-form content, scan for the eight editorial-edi
 
 ### 19. Order Lists by Magnitude and Recognizability
 
-When you list deals, proof-points, numeric receipts, or competing examples, the first item anchors the reader. Smallest-first or least-recognizable-first or foreign-spelling-first weakens the hook before the thesis lands. Order largest-first by magnitude; break ties by recognizability; avoid leading with a foreign-spelling brand unless it is the single most-recognized name in its category.
+When you list deals, proof-points, or competing examples, the first item anchors the reader. Order largest-first by magnitude (dollars, MW, headcount, votes); break ties by audience recognizability; avoid leading with a foreign-spelling brand (Wärtsilä, Mærsk, Citroën) unless it's the single most-recognized name in its category.
 
 - Wrong: "Wärtsilä committed 412 MW, PROENERGY 650 MW, and INNIO 1.25 GW to the buildout."
 - Right: "INNIO committed 1.25 GW, PROENERGY 650 MW, and Wärtsilä 412 MW to the buildout."
 
-**Tiebreakers (in order):**
-
-1. **Magnitude.** Largest-first when the unit is comparable: dollars, megawatts, square footage, headcount, market cap, vote totals, revenue.
-2. **Recognizability.** Among comparable magnitudes, lead with the name the audience knows best. For US business audiences, that usually means mainstream / domestic brands ahead of regional or foreign ones.
-3. **Foreign-spelling exception.** Names with umlauts, accents, or diacritics (Wärtsilä, Mærsk, Citroën) are visually disruptive at the start of a list. Move them mid-list unless the brand is the single most-recognized name in its category.
-
-**Where this matters:** Deal lists, news roundups, project budgets, candidate slates, vendor comparisons, conference rosters, awards write-ups. Anywhere three or more named items appear in prose. Comma-separated runs in a sentence count too, not just bulleted lists.
-
-**Where this doesn't matter:** Genuine alphabetical indexes (glossaries, contributor credits), chronological lists where the date is the structure, and rankings where another ordering is load-bearing (final standings, search results).
-
-**Why:** The first list item is the anchor; the rest of the list lives in its shadow. Magnitude order tells the reader "this is the size of the thing." Recognizability order tells the reader "this is the shape of the thing." Either beats alphabetical or arrival order, which were never editorial choices in the first place.
+**Applies** to any prose with three or more named items, including comma-separated runs in a sentence. **Doesn't apply** to alphabetical indexes, chronological lists, or rankings where another order is load-bearing (final standings, search results). **Why:** the first item is the anchor; the rest live in its shadow. Magnitude signals size, recognizability signals shape; either beats alphabetical or arrival order.
 
 ## Hook Patterns (Universal)
 
@@ -478,6 +468,10 @@ These are the rationalizations the skill must refuse, with the counter to apply:
 | "The parallel-clause punchline is punchier on X, so it's earned." | Rule #10's parallel-clause moralistic punchline subsection: same AI rhetorical move as "X isn't Y, it's Z" without the negation. State the principle directly. |
 | "Voice context says no contractions, but rule #3 says use them." | Voice wins (rule #15). Captured voice context overrides universal defaults where they conflict. EVAL 3 yields to formal register. |
 | "The user's draft already used 'serves as,' so it must be voice." | If the captured voice contains AI tells (em dashes, copula avoidance, corrective reframes), it's contamination from prior AI editing. Strip them. Rule #15 protects deliberate human quirks, not AI artifacts. |
+| "Opening with 'In today's brief...' tells the reader where they are." | Time-deixis is structural AI slop (see [ai-slop-patterns.md](references/ai-slop-patterns.md)). The medium label is invisible to a reader who already opened it. Open with substance: a number, a name, a claim. |
+| "The two-part question ('Should the city act, or does the market clear?') is more nuanced." | Two-part engagement questions are the AI shape (ai-slop-patterns.md). Pick one clause. Single-clause questions land; compound ones stall. |
+| "The vendor cratered, and the language matches the moment." | Spectacle framing reaches for verbs the facts don't earn. State the mechanic: "The vendor missed three deadlines and the contract was terminated." Mechanics over spectacle (ai-slop-patterns.md). |
+| "$5.27B is the actual number from the filing, so I'll use it verbatim." | Fractional-magnitude precision past meaningful digits is an AI tic (ai-slop-patterns.md). Round to "$5.3B" or "~$5B" unless the trailing digits carry argumentative weight (e.g., "$5.27B vs. the $5.30B reported"). |
 
 If a rationalization isn't on this list, write it down before acting on it. New rationalizations are the most valuable signal for the next skill iteration.
 
@@ -518,6 +512,6 @@ Patterns to watch:
 - When do contractions hurt rather than help? (suggests rule #15 examples to add)
 - Which rationalizations recur? (suggests new rows in the defense table)
 - Which channel-context overrides surface most? (suggests rule #15's "channel context modifies voice-mirror" needs more channels named)
+- Which rules conflict with each other under pressure? (suggests new examples or hierarchies in rule #15)
 
 The journal is per-installation data, not source code. `.learnings.jsonl` is gitignored at the skill root.
-- Which rules conflict with each other under pressure?
