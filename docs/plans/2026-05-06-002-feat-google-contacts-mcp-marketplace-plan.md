@@ -1,9 +1,10 @@
 ---
 title: "feat: google-contacts MCP — Bun→Node refactor, npm publish, marketplace plugin"
 type: feat
-status: active
+status: completed
 date: 2026-05-06
 deepened: 2026-05-06
+completed: 2026-05-11
 ---
 
 # feat: google-contacts MCP — Bun→Node refactor, npm publish, marketplace plugin
