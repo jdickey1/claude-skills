@@ -34,12 +34,13 @@ Before adopting any AEO number that arrives via a social-media thread, vendor bl
 1. **Traceability** — Is the "proprietary study" traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land)? If the numbers match an unattributed public study, treat as repackaged.
 2. **Closed loop** — Does the author own a tool that produced the data? Closed-loop marketing data is directional at best.
 3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers**? If not, flag as basket-specific or unsupported.
+4. **Google-official contradiction** — Does the tactic contradict Google's official Search guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide, 2026-05-15)? If Google explicitly disclaims it as a Google Search input (llms.txt, AI-specific chunking, structured-data overfocus), scope the tactic to non-Google engines with a caveat. If Google classifies it as spam (inauthentic mentions, scaled content abuse), the tactic is removed/reversed, not scoped — disingenuous on every engine. A well-sourced number does not rehabilitate a Google-disclaimed or spam tactic.
 
-When **all three** fire, warn the user and cite the verified playbook instead of the viral number. Single trigger is informational only. The guardrail warns — it never blocks.
+When **checks 1-3 all fire**, warn the user and cite the verified playbook instead of the viral number; a single trigger is informational only. **Check 4** is a scope/removal decision (it changes whether and where the tactic is recommended), not a stat warning. The guardrail warns and scopes — it never blocks.
 
 **Reference test:** Given "Jake Ward says LinkedIn is 11% of AI answers — should we adopt?" — the command should surface the verified `aeo.md` row ("basket-specific; false on broad baskets per LLM Pulse"), warn that the headline is not triangulated, and return the verified tactics (500-2,000 word articles, 50-66% citation share; platform split; Bing-first mechanism) rather than the headline number.
 
-Keep the wording of this check aligned with the matching guardrail in the `digest` skill's Section 5 — they solve the same failure mode (closed-loop marketing data) and should stay in sync when either is edited.
+**Sync contract (semantic, not byte-identical).** This check is one of **three surfaces** that carry the same guardrail: this command, `skills/seo/reference/aeo.md` ("Credibility Guardrail for Viral AEO Claims"), and the `digest` skill's §5b. Keep the **check logic and the warn-and-scope/never-block severity posture** aligned across all three when editing any of them. Do **not** force them byte-identical — each intentionally keeps its own structure (this command's "Reference test"; digest §5b's two-trigger gate + "Effect on output" block; aeo.md's verified-playbook framing). What must stay in sync is the four checks and the severity behavior, not the prose.
 
 ## Process
 
@@ -48,8 +49,8 @@ Keep the wording of this check aligned with the matching guardrail in the `diges
 3. Follow the 4-section audit structure from `aeo.md`:
    - **AI Crawlability & Access** (0-20 pts) — robots.txt, technical accessibility
    - **Content Structure & Extractability** (0-25 pts) — answer-first format, tables, FAQs, freshness
-   - **Schema & Machine-Readable Data** (0-25 pts) — JSON-LD, llms.txt, brand-facts
-   - **Authority & Trust Signals** (0-30 pts) — 19 trust signals, third-party validation
+   - **Schema & Machine-Readable Data** (0-25 pts) — JSON-LD, llms.txt, brand-facts. **Scope these as non-Google-engine signals** per Google 2026-05-15 (see `aeo.md` → "Google Search vs AI-Engine Scope"); never report schema/llms.txt as a Google AI-readiness gap. Reconcile schema-citation figures as directional/non-Google.
+   - **Authority & Trust Signals** (0-30 pts) — 19 trust signals, third-party validation. Apply the **anti-inauthentic-mention authenticity guardrail** from `aeo.md` — score third-party presence as earned, never recommend seeded/persona/astroturfed mentions (Google spam, 2026-05-15).
 4. Run an **Answer Intent Map** — test 15-20 category queries in ChatGPT and Perplexity to establish the brand's current AI visibility baseline
 5. Generate scored report with prioritized implementation roadmap
 
@@ -78,8 +79,9 @@ This is what makes the AEO audit actionable. For the target business:
 
 - Use dev-browser (script files at `/tmp/*.js`, run via `dev-browser run /tmp/script.js`, never heredocs) to inspect live pages — evaluate DOM, read rendered HTML, screenshot
 - Check `robots.txt` directly with curl for AI bot directives
-- **Verify schema in raw HTML** — don't rely on content extractors for structured data findings
-- Check for `llms.txt` and `brand-facts.json` at their expected URLs
+- **Verify schema in raw HTML** — don't rely on content extractors for structured data findings (schema is a non-Google-engine citation signal per Google 2026-05-15; report as such, not as Google AI-readiness)
+- Check for `llms.txt` and `brand-facts.json` at their expected URLs — report findings as **non-Google-engine** scope only (Google does not use `llms.txt`; per Google 2026-05-15). Never recommend `llms.txt` as a Google ranking/citation tactic
+- Never recommend or score scaled per-fan-out-term page generation or seeded/inauthentic third-party mentions — both are Google spam (2026-05-15) and disingenuous on every engine; flag and reverse
 - Weight severity using the Common Mistakes table in `aeo.md`
 - The Answer Intent Map is NOT optional — it's the foundation of every recommendation
 

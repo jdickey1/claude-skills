@@ -1,7 +1,7 @@
 ---
 name: seo
 description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR AEO OR answer engine optimization OR AI visibility OR AI citations OR ChatGPT ranking OR Perplexity optimization OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
-version: 2.5.0
+version: 2.6.0
 effort: high
 ---
 
@@ -47,7 +47,7 @@ Deep-dive references loaded on demand by commands:
 | `reference/ranking-factors.md` | Evidence-based ranking factor priorities, severity calibration, keyword validation |
 | `reference/ai-search.md` | AEO/GEO optimization, platform-specific citation data, AI accessibility |
 | `reference/aeo.md` | Full AEO audit framework: 4-section scoring, Answer Intent Mapping, trust signals, service business adaptations, maintenance loop |
-| `reference/fan-out-queries.md` | Fan-out query optimization: how AI models decompose queries and use `site:` searches, content depth strategy, audit methodology |
+| `reference/fan-out-queries.md` | Fan-out query optimization for **ChatGPT/Bing-class engines** (`site:`-operator fan-out — *not* Google, which grounds over its core index per Google 2026-05-15); genuine content-depth strategy and audit methodology, with an anti-scaled-content guardrail |
 | `reference/local-seo.md` | GBP, citations, NAP, reviews, SABs, Google spam warnings |
 | `reference/link-building.md` | Link profile, tactics, local link building, brand signals |
 | `reference/automation.md` | Full DIY automation system (~$75/mo replaces ~$1,500/mo agency) |
