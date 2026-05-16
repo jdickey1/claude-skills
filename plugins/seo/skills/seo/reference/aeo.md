@@ -6,6 +6,27 @@ For foundational AI search data (citation stats, platform comparison, content fo
 
 ---
 
+## Google Search vs AI-Engine Scope (Governing Principle)
+
+> **Source:** Google Search Central, "Optimizing for generative AI features on Google Search" — https://developers.google.com/search/docs/fundamentals/ai-optimization-guide (last updated 2026-05-15). This is the authoritative first-party statement for Google's AI features (AI Overviews, AI Mode). Where this reference predates or conflicts with it, Google's guidance governs *for Google Search*.
+
+**What Google officially states:**
+
+- Google's AI features run **retrieval-augmented generation (RAG)/grounding plus query fan-out over Google's core Search index** — the model issues a set of related queries concurrently and grounds its answer in pages already retrievable from that index. It does not run `site:domain.com` operator searches against individual websites.
+- The path to visibility in Google's AI features is **foundational SEO plus genuinely useful, people-first, non-commodity content** — the same fundamentals that earn classic Search visibility. There is no separate AI-specific ranking lever.
+- Google **does not require** `llms.txt`/special markup, AI-specific content "chunking" or rewriting, or structured-data overfocus as inputs to its AI features. (Structured data can support rich results generally; it is not an AI-Overviews/AI-Mode admission ticket.)
+- Google classifies **seeking inauthentic mentions** and **scaled content abuse** (mass per-variation or per-fan-out-term pages created to manipulate rankings) as **spam**.
+
+**The principle this reference follows:**
+
+1. **Engine-scope every AI tactic.** State which engines a tactic applies to. Google Search, ChatGPT, Perplexity, and Bing-fed surfaces differ; a tactic legitimate for one is not automatically legitimate for all.
+2. **Never present a Google-disclaimed tactic as a Google Search input.** Tactics Google explicitly disclaims (llms.txt, AI-specific chunking, structured-data overfocus) are retained here only where they remain load-bearing for non-Google engines (ChatGPT/Bing/Perplexity), and are explicitly fenced as *not* Google Search signals.
+3. **Never recommend a tactic that is disingenuous on any engine.** Inauthentic mentions, sockpuppet/persona seeding, and scaled coverage-driven page generation are spam everywhere — they are reversed, not scoped.
+
+This scope statement is the anchor the rest of this reference is reconciled toward. Dated caveats below ("per Google's 2026-05-15 guidance") mark text that this principle supersedes.
+
+---
+
 ## AEO Audit Scoring (0-125)
 
 | Section | Points | What It Measures |
@@ -423,13 +444,14 @@ The following claims appeared in a widely shared April 2026 LinkedIn AEO thread 
 
 ### Credibility Guardrail for Viral AEO Claims
 
-Before adopting any AEO number from a social-media thread, vendor blog, or "proprietary study," run this three-check pattern. When **all three** fire, treat the claim as directional only and cite the verified row above instead.
+Before adopting any AEO number from a social-media thread, vendor blog, or "proprietary study," run the three stat-credibility checks. When **all three** fire, treat the claim as directional only and cite the verified row above instead. Then run the fourth check on the *tactic itself*, independent of how well-sourced the number is.
 
 1. **Traceability** — Is the claimed number traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land)? If the numbers match an unattributed public study, treat as repackaged.
 2. **Closed loop** — Does the author own a tool that produced the data? Closed-loop marketing data is directional at best.
 3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers**? If not, flag as basket-specific or unsupported.
+4. **Google-official contradiction** — Does the tactic contradict Google's official Search guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide, 2026-05-15)? If Google explicitly disclaims it as a Google Search input (e.g. llms.txt, AI-specific chunking, structured-data overfocus), scope the tactic to non-Google engines with an explicit caveat. If Google classifies it as spam (inauthentic mentions, scaled content abuse), the tactic is removed/reversed, not scoped — it is disingenuous on every engine. A well-sourced number does not rehabilitate a Google-disclaimed or spam tactic.
 
-Three-of-three triggers a warning, not a block. Single trigger is informational only. The guardrail mirrors the one in the `digest` skill — keep the wording aligned when editing either file.
+Checks 1-3: three-of-three triggers a warning, not a block; a single trigger is informational only. Check 4 is a scope/removal decision, not a stat warning — it changes *whether and where* the tactic is recommended, never silently deletes engine-legitimate guidance. The whole guardrail is warn-and-scope, never a hard audit-time block. The guardrail mirrors the one in the `digest` skill and the `/seo:seo-aeo` command — keep the **check logic and severity posture** aligned across all three when editing any of them (the three are not byte-identical by design; see the sync note where each carries it).
 
 ### Quarterly Citation Audit Protocol
 
