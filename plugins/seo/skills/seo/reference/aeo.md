@@ -265,13 +265,16 @@ Before optimizing anything, you need to know what AI is currently saying about y
 
 ### Fan-Out Query Awareness
 
-AI models (GPT 5.4+) don't make a single search per user query. They decompose it into **10-15 fan-out sub-queries**, including `site:domain.com` searches against individual domains. This means:
+AI engines don't make a single search per user query — they **fan out into multiple related sub-queries** and synthesize the results. *How* they do this differs by engine, and the difference is load-bearing:
+
+- **Google Search (AI Overviews / AI Mode):** per Google's 2026-05-15 guidance, fan-out is **concurrent related queries grounded (RAG) over Google's core Search index** — the model retrieves pages Google already indexes. It does **not** run `site:domain.com` operator searches against individual websites. There is no "search within your site" phase to optimize for; the lever is being genuinely useful, indexable, non-commodity content that the core index already ranks.
+- **ChatGPT (GPT 5.4, Bing-index) and similar Bing-fed surfaces:** these *do* use `site:` operator sub-queries extensively (March 2026+), effectively searching within trusted domains. The three-phase pattern below describes **this engine class — not Google**:
 
 1. **Phase 1 (Discovery):** Broad queries identify which domains are relevant
-2. **Phase 2 (Site-specific):** `site:yoursite.com [topic]` queries extract detailed content from each trusted domain
-3. **Phase 3 (Validation):** `site:g2.com [brand] reviews` type queries cross-reference via third parties
+2. **Phase 2 (Site-specific):** `site:yoursite.com [topic]` queries extract detailed content from each trusted domain *(ChatGPT/Bing-class only; not a Google mechanism)*
+3. **Phase 3 (Validation):** `site:g2.com [brand] reviews` type queries cross-reference via third parties *(ChatGPT/Bing-class only)*
 
-Your Answer Intent Map must account for all three phases. See `reference/fan-out-queries.md` for the full fan-out optimization framework, content depth strategy, and fan-out coverage audit methodology.
+Your Answer Intent Map should account for the Bing-class three-phase pattern **and** for Google's index-grounded fan-out — they are different surfaces, not one universal mechanism. See `reference/fan-out-queries.md` for the full (ChatGPT/Bing-scoped) fan-out optimization framework and content-depth strategy.
 
 ### How to Run an Answer Intent Audit
 
@@ -534,7 +537,7 @@ After initial optimization, maintain AI visibility with this weekly routine:
 2. **Content refresh (30 min)** — Update your Answer Hub/Authority Page TL;DR with any new data points, citations, or competitive changes. Add one new FAQ or comparison section.
 3. **Schema & feed health (15 min)** — Fix any schema validation errors. For ecommerce: clear Merchant Center warnings, push 10+ new reviews to weakest product.
 4. **Citation building (25 min)** — One outreach action: pitch a review site, engage on Reddit/Quora, publish a comparison page, or update an external directory listing.
-5. **Fan-out coverage check (15 min)** — Run `site:yoursite.com` with 5 predicted fan-out terms in Google. Score each 0/1/2. Track coverage score over time. Identify and prioritize content gaps.
+5. **Fan-out coverage check (15 min)** — Run `site:yoursite.com [term]` in Google for 5 predicted sub-topic terms. This is an **indexation/coverage self-check** (does Google's core index hold a strong page for each sub-topic?), *not* a model of how Google's AI retrieves — Google grounds over its core index, it does not run `site:` operator fan-out. Score each 0/1/2. Track coverage over time; fill genuine content gaps with substantive pages (not coverage-driven thin pages — see Common AEO Mistakes).
 
 **Monthly:** Refresh `brand-facts.json` / `llms.txt`, validate all PDP schema, update policy changes, re-run full Answer Intent Map audit. Run full Fan-Out Query Audit (see `reference/fan-out-queries.md`).
 

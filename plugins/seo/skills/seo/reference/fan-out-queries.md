@@ -2,6 +2,8 @@
 
 AI models (GPT 5.4+, Perplexity, Gemini) don't make a single search to answer a question. They decompose user queries into **multiple sub-queries (fan-out queries)** and synthesize the results. As of March 2026, GPT 5.4 uses `site:` operator searches extensively in its fan-out pattern, searching directly within specific domains.
 
+> **Scope — not a Google Search mechanism.** This framework optimizes for the **`site:`-operator fan-out used by ChatGPT/Bing-class engines (GPT 5.4)**. It is *not* how Google's AI features work: per Google's 2026-05-15 guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), Google fans out via concurrent related queries **grounded over its core Search index (RAG)** and does not run `site:domain.com` operator searches into individual websites. Apply this reference for ChatGPT/Bing visibility; for Google, the lever is foundational SEO + genuinely useful, indexable, non-commodity content (see `aeo.md` → "Google Search vs AI-Engine Scope"). Do **not** generate pages whose purpose is fan-out-term coverage (see `aeo.md` Common AEO Mistakes — scaled content abuse).
+
 This reference covers how to optimize for this behavior.
 
 ---
