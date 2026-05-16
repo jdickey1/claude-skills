@@ -77,7 +77,7 @@ ChatGPT (GPT 5.4, on Bing's index) and similar Bing-fed surfaces decompose user 
 
 **Three-phase pattern (ChatGPT/Bing-class only):** (1) Broad discovery queries identify relevant domains, (2) `site:` queries extract detailed content from each domain, (3) `site:g2.com` / review site queries cross-validate.
 
-**Key implication:** Every major feature, use case, comparison, and documentation topic needs its own dedicated, content-rich, indexable page. A single "Features" page won't surface for specific fan-out queries.
+**Key implication (anti-scaled-content):** On Bing-class engines, genuinely distinct features/use-cases/comparisons *may* warrant their own substantive pages — but only when each has real, non-commodity depth. Do **not** mass-generate a page per fan-out term for coverage's sake: Google classifies scaled content abuse as spam (2026-05-15) and thin per-variation pages are suppressed on every engine. Consolidate into deep, genuinely unique pages; a single thin "Features" page and fifty thin coverage pages fail for the same reason.
 
 See `reference/fan-out-queries.md` for the full framework, audit methodology, and content strategy.
 

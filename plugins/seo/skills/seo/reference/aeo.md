@@ -370,7 +370,8 @@ The 7-layer ecommerce framework adapts to service businesses (law firms, consult
 
 ### Answer Hub → Service Authority Page
 - URL: `/guides/best-[service]-[location]-[year]` (e.g., `/guides/best-business-attorney-austin-2026`)
-- Same structure: TL;DR (60-90 words), ranked list of firms (yours at #1 + real competitors), comparison table (years in practice, specialties, case results, consultation fee, rating), FAQ from Answer Intent Map
+- Same structure: TL;DR (60-90 words), an **honest, criteria-based comparison** of real firms (including yours), comparison table (years in practice, specialties, case results, consultation fee, rating), FAQ from Answer Intent Map
+- **Do not self-rank.** Never publish a "ranked list with yours at #1" — a self-authored listicle that places the author's own firm at the top is exactly the disingenuous pattern Google and AI engines discount (and a deceptive-practice risk for regulated professions like law). Present an even-handed, transparent-criteria comparison; let the criteria and verifiable facts speak. Earn the top position in *third-party* roundups through real differentiation, not by ranking yourself.
 - Key difference: emphasize credentials, case outcomes, and trust signals over price
 
 ### Brand-Facts → Firm Profile
@@ -641,8 +642,8 @@ Passages needing improvement:
 |-------------|---------------|---------------|------|
 | [feature/topic] | [page found or "no result"] | [0/1/2] | [yes/no] |
 
-### Content Gaps (Priority Targets)
-[Fan-out terms that returned 0 or 1 — these need dedicated pages]
+### Content Gaps (Candidate Targets)
+[Fan-out terms that returned 0 or 1 — *candidate* gaps. For each, recommend a new page **only** where genuinely distinct, substantive expertise exists; otherwise recommend consolidating into an existing strong page. Never recommend mass per-term page generation — scaled content abuse is Google spam (2026-05-15) and a spam-update target. See `reference/fan-out-queries.md` → "Create Content That Matches" anti-scaled-content guardrail.]
 
 ### Third-Party Validation
 | Review Site | Profile Status | Recent Reviews | Rating |
