@@ -254,10 +254,12 @@ AI models verify brands before recommending them. Score each signal as present (
 
 This separates brands that KIND OF show up in AI from brands that show up CONSISTENTLY. AI models cross-reference what others say about you.
 
-- [ ] **Third-party review profiles** — Presence on Trustpilot, G2, Capterra, Yelp, BBB, or industry-specific review sites. 3x higher citation probability.
-- [ ] **External citations** — Your brand mentioned on authoritative sites you don't control (review roundups, industry publications, comparison articles).
-- [ ] **Comparison pages** — `/compare/you-vs-competitor` pages on your own site that cite external sources (AI sees citations going both ways).
-- [ ] **Community presence** — Authentic engagement on Reddit, Quora, or industry forums where your category is discussed. AI models heavily reference Reddit threads and Quora answers.
+> **Authenticity guardrail (hard rule — read before scoring this section).** Third-party presence is scored as an **outcome of real work and real expertise**, never as a lever to manufacture. Google explicitly classifies **seeking inauthentic mentions** as spam (per Google 2026-05-15; https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), and it is disingenuous on *every* engine, not just Google. **Never** recommend or score: coordinated/seeded/paid mentions, sockpuppet or "neutral persona" accounts, astroturfed forum/Reddit/Quora activity, review solicitation that distorts rating authenticity, self-placed mentions dressed as third-party, or any mention-building whose purpose is to influence AI rather than to genuinely help a real audience. If presence was manufactured, it scores **zero** and is flagged as a spam risk — a high mention count obtained inauthentically is a liability, not a signal. The legitimate path is being genuinely worth mentioning; mirror the skill's existing anti-manipulation stance (`local-seo.md` review-manipulation / thin-page warnings).
+
+- [ ] **Third-party review profiles** — *Organic* presence on Trustpilot, G2, Capterra, Yelp, BBB, or industry-specific review sites, with authentic, unsolicited-or-compliantly-solicited reviews. ~3x higher citation probability — but only real profiles count; never gate, incentivize, or astroturf reviews.
+- [ ] **External citations (earned)** — Your brand *organically* mentioned on authoritative sites you don't control (review roundups, industry publications, comparison articles) because the work merited it. Earned, not placed or seeded.
+- [ ] **Comparison pages** — `/compare/you-vs-competitor` pages on your own site that cite external sources and present honest, even-handed criteria (no self-ranking; see Service Authority Page guidance).
+- [ ] **Community presence (authentic only)** — Genuine, disclosed, value-adding participation by real people from your org in Reddit, Quora, or industry forums where your category is discussed. This is a *behavioral* signal of real engagement — not a channel to seed mentions. Astroturfing or persona accounts here are spam and disqualifying.
 - [ ] **Authoritative outbound citations** — Your content cites credible external sources (studies, government data, industry reports). This signals research rigor.
 
 **Defensive Signals (6 pts)**
@@ -525,8 +527,10 @@ Flag these automatically when found during an audit:
 | Mistake | Severity | Why It Kills Citations |
 |---------|----------|----------------------|
 | AI bots blocked in robots.txt | CRITICAL | Zero citations if bots can't crawl |
+| **Seeding inauthentic mentions / coordinated mention-building** | **CRITICAL** | **Google classifies seeking inauthentic mentions as spam (2026-05-15). Sockpuppet/"neutral persona" accounts, astroturfed forum/Reddit/Quora activity, seeded or paid "third-party" mentions, and review manipulation are ineffective AND disqualifying — disingenuous on every engine, not just Google. Flag and reverse, never recommend.** |
+| **Scaled content abuse (mass per-variation/fan-out pages)** | **CRITICAL** | **Google classifies scaled content abuse as spam (2026-05-15). Mass per-fan-out-term / per-variation pages created for ranking coverage are suppressed and a spam-update target. See `fan-out-queries.md` anti-scaled-content guardrail.** |
 | No publication/update dates | HIGH | Signals staleness to AI |
-| Generic AI-written content | HIGH | LLMs detect and ignore it; original insights required |
+| Generic AI-written content (at scale) | HIGH | LLMs detect and ignore it; original insights required. At volume this is **Google scaled-content abuse (2026-05-15)** — spam, not just low-quality |
 | Paragraph prose for comparison queries | HIGH | Tables beat prose 2.8x for these queries |
 | Missing schema markup (non-Google engines) | MEDIUM | ~2.3-2.5x citation gap on ChatGPT/Bing/Perplexity-class (directional, non-Google, unverified). **Not** a Google AI-features input per Google 2026-05-15 — do not flag as a Google AI-readiness gap; schema still matters for classic rich results |
 | No About/Team page | HIGH | AI can't verify entity identity |
@@ -534,7 +538,7 @@ Flag these automatically when found during an audit:
 | Skipped heading levels | MEDIUM | 3.2x citation rate difference with proper hierarchy |
 | No FAQ sections | MEDIUM | 72% vs 34% citation rate |
 | Only optimizing for Google | MEDIUM | Misses ChatGPT/Perplexity entirely |
-| Timestamp-only "updates" | LOW | +12% vs +71% for meaningful content updates. AI detects fake freshness. |
+| Timestamp-only "updates" | LOW | +12% vs +71% for meaningful content updates. AI detects fake freshness; faking update recency to game ranking aligns with Google's spam stance (2026-05-15) — make meaningful updates, not cosmetic ones. |
 
 ---
 

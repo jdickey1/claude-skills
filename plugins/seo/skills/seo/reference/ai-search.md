@@ -23,7 +23,7 @@ AI Overviews appear in ~16-60% of Google searches (varies by query type; peaked 
 
 ## Generative Engine Optimization (GEO)
 
-- [ ] **Brand entity recognition** — consistent brand mentions across authoritative third-party sites. Brands in lowest quartile of web mentions are nearly absent from AI Overviews. ChatGPT now tags brands as structured entities (Oct 2025 update); fewer brands surfaced per answer (3-4 vs 6-7) means authority matters more.
+- [ ] **Brand entity recognition** — *earned* brand mentions across authoritative third-party sites (an outcome of real authority, not seeded/coordinated mentions — inauthentic mention-building is Google spam, 2026-05-15). Brands in the lowest quartile of organic web mentions are nearly absent from AI Overviews. ChatGPT now tags brands as structured entities (Oct 2025 update); fewer brands surfaced per answer (3-4 vs 6-7) means genuine authority matters more.
 - [ ] **Third-party review profiles** — presence on Trustpilot, G2, Capterra, Yelp increases citation probability 3x
 - [ ] Expert reviews, press mentions, and industry recognition exist
 - [ ] **Author attribution with visible credentials** — author credentials increase AI citations by +40%. Author identity is a direct input to Google's quality models.
@@ -53,7 +53,7 @@ Each platform cites different sources — only 11% of domains appear in both Cha
 - [ ] **Bing/Copilot** — software and tech sources preferred (SourceForge 21.33%). Important for Microsoft ecosystem and enterprise B2B searches.
 - [ ] **Sitemap freshness** — Bing weights `lastmod`, `changefreq` more than Google
 - [ ] Content is voice-search friendly (conversational Q&A format). 50%+ of local searches are now voice; 58% of consumers use voice for local business info.
-- [ ] **Reddit presence** (if applicable) — Google AI Overviews cite Reddit 20% of the time. Authentic participation in relevant subreddits drives AI citations.
+- [ ] **Reddit presence** (if applicable) — Google AI Overviews cite Reddit 20% of the time. *Genuine, disclosed* participation by real people is an organic signal — **never** astroturf, seed, or use persona accounts (Google classifies inauthentic mentions as spam, 2026-05-15; disqualifying on every engine). Presence here is an outcome of real engagement, not a citation-acquisition tactic.
 - [ ] **Video content** — YouTube = 23.3% of Google AI Overview citations. Chapter timestamps enable AI to cite specific segments.
 
 ## AI Citation Data Quick Reference
