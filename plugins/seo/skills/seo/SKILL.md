@@ -18,7 +18,7 @@ Comprehensive SEO framework covering technical foundations, on-page optimization
 1. **Start with indexability** — If Google can't find your pages, nothing else matters.
 2. **Prioritize buyers over browsers** — Target "service + city" keywords, not "how to" keywords.
 3. **Local first** — For local businesses, Google Business Profile is the #1 lever.
-4. **Structure for machines** — AI search systems (ChatGPT, Copilot, Gemini, Perplexity) need structured, citable content.
+4. **Structure for machines** — AI search systems (ChatGPT, Copilot, Gemini, Perplexity) benefit from structured, citable content. Note: this is a **non-Google-engine** lever — per Google's 2026-05-15 guidance, Google's AI features need no AI-specific structuring/markup; foundational SEO + non-commodity content is the path there (see `reference/aeo.md` → "Google Search vs AI-Engine Scope").
 5. **E-E-A-T everywhere** — Trust is the foundation. Untrustworthy pages have low E-E-A-T regardless of other signals.
 6. **Prove it with data** — Every finding must reference the specific page, element, or missing item.
 
@@ -228,7 +228,7 @@ For the full checklist with ~180 items, see `reference/audit-checklist.md`.
 | **AEO** | Descriptive clarity | Make content machine-readable, structured, extractable |
 | **GEO** | Justification & trust | Build authority signals AI systems can verify and cite |
 
-SEO is the foundation. AEO drives understanding. GEO drives confidence. You need all three to be recommended by AI search. See `reference/ai-search.md` for citation data and `reference/aeo.md` for the full AEO audit framework.
+SEO is the foundation. AEO drives understanding. GEO drives confidence. You need all three to be recommended by AI search. The AEO "machine-readable/extractable" emphasis is a **non-Google-engine** lever (per Google 2026-05-15, Google's AI features require no AI-specific markup/chunking — foundational SEO + non-commodity content is the path there). See `reference/ai-search.md` for citation data and `reference/aeo.md` for the full AEO audit framework and the governing "Google Search vs AI-Engine Scope" principle.
 
 ---
 

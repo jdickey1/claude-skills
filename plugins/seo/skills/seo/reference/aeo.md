@@ -91,7 +91,9 @@ AI models extract answers from the first 30% of content 44% of the time. Structu
 
 ### Passage-Level Citability Scoring
 
-Score every substantive content block on the page (paragraphs between headings, list sections, table sections) on a 0-100 citability scale. This measures how likely AI models are to extract and quote each passage.
+> **Engine scope (per Google 2026-05-15):** Google's guidance explicitly states that **AI-specific content "chunking" or rewriting is not required for Google Search** AI features — foundational content quality and normal good structure are sufficient; there is no separate passage-optimization lever for Google. This passage-citability scoring is a **non-Google-engine optimization** (ChatGPT/Bing/Perplexity citation behavior), retained because it remains load-bearing there. Do not present a passage-citability sub-score as a Google AI-readiness signal. Writing answer-first, well-structured content is still good practice for all engines — the caveat is against *AI-specific re-chunking as a Google tactic*, not against clear structure.
+
+Score every substantive content block on the page (paragraphs between headings, list sections, table sections) on a 0-100 citability scale. This measures how likely AI models (ChatGPT/Bing/Perplexity-class) are to extract and quote each passage.
 
 **Optimal passage length:** 134-167 words. Research shows this is the sweet spot for AI citation — long enough for substance, short enough to quote verbatim.
 
@@ -124,7 +126,9 @@ Score every substantive content block on the page (paragraphs between headings, 
 
 ### JSON-LD Schema Markup (15 pts)
 
-Schema markup boosts AI citations 2.3-2.5x. All schema must be JSON-LD format (Google's preference, separates data from HTML).
+> **Engine scope (per Google 2026-05-15):** Google's guidance is explicit that **structured data is not a required input to Google's AI features** (AI Overviews / AI Mode) and that **structured-data overfocus is not the path** to Google AI visibility. Structured data still supports classic rich results and is good general SEO hygiene — but do not score or present schema as a Google-AI-citation lever. The "2.3-2.5x" figure below is a **directional, non-Google, unverified estimate** for ChatGPT/Bing/Perplexity-class engines (full stat re-triangulation is out of scope here; see `ai-search.md`). This schema sub-score is a non-Google-engine signal.
+
+Schema markup is associated with **~2.3-2.5x more AI citations on ChatGPT/Bing/Perplexity-class engines** (directional, non-Google, unverified — not a Google AI-features input). All schema should still be JSON-LD format (Google's stated preference for rich results; separates data from HTML).
 
 **Required schema by page type:**
 
@@ -148,7 +152,9 @@ Schema markup boosts AI citations 2.3-2.5x. All schema must be JSON-LD format (G
 
 ### Machine-Readable Brand Data (10 pts)
 
-These are direct signals to AI agents — structured data they can consume without scraping.
+> **Engine scope (per Google 2026-05-15):** `llms.txt` / special markup for AI is **not a Google Search input** — Google's guidance explicitly disclaims it as a requirement for its AI features. These signals are retained as **non-Google-engine** tactics (ChatGPT/Bing/Perplexity and AI-agent crawlers); score them as such, never as Google AI-readiness. A Brand-Facts page is also just good entity hygiene (it helps classic Search and human trust) — keep it, but not as a Google-AI lever.
+
+These are direct signals to some AI agents — structured data they can consume without scraping (non-Google-engine scope; see caveat above).
 
 - [ ] **`/llms.txt` file** — See llms.txt Audit & Generation subsection below.
 - [ ] **Brand-Facts page** (`/about/facts` or `/brand-facts`) — Wikipedia-style neutral facts page: one-sentence TL;DR, key facts table (founded, category, pricing, certifications, guarantees), links to external profiles (Wikidata, Crunchbase, social, press). This gets crawled by AI bots more than marketing pages.
@@ -157,7 +163,9 @@ These are direct signals to AI agents — structured data they can consume witho
 
 ### llms.txt Audit & Generation
 
-The `llms.txt` standard is an emerging specification that helps AI crawlers understand your site structure and find your most important content. It lives at the domain root (`/llms.txt`) with an optional extended version (`/llms-full.txt`).
+> **Scope + freshness caveat (per Google 2026-05-15):** Google has **explicitly stated `llms.txt` is not used by Google Search** or its AI features. Treat this entire subsection as **ChatGPT/Bing/Perplexity-and-AI-agent scope only**. It is an emerging, non-standardized convention with uneven adoption — audit/generate it for non-Google AI surfaces, but never report an `llms.txt` score as Google AI-readiness, and never recommend it as a Google ranking/citation tactic.
+
+The `llms.txt` standard is an emerging specification that helps *some non-Google* AI crawlers understand your site structure and find your most important content. It lives at the domain root (`/llms.txt`) with an optional extended version (`/llms-full.txt`).
 
 **Audit steps:**
 
@@ -519,7 +527,7 @@ Flag these automatically when found during an audit:
 | No publication/update dates | HIGH | Signals staleness to AI |
 | Generic AI-written content | HIGH | LLMs detect and ignore it; original insights required |
 | Paragraph prose for comparison queries | HIGH | Tables beat prose 2.8x for these queries |
-| Missing schema markup | HIGH | 2.3-2.5x citation gap vs pages with schema |
+| Missing schema markup (non-Google engines) | MEDIUM | ~2.3-2.5x citation gap on ChatGPT/Bing/Perplexity-class (directional, non-Google, unverified). **Not** a Google AI-features input per Google 2026-05-15 — do not flag as a Google AI-readiness gap; schema still matters for classic rich results |
 | No About/Team page | HIGH | AI can't verify entity identity |
 | Claims without sources | MEDIUM | Reduces trust score; AI prefers verifiable assertions |
 | Skipped heading levels | MEDIUM | 3.2x citation rate difference with proper hierarchy |

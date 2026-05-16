@@ -158,12 +158,12 @@ All schema should use **JSON-LD format** (Google recommended, AI-universal). Use
 - [ ] **Person schema for authors** with `jobTitle`, `description`, `sameAs` links to LinkedIn/profiles, `worksFor`, and `image`
 - [ ] BreadcrumbList schema for navigation
 - [ ] Service schema on service pages (nest within LocalBusiness)
-- [ ] FAQ schema on pages with FAQs — **3.2x more likely to appear in AI Overviews**
+- [ ] FAQ schema on pages with FAQs — supports classic rich results; **~3.2x citation lift is a directional, non-Google estimate** for ChatGPT/Bing/Perplexity-class engines. Per Google 2026-05-15, structured data is not a required AI-Overviews/AI-Mode input — do not flag as a Google AI gap
 - [ ] Review/AggregateRating schema (if reviews on site) — `ratingValue` and `reviewCount` must match visible numbers exactly
 - [ ] Product schema (for product pages) with price, currency, availability
 - [ ] Article schema (for blog/content pages) with `author` (Person type), `datePublished`, `dateModified`, and `image` (min 696px wide)
 - [ ] Schema validates in **both** Google Rich Results Test AND Schema Markup Validator
-- [ ] **Content with schema is 2.3-2.5x more likely to appear in AI-generated answers**
+- [ ] **Content with schema ~2.3-2.5x more likely to be cited on non-Google engines** (ChatGPT/Bing/Perplexity-class — directional, unverified). **Not** a Google AI-features input (Google 2026-05-15); schema still earns classic rich results
 - [ ] No over-marking — use only schema types that authentically represent the page content
 
 #### Local Business Schema
@@ -211,6 +211,8 @@ See `reference/local-seo.md` for full citation details and quality hierarchy.
 
 ## Tier 3: AI Search Optimization (AEO/GEO)
 See `reference/ai-search.md` for full AI search optimization details.
+
+> **Google scope (per Google 2026-05-15):** schema, modular/chunked answer blocks, and machine-readable signals below are **non-Google-engine** levers (ChatGPT/Bing/Perplexity-class) — Google's AI features require none of them. They remain good general structure; do not score them as Google AI-readiness. See `aeo.md` → "Google Search vs AI-Engine Scope".
 
 - [ ] **Answer-first layout** — "Question, Answer, Evidence" pattern
 - [ ] **Self-contained answer blocks** of 120-180 words between headings

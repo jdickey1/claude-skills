@@ -6,6 +6,8 @@ AI Overviews appear in ~16-60% of Google searches (varies by query type; peaked 
 
 **AEO vs GEO distinction:** AEO (Answer Engine Optimization) = be the direct answer (featured snippets, voice, position zero). GEO (Generative Engine Optimization) = be the source AI synthesizes from (ChatGPT, Perplexity, Claude, Copilot). AEO originated in Google-focused SEO; GEO emerged with LLMs. Optimize for both.
 
+> **Google scope (per Google 2026-05-15 — see `aeo.md` → "Google Search vs AI-Engine Scope"):** Google's AI features do **not** require `llms.txt`/special markup, AI-specific content "chunking" or rewriting, or structured-data overfocus. Items below about schema, modular/chunked answer blocks, and machine-readable signals are **non-Google-engine** levers (ChatGPT/Bing/Perplexity-class) — they are good general structure too, but never report them as Google AI-readiness. For Google, the lever is foundational SEO + genuinely useful, non-commodity content.
+
 ## Answer Engine Optimization (AEO)
 
 - [ ] **Answer-first layout** — "Question, Answer, Evidence" pattern: H2 as real question, 1-2 sentence direct answer, then supporting evidence. 44% of AI citations come from the first 30% of content.
@@ -35,7 +37,7 @@ AI Overviews appear in ~16-60% of Google searches (varies by query type; peaked 
 - [ ] Content is in HTML (not trapped in JavaScript-only rendering)
 - [ ] No cloaking (same content served to bots and users)
 - [ ] Clean HTML structure (semantic elements: article, section, nav, main)
-- [ ] Structured data is comprehensive — schema markup boosts AI citations by 36%. 2.3x more likely in AI Overviews vs pages without.
+- [ ] Structured data is comprehensive — associated with **~2.3-2.5x more AI citations on ChatGPT/Bing/Perplexity-class engines** (directional, non-Google, unverified estimate; figures reconciled to the 2.3-2.5x range used elsewhere in this skill — the earlier "+36%" framing was an unsourced outlier). **Not** a Google AI-features input: per Google 2026-05-15 (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), structured data is not required for AI Overviews/AI Mode — it still supports classic rich results.
 - [ ] **Page speed matters for AI** — pages with FCP under 0.4s average 6.7 citations; over 1.13s drops to 2.1 (3x difference)
 - [ ] Site loads without JavaScript (SSR/SSG preferred for key content)
 - [ ] Descriptive image alt text (AI can't see images without it)
@@ -58,7 +60,7 @@ Each platform cites different sources — only 11% of domains appear in both Cha
 
 | Signal | Impact on AI Citations |
 |--------|----------------------|
-| Schema markup (JSON-LD) | 2.3-2.5x more likely to be cited; GPT-4 accuracy 16%->54% with schema |
+| Schema markup (JSON-LD) — *non-Google engines* | ~2.3-2.5x more likely to be cited on ChatGPT/Bing/Perplexity-class (directional, unverified). Not a Google AI-features input (Google 2026-05-15); supports classic rich results only |
 | Tables and comparison matrices | 2.5-2.8x citation rate vs text-only |
 | Original data/statistics | 4.1-5.5x citation boost |
 | Strong E-E-A-T signals | r=0.81 correlation (strongest predictor) |
