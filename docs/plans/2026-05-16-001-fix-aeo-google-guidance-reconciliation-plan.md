@@ -1,7 +1,7 @@
 ---
 title: "fix: Reconcile AEO/GEO playbook with Google's official generative-AI guidance"
 type: fix
-status: active
+status: completed
 date: 2026-05-16
 ---
 
