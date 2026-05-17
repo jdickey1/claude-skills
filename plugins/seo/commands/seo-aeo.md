@@ -7,7 +7,7 @@ argument-hint: <url> | --audit <project>
 
 ## Two Invocation Modes
 
-1. **Full AEO audit** — `$ARGUMENTS` is a target URL. Runs the 100-point scored assessment, Answer Intent Map, and 4-week implementation roadmap.
+1. **Full AEO audit** — `$ARGUMENTS` is a target URL. Runs the 125-point scored assessment (5 sections), Answer Intent Map, and 4-week implementation roadmap.
 2. **Quarterly citation audit** — `$ARGUMENTS` starts with `--audit` (e.g., `--audit jdkey.com`, `--audit hyperscale`). Runs the quarterly citation-presence matrix across ChatGPT / Perplexity / Google AI Mode against the project's stored query panel and produces a quarterly audit note.
 
 If no arguments are provided, ask the user which mode and what target.
@@ -46,11 +46,12 @@ When **checks 1-3 all fire**, warn the user and cite the verified playbook inste
 
 1. Read `${CLAUDE_PLUGIN_ROOT}/skills/seo/reference/aeo.md` for the full AEO audit framework and scoring system
 2. Read `${CLAUDE_PLUGIN_ROOT}/skills/seo/reference/ai-search.md` for citation data and platform-specific stats
-3. Follow the 4-section audit structure from `aeo.md`:
+3. Follow the 5-section audit structure from `aeo.md`:
    - **AI Crawlability & Access** (0-20 pts) — robots.txt, technical accessibility
    - **Content Structure & Extractability** (0-25 pts) — answer-first format, tables, FAQs, freshness
    - **Schema & Machine-Readable Data** (0-25 pts) — JSON-LD, llms.txt, brand-facts. **Scope these as non-Google-engine signals** per Google 2026-05-15 (see `aeo.md` → "Google Search vs AI-Engine Scope"); never report schema/llms.txt as a Google AI-readiness gap. Reconcile schema-citation figures as directional/non-Google.
    - **Authority & Trust Signals** (0-30 pts) — 19 trust signals, third-party validation. Apply the **anti-inauthentic-mention authenticity guardrail** from `aeo.md` — score third-party presence as earned, never recommend seeded/persona/astroturfed mentions (Google spam, 2026-05-15).
+   - **Fan-Out Query Readiness** (0-25 pts) — on-site content depth vs AI sub-query patterns (see `aeo.md` + `reference/fan-out-queries.md`). This is **ChatGPT/Bing-class scope, not Google** (Google grounds over its core index, not `site:` operator fan-out); never recommend scaled per-fan-out-term pages (Google scaled-content-abuse spam, 2026-05-15).
 4. Run an **Answer Intent Map** — test 15-20 category queries in ChatGPT and Perplexity to establish the brand's current AI visibility baseline
 5. Generate scored report with prioritized implementation roadmap
 
@@ -87,7 +88,7 @@ This is what makes the AEO audit actionable. For the target business:
 
 ## Output
 
-Use the AEO Audit Output Format from `aeo.md`. Score out of 100 with 4-section breakdown. Include:
+Use the AEO Audit Output Format from `aeo.md`. Score out of 125 with 5-section breakdown. Include:
 - **Visibility Scorecard** — Mention Rate, Prominence Rate, composite Visibility Score (0-100 scale), competitor frequency table, gap analysis
 - **Answer Intent Map** — full per-query results table
 - Per-finding format matching the main SEO audit style (SEVERITY, Category, Page, Confidence, Issue, Recommendation, Impact)

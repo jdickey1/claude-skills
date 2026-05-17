@@ -46,7 +46,7 @@ Deep-dive references loaded on demand by commands:
 | `reference/audit-checklist.md` | Full 4-tier audit checklist (~180 items) |
 | `reference/ranking-factors.md` | Evidence-based ranking factor priorities, severity calibration, keyword validation |
 | `reference/ai-search.md` | AEO/GEO optimization, platform-specific citation data, AI accessibility |
-| `reference/aeo.md` | Full AEO audit framework: 4-section scoring, Answer Intent Mapping, trust signals, service business adaptations, maintenance loop |
+| `reference/aeo.md` | Full AEO audit framework: 5-section scoring (0-125), Answer Intent Mapping, trust signals, service business adaptations, maintenance loop |
 | `reference/fan-out-queries.md` | Fan-out query optimization for **ChatGPT/Bing-class engines** (`site:`-operator fan-out — *not* Google, which grounds over its core index per Google 2026-05-15); genuine content-depth strategy and audit methodology, with an anti-scaled-content guardrail |
 | `reference/local-seo.md` | GBP, citations, NAP, reviews, SABs, Google spam warnings |
 | `reference/link-building.md` | Link profile, tactics, local link building, brand signals |

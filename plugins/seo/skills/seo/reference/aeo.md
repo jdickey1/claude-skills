@@ -590,7 +590,7 @@ AI-driven sessions grew 527% YoY in early 2025. ChatGPT referrals went from ~600
 # AEO Audit: [Business Name / Domain]
 **Date:** [date]
 **Pages Reviewed:** [count]
-**AEO Readiness Score:** [X/100]
+**AEO Readiness Score:** [X/125]
 
 ## Score Breakdown
 - AI Crawlability & Access: [X/20]
