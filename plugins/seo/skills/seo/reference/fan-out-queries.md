@@ -2,6 +2,8 @@
 
 AI models (GPT 5.4+, Perplexity, Gemini) don't make a single search to answer a question. They decompose user queries into **multiple sub-queries (fan-out queries)** and synthesize the results. As of March 2026, GPT 5.4 uses `site:` operator searches extensively in its fan-out pattern, searching directly within specific domains.
 
+> **Scope — not a Google Search mechanism.** This framework optimizes for the **`site:`-operator fan-out used by ChatGPT/Bing-class engines (GPT 5.4)**. It is *not* how Google's AI features work: per Google's 2026-05-15 guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), Google fans out via concurrent related queries **grounded over its core Search index (RAG)** and does not run `site:domain.com` operator searches into individual websites. Apply this reference for ChatGPT/Bing visibility; for Google, the lever is foundational SEO + genuinely useful, indexable, non-commodity content (see `aeo.md` → "Google Search vs AI-Engine Scope"). Do **not** generate pages whose purpose is fan-out-term coverage (see `aeo.md` Common AEO Mistakes — scaled content abuse).
+
 This reference covers how to optimize for this behavior.
 
 ---
@@ -50,6 +52,8 @@ Can your domain be found in broad category searches?
 
 ### 2. On-Site Content Depth (12 pts)
 
+> **Score genuine substance, not coverage.** Award points only for pages with **genuinely distinct, substantive content**. Do not award points for — and do not recommend creating — near-duplicate or templated pages that exist only to match a fan-out term; that is scaled content abuse (Google 2026-05-15) and a spam-update target. A consolidated, deep page beats five thin coverage pages on every engine.
+
 When the AI runs `site:yoursite.com [topic]`, will it find comprehensive content?
 
 - [ ] **Feature pages exist as standalone URLs** — Each major feature/capability has its own page (not buried in a single features list). `site:yoursite.com AI features` must return relevant results.
@@ -87,12 +91,14 @@ For any topic you want to rank in AI answers, predict what fan-out queries the A
 
 ### Create Content That Matches
 
-For each predicted fan-out query, ensure a dedicated, content-rich page exists:
+> **Anti-scaled-content guardrail (do not skip).** This is **not** a directive to spin up a page per predicted fan-out term. Google explicitly classifies **scaled content abuse** — mass per-variation / per-fan-out-term pages created to manipulate rankings — as **spam** (per Google 2026-05-15; https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), and the same thin-page pattern is a known spam-update target (mirror the skill's own stance: `local-seo.md` "genuinely unique content, not city-name swaps"; `audit-checklist.md` "No thin city pages with keyword swaps"). A predicted fan-out query is a signal to ask *"do we have genuinely distinct, substantive expertise on this?"* — **not** a quota to fill with templated coverage pages. Generating pages whose purpose is fan-out coverage is reversed here, not recommended.
 
-1. **Map your content to fan-out patterns** — List your top 20 target queries. For each, predict 5-8 fan-out sub-queries. Check if you have pages matching each.
-2. **Fill the gaps** — Missing pages = missing citations. Create dedicated pages for features, use cases, comparisons, and documentation that fan-out queries target.
-3. **Optimize page titles for site-search** — When the AI does `site:yoursite.com AI features`, your page title and H1 must contain those terms. Generic titles like "Our Platform" won't match.
-4. **Self-contained pages** — Each page must answer its question without requiring navigation to other pages. The AI extracts from individual pages, not your site navigation flow.
+Use predicted fan-out queries to find *genuine* content gaps, then close only the ones backed by real, non-commodity substance:
+
+1. **Map your content to fan-out patterns** — List your top 20 target queries. For each, predict 5-8 fan-out sub-queries. Check whether you already cover the underlying topic substantively.
+2. **Evaluate each gap honestly** — A missing page is only worth creating when you have **genuinely distinct, substantive expertise** to put on it (real depth, original data, first-hand experience). If the only reason to create it is fan-out coverage, **do not create it** — consolidate the topic into an existing strong page instead. Thin coverage-driven pages are scaled content abuse and get suppressed, not cited.
+3. **Optimize titles honestly** — Page titles and H1s should accurately describe genuinely distinct content. Descriptive titles help users and all engines; never create near-duplicate pages that differ only by a swapped fan-out term.
+4. **Self-contained pages** — Each *substantive* page should answer its question without requiring navigation to other pages.
 
 ### The "Official" Signal
 
@@ -120,7 +126,7 @@ Add this to the weekly maintenance loop:
    - `site:yoursite.com [each integration]`
 4. **Score each:** Does the query return a relevant, content-rich page? Score 0 (no result), 1 (thin result), 2 (strong result).
 5. **Calculate Fan-Out Coverage Score:** `(sum of scores) / (max possible) x 100`
-6. **Gap list:** Every 0-score is a content gap that directly costs you AI citations.
+6. **Gap list:** Every 0-score is a *candidate* gap. Before creating anything, apply the anti-scaled-content guardrail (see "Create Content That Matches"): create a page only when you have genuinely distinct, substantive expertise for it; otherwise consolidate the topic into an existing strong page. A 0-score is a prompt to evaluate, never an instruction to mass-produce coverage pages.
 
 ### Track Over Time
 

@@ -122,7 +122,7 @@ Brand search volume is the strongest predictor of AI citations (r=0.334), strong
 - [ ] Brand name searches are growing (or at minimum, exist)
 - [ ] Social profiles exist and link to website
 - [ ] Wikipedia or knowledge panel presence (if applicable)
-- [ ] Brand mentioned in community discussions (forums, Reddit, etc.)
+- [ ] Brand *organically* mentioned in community discussions (forums, Reddit, etc.) — an earned signal of real traction. **Never seed, astroturf, or use persona accounts**: Google classifies inauthentic mentions as spam (2026-05-15) and it is disqualifying on every engine.
 - [ ] Consistent brand presentation across all platforms
 - [ ] **Entity consistency** — same brand name, author names, and identifiers across all web properties. AI systems use entity matching to build confidence.
-- [ ] **Third-party presence** — brand visible on authoritative sites beyond your own (press mentions, industry publications, expert-curated lists). Sites with 32K+ referring domains are 3.5x more likely to be cited by ChatGPT.
+- [ ] **Third-party presence (earned)** — brand visible on authoritative sites beyond your own through merit (press mentions, industry publications, expert-curated lists you earned into). This is an *outcome* of real authority and useful work, not a mention-acquisition target — seeded/paid/coordinated placements dressed as organic are spam. Sites with 32K+ referring domains are ~3.5x more likely to be cited by ChatGPT.
