@@ -6,6 +6,8 @@ AI Overviews appear in ~16-60% of Google searches (varies by query type; peaked 
 
 **AEO vs GEO distinction:** AEO (Answer Engine Optimization) = be the direct answer (featured snippets, voice, position zero). GEO (Generative Engine Optimization) = be the source AI synthesizes from (ChatGPT, Perplexity, Claude, Copilot). AEO originated in Google-focused SEO; GEO emerged with LLMs. Optimize for both.
 
+> **Google scope (per Google 2026-05-15 — see `aeo.md` → "Google Search vs AI-Engine Scope"):** Google's AI features do **not** require `llms.txt`/special markup, AI-specific content "chunking" or rewriting, or structured-data overfocus. Items below about schema, modular/chunked answer blocks, and machine-readable signals are **non-Google-engine** levers (ChatGPT/Bing/Perplexity-class) — they are good general structure too, but never report them as Google AI-readiness. For Google, the lever is foundational SEO + genuinely useful, non-commodity content.
+
 ## Answer Engine Optimization (AEO)
 
 - [ ] **Answer-first layout** — "Question, Answer, Evidence" pattern: H2 as real question, 1-2 sentence direct answer, then supporting evidence. 44% of AI citations come from the first 30% of content.
@@ -21,7 +23,7 @@ AI Overviews appear in ~16-60% of Google searches (varies by query type; peaked 
 
 ## Generative Engine Optimization (GEO)
 
-- [ ] **Brand entity recognition** — consistent brand mentions across authoritative third-party sites. Brands in lowest quartile of web mentions are nearly absent from AI Overviews. ChatGPT now tags brands as structured entities (Oct 2025 update); fewer brands surfaced per answer (3-4 vs 6-7) means authority matters more.
+- [ ] **Brand entity recognition** — *earned* brand mentions across authoritative third-party sites (an outcome of real authority, not seeded/coordinated mentions — inauthentic mention-building is Google spam, 2026-05-15). Brands in the lowest quartile of organic web mentions are nearly absent from AI Overviews. ChatGPT now tags brands as structured entities (Oct 2025 update); fewer brands surfaced per answer (3-4 vs 6-7) means genuine authority matters more.
 - [ ] **Third-party review profiles** — presence on Trustpilot, G2, Capterra, Yelp increases citation probability 3x
 - [ ] Expert reviews, press mentions, and industry recognition exist
 - [ ] **Author attribution with visible credentials** — author credentials increase AI citations by +40%. Author identity is a direct input to Google's quality models.
@@ -35,7 +37,7 @@ AI Overviews appear in ~16-60% of Google searches (varies by query type; peaked 
 - [ ] Content is in HTML (not trapped in JavaScript-only rendering)
 - [ ] No cloaking (same content served to bots and users)
 - [ ] Clean HTML structure (semantic elements: article, section, nav, main)
-- [ ] Structured data is comprehensive — schema markup boosts AI citations by 36%. 2.3x more likely in AI Overviews vs pages without.
+- [ ] Structured data is comprehensive — associated with **~2.3-2.5x more AI citations on ChatGPT/Bing/Perplexity-class engines** (directional, non-Google, unverified estimate; figures reconciled to the 2.3-2.5x range used elsewhere in this skill — the earlier "+36%" framing was an unsourced outlier). **Not** a Google AI-features input: per Google 2026-05-15 (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), structured data is not required for AI Overviews/AI Mode — it still supports classic rich results.
 - [ ] **Page speed matters for AI** — pages with FCP under 0.4s average 6.7 citations; over 1.13s drops to 2.1 (3x difference)
 - [ ] Site loads without JavaScript (SSR/SSG preferred for key content)
 - [ ] Descriptive image alt text (AI can't see images without it)
@@ -51,14 +53,14 @@ Each platform cites different sources — only 11% of domains appear in both Cha
 - [ ] **Bing/Copilot** — software and tech sources preferred (SourceForge 21.33%). Important for Microsoft ecosystem and enterprise B2B searches.
 - [ ] **Sitemap freshness** — Bing weights `lastmod`, `changefreq` more than Google
 - [ ] Content is voice-search friendly (conversational Q&A format). 50%+ of local searches are now voice; 58% of consumers use voice for local business info.
-- [ ] **Reddit presence** (if applicable) — Google AI Overviews cite Reddit 20% of the time. Authentic participation in relevant subreddits drives AI citations.
+- [ ] **Reddit presence** (if applicable) — Google AI Overviews cite Reddit 20% of the time. *Genuine, disclosed* participation by real people is an organic signal — **never** astroturf, seed, or use persona accounts (Google classifies inauthentic mentions as spam, 2026-05-15; disqualifying on every engine). Presence here is an outcome of real engagement, not a citation-acquisition tactic.
 - [ ] **Video content** — YouTube = 23.3% of Google AI Overview citations. Chapter timestamps enable AI to cite specific segments.
 
 ## AI Citation Data Quick Reference
 
 | Signal | Impact on AI Citations |
 |--------|----------------------|
-| Schema markup (JSON-LD) | 2.3-2.5x more likely to be cited; GPT-4 accuracy 16%->54% with schema |
+| Schema markup (JSON-LD) — *non-Google engines* | ~2.3-2.5x more likely to be cited on ChatGPT/Bing/Perplexity-class (directional, unverified). Not a Google AI-features input (Google 2026-05-15); supports classic rich results only |
 | Tables and comparison matrices | 2.5-2.8x citation rate vs text-only |
 | Original data/statistics | 4.1-5.5x citation boost |
 | Strong E-E-A-T signals | r=0.81 correlation (strongest predictor) |
@@ -67,20 +69,22 @@ Each platform cites different sources — only 11% of domains appear in both Cha
 | Consistent heading hierarchy | 3.2x higher citation rates |
 | Meaningful content updates | +71% citation lift (vs +12% for timestamp-only) |
 
-## Fan-Out Query Pattern (GPT 5.4+, March 2026)
+## Fan-Out Query Pattern (ChatGPT/Bing-class, GPT 5.4+, March 2026)
 
-AI models now decompose user queries into 10-15 **fan-out sub-queries**, including `site:domain.com` searches that go directly into individual websites. This is a paradigm shift — once a model decides your domain is relevant, it searches *within your site* for detailed content. On-site content depth directly determines citation volume.
+> **Scope:** this `site:`-operator pattern is **ChatGPT/Bing-class behavior, not Google**. Per Google's 2026-05-15 guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), Google's AI features fan out via concurrent related queries **grounded over Google's core Search index (RAG)** — they do not run `site:domain.com` operator searches into individual websites. For Google, the lever is being genuinely useful, indexable content the core index already ranks; there is no "search within your site" phase.
 
-**Three-phase pattern:** (1) Broad discovery queries identify relevant domains, (2) `site:` queries extract detailed content from each domain, (3) `site:g2.com` / review site queries cross-validate.
+ChatGPT (GPT 5.4, on Bing's index) and similar Bing-fed surfaces decompose user queries into 10-15 **fan-out sub-queries**, including `site:domain.com` searches that go directly into individual websites. For this engine class — once a model decides your domain is relevant, it searches *within your site* for detailed content, so on-site content depth directly determines citation volume on those engines.
 
-**Key implication:** Every major feature, use case, comparison, and documentation topic needs its own dedicated, content-rich, indexable page. A single "Features" page won't surface for specific fan-out queries.
+**Three-phase pattern (ChatGPT/Bing-class only):** (1) Broad discovery queries identify relevant domains, (2) `site:` queries extract detailed content from each domain, (3) `site:g2.com` / review site queries cross-validate.
+
+**Key implication (anti-scaled-content):** On Bing-class engines, genuinely distinct features/use-cases/comparisons *may* warrant their own substantive pages — but only when each has real, non-commodity depth. Do **not** mass-generate a page per fan-out term for coverage's sake: Google classifies scaled content abuse as spam (2026-05-15) and thin per-variation pages are suppressed on every engine. Consolidate into deep, genuinely unique pages; a single thin "Features" page and fifty thin coverage pages fail for the same reason.
 
 See `reference/fan-out-queries.md` for the full framework, audit methodology, and content strategy.
 
 ## Platform-Specific Notes
 
-- **Google AI Overviews** — Sources broadly, cites ~7.7 domains per response. E-E-A-T is primary filter.
-- **ChatGPT (GPT 5.4)** — Uses Bing's index + `site:` fan-out queries. Wikipedia-heavy (47.9% of citations). Cites ~5.0 domains per response. Now searches directly within trusted domains, making on-site content depth critical. Bing SEO is foundational.
+- **Google AI Overviews** — Sources broadly, cites ~7.7 domains per response. E-E-A-T is primary filter. Fan-out is **query fan-out grounded over Google's core index (RAG), not `site:` operator search** (per Google 2026-05-15) — optimize via foundational SEO + non-commodity content, not site-internal fan-out coverage.
+- **ChatGPT (GPT 5.4)** — Uses Bing's index + `site:` fan-out queries. Wikipedia-heavy (47.9% of citations). Cites ~5.0 domains per response. Now searches directly within trusted domains, making on-site content depth critical. Bing SEO is foundational. *(This `site:` behavior is ChatGPT/Bing-class, not Google — see scope note above.)*
 - **Perplexity** — Most transparent/trackable. Indexes fresh content within hours. Only 11% domain overlap with ChatGPT citations.
 - **Voice assistants** — Only 1% answer overlap across Google, Siri, and Alexa. Must optimize for all platforms, not just Google.
 

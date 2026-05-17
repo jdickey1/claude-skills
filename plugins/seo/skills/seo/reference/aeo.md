@@ -6,6 +6,27 @@ For foundational AI search data (citation stats, platform comparison, content fo
 
 ---
 
+## Google Search vs AI-Engine Scope (Governing Principle)
+
+> **Source:** Google Search Central, "Optimizing for generative AI features on Google Search" — https://developers.google.com/search/docs/fundamentals/ai-optimization-guide (last updated 2026-05-15). This is the authoritative first-party statement for Google's AI features (AI Overviews, AI Mode). Where this reference predates or conflicts with it, Google's guidance governs *for Google Search*.
+
+**What Google officially states:**
+
+- Google's AI features run **retrieval-augmented generation (RAG)/grounding plus query fan-out over Google's core Search index** — the model issues a set of related queries concurrently and grounds its answer in pages already retrievable from that index. It does not run `site:domain.com` operator searches against individual websites.
+- The path to visibility in Google's AI features is **foundational SEO plus genuinely useful, people-first, non-commodity content** — the same fundamentals that earn classic Search visibility. There is no separate AI-specific ranking lever.
+- Google **does not require** `llms.txt`/special markup, AI-specific content "chunking" or rewriting, or structured-data overfocus as inputs to its AI features. (Structured data can support rich results generally; it is not an AI-Overviews/AI-Mode admission ticket.)
+- Google classifies **seeking inauthentic mentions** and **scaled content abuse** (mass per-variation or per-fan-out-term pages created to manipulate rankings) as **spam**.
+
+**The principle this reference follows:**
+
+1. **Engine-scope every AI tactic.** State which engines a tactic applies to. Google Search, ChatGPT, Perplexity, and Bing-fed surfaces differ; a tactic legitimate for one is not automatically legitimate for all.
+2. **Never present a Google-disclaimed tactic as a Google Search input.** Tactics Google explicitly disclaims (llms.txt, AI-specific chunking, structured-data overfocus) are retained here only where they remain load-bearing for non-Google engines (ChatGPT/Bing/Perplexity), and are explicitly fenced as *not* Google Search signals.
+3. **Never recommend a tactic that is disingenuous on any engine.** Inauthentic mentions, sockpuppet/persona seeding, and scaled coverage-driven page generation are spam everywhere — they are reversed, not scoped.
+
+This scope statement is the anchor the rest of this reference is reconciled toward. Dated caveats below ("per Google's 2026-05-15 guidance") mark text that this principle supersedes.
+
+---
+
 ## AEO Audit Scoring (0-125)
 
 | Section | Points | What It Measures |
@@ -70,7 +91,9 @@ AI models extract answers from the first 30% of content 44% of the time. Structu
 
 ### Passage-Level Citability Scoring
 
-Score every substantive content block on the page (paragraphs between headings, list sections, table sections) on a 0-100 citability scale. This measures how likely AI models are to extract and quote each passage.
+> **Engine scope (per Google 2026-05-15):** Google's guidance explicitly states that **AI-specific content "chunking" or rewriting is not required for Google Search** AI features — foundational content quality and normal good structure are sufficient; there is no separate passage-optimization lever for Google. This passage-citability scoring is a **non-Google-engine optimization** (ChatGPT/Bing/Perplexity citation behavior), retained because it remains load-bearing there. Do not present a passage-citability sub-score as a Google AI-readiness signal. Writing answer-first, well-structured content is still good practice for all engines — the caveat is against *AI-specific re-chunking as a Google tactic*, not against clear structure.
+
+Score every substantive content block on the page (paragraphs between headings, list sections, table sections) on a 0-100 citability scale. This measures how likely AI models (ChatGPT/Bing/Perplexity-class) are to extract and quote each passage.
 
 **Optimal passage length:** 134-167 words. Research shows this is the sweet spot for AI citation — long enough for substance, short enough to quote verbatim.
 
@@ -103,7 +126,9 @@ Score every substantive content block on the page (paragraphs between headings, 
 
 ### JSON-LD Schema Markup (15 pts)
 
-Schema markup boosts AI citations 2.3-2.5x. All schema must be JSON-LD format (Google's preference, separates data from HTML).
+> **Engine scope (per Google 2026-05-15):** Google's guidance is explicit that **structured data is not a required input to Google's AI features** (AI Overviews / AI Mode) and that **structured-data overfocus is not the path** to Google AI visibility. Structured data still supports classic rich results and is good general SEO hygiene — but do not score or present schema as a Google-AI-citation lever. The "2.3-2.5x" figure below is a **directional, non-Google, unverified estimate** for ChatGPT/Bing/Perplexity-class engines (full stat re-triangulation is out of scope here; see `ai-search.md`). This schema sub-score is a non-Google-engine signal.
+
+Schema markup is associated with **~2.3-2.5x more AI citations on ChatGPT/Bing/Perplexity-class engines** (directional, non-Google, unverified — not a Google AI-features input). All schema should still be JSON-LD format (Google's stated preference for rich results; separates data from HTML).
 
 **Required schema by page type:**
 
@@ -127,7 +152,9 @@ Schema markup boosts AI citations 2.3-2.5x. All schema must be JSON-LD format (G
 
 ### Machine-Readable Brand Data (10 pts)
 
-These are direct signals to AI agents — structured data they can consume without scraping.
+> **Engine scope (per Google 2026-05-15):** `llms.txt` / special markup for AI is **not a Google Search input** — Google's guidance explicitly disclaims it as a requirement for its AI features. These signals are retained as **non-Google-engine** tactics (ChatGPT/Bing/Perplexity and AI-agent crawlers); score them as such, never as Google AI-readiness. A Brand-Facts page is also just good entity hygiene (it helps classic Search and human trust) — keep it, but not as a Google-AI lever.
+
+These are direct signals to some AI agents — structured data they can consume without scraping (non-Google-engine scope; see caveat above).
 
 - [ ] **`/llms.txt` file** — See llms.txt Audit & Generation subsection below.
 - [ ] **Brand-Facts page** (`/about/facts` or `/brand-facts`) — Wikipedia-style neutral facts page: one-sentence TL;DR, key facts table (founded, category, pricing, certifications, guarantees), links to external profiles (Wikidata, Crunchbase, social, press). This gets crawled by AI bots more than marketing pages.
@@ -136,7 +163,9 @@ These are direct signals to AI agents — structured data they can consume witho
 
 ### llms.txt Audit & Generation
 
-The `llms.txt` standard is an emerging specification that helps AI crawlers understand your site structure and find your most important content. It lives at the domain root (`/llms.txt`) with an optional extended version (`/llms-full.txt`).
+> **Scope + freshness caveat (per Google 2026-05-15):** Google has **explicitly stated `llms.txt` is not used by Google Search** or its AI features. Treat this entire subsection as **ChatGPT/Bing/Perplexity-and-AI-agent scope only**. It is an emerging, non-standardized convention with uneven adoption — audit/generate it for non-Google AI surfaces, but never report an `llms.txt` score as Google AI-readiness, and never recommend it as a Google ranking/citation tactic.
+
+The `llms.txt` standard is an emerging specification that helps *some non-Google* AI crawlers understand your site structure and find your most important content. It lives at the domain root (`/llms.txt`) with an optional extended version (`/llms-full.txt`).
 
 **Audit steps:**
 
@@ -225,10 +254,12 @@ AI models verify brands before recommending them. Score each signal as present (
 
 This separates brands that KIND OF show up in AI from brands that show up CONSISTENTLY. AI models cross-reference what others say about you.
 
-- [ ] **Third-party review profiles** — Presence on Trustpilot, G2, Capterra, Yelp, BBB, or industry-specific review sites. 3x higher citation probability.
-- [ ] **External citations** — Your brand mentioned on authoritative sites you don't control (review roundups, industry publications, comparison articles).
-- [ ] **Comparison pages** — `/compare/you-vs-competitor` pages on your own site that cite external sources (AI sees citations going both ways).
-- [ ] **Community presence** — Authentic engagement on Reddit, Quora, or industry forums where your category is discussed. AI models heavily reference Reddit threads and Quora answers.
+> **Authenticity guardrail (hard rule — read before scoring this section).** Third-party presence is scored as an **outcome of real work and real expertise**, never as a lever to manufacture. Google explicitly classifies **seeking inauthentic mentions** as spam (per Google 2026-05-15; https://developers.google.com/search/docs/fundamentals/ai-optimization-guide), and it is disingenuous on *every* engine, not just Google. **Never** recommend or score: coordinated/seeded/paid mentions, sockpuppet or "neutral persona" accounts, astroturfed forum/Reddit/Quora activity, review solicitation that distorts rating authenticity, self-placed mentions dressed as third-party, or any mention-building whose purpose is to influence AI rather than to genuinely help a real audience. If presence was manufactured, it scores **zero** and is flagged as a spam risk — a high mention count obtained inauthentically is a liability, not a signal. The legitimate path is being genuinely worth mentioning; mirror the skill's existing anti-manipulation stance (`local-seo.md` review-manipulation / thin-page warnings).
+
+- [ ] **Third-party review profiles** — *Organic* presence on Trustpilot, G2, Capterra, Yelp, BBB, or industry-specific review sites, with authentic, unsolicited-or-compliantly-solicited reviews. ~3x higher citation probability — but only real profiles count; never gate, incentivize, or astroturf reviews.
+- [ ] **External citations (earned)** — Your brand *organically* mentioned on authoritative sites you don't control (review roundups, industry publications, comparison articles) because the work merited it. Earned, not placed or seeded.
+- [ ] **Comparison pages** — `/compare/you-vs-competitor` pages on your own site that cite external sources and present honest, even-handed criteria (no self-ranking; see Service Authority Page guidance).
+- [ ] **Community presence (authentic only)** — Genuine, disclosed, value-adding participation by real people from your org in Reddit, Quora, or industry forums where your category is discussed. This is a *behavioral* signal of real engagement — not a channel to seed mentions. Astroturfing or persona accounts here are spam and disqualifying.
 - [ ] **Authoritative outbound citations** — Your content cites credible external sources (studies, government data, industry reports). This signals research rigor.
 
 **Defensive Signals (6 pts)**
@@ -244,13 +275,16 @@ Before optimizing anything, you need to know what AI is currently saying about y
 
 ### Fan-Out Query Awareness
 
-AI models (GPT 5.4+) don't make a single search per user query. They decompose it into **10-15 fan-out sub-queries**, including `site:domain.com` searches against individual domains. This means:
+AI engines don't make a single search per user query — they **fan out into multiple related sub-queries** and synthesize the results. *How* they do this differs by engine, and the difference is load-bearing:
+
+- **Google Search (AI Overviews / AI Mode):** per Google's 2026-05-15 guidance, fan-out is **concurrent related queries grounded (RAG) over Google's core Search index** — the model retrieves pages Google already indexes. It does **not** run `site:domain.com` operator searches against individual websites. There is no "search within your site" phase to optimize for; the lever is being genuinely useful, indexable, non-commodity content that the core index already ranks.
+- **ChatGPT (GPT 5.4, Bing-index) and similar Bing-fed surfaces:** these *do* use `site:` operator sub-queries extensively (March 2026+), effectively searching within trusted domains. The three-phase pattern below describes **this engine class — not Google**:
 
 1. **Phase 1 (Discovery):** Broad queries identify which domains are relevant
-2. **Phase 2 (Site-specific):** `site:yoursite.com [topic]` queries extract detailed content from each trusted domain
-3. **Phase 3 (Validation):** `site:g2.com [brand] reviews` type queries cross-reference via third parties
+2. **Phase 2 (Site-specific):** `site:yoursite.com [topic]` queries extract detailed content from each trusted domain *(ChatGPT/Bing-class only; not a Google mechanism)*
+3. **Phase 3 (Validation):** `site:g2.com [brand] reviews` type queries cross-reference via third parties *(ChatGPT/Bing-class only)*
 
-Your Answer Intent Map must account for all three phases. See `reference/fan-out-queries.md` for the full fan-out optimization framework, content depth strategy, and fan-out coverage audit methodology.
+Your Answer Intent Map should account for the Bing-class three-phase pattern **and** for Google's index-grounded fan-out — they are different surfaces, not one universal mechanism. See `reference/fan-out-queries.md` for the full (ChatGPT/Bing-scoped) fan-out optimization framework and content-depth strategy.
 
 ### How to Run an Answer Intent Audit
 
@@ -338,7 +372,8 @@ The 7-layer ecommerce framework adapts to service businesses (law firms, consult
 
 ### Answer Hub → Service Authority Page
 - URL: `/guides/best-[service]-[location]-[year]` (e.g., `/guides/best-business-attorney-austin-2026`)
-- Same structure: TL;DR (60-90 words), ranked list of firms (yours at #1 + real competitors), comparison table (years in practice, specialties, case results, consultation fee, rating), FAQ from Answer Intent Map
+- Same structure: TL;DR (60-90 words), an **honest, criteria-based comparison** of real firms (including yours), comparison table (years in practice, specialties, case results, consultation fee, rating), FAQ from Answer Intent Map
+- **Do not self-rank.** Never publish a "ranked list with yours at #1" — a self-authored listicle that places the author's own firm at the top is exactly the disingenuous pattern Google and AI engines discount (and a deceptive-practice risk for regulated professions like law). Present an even-handed, transparent-criteria comparison; let the criteria and verifiable facts speak. Earn the top position in *third-party* roundups through real differentiation, not by ranking yourself.
 - Key difference: emphasize credentials, case outcomes, and trust signals over price
 
 ### Brand-Facts → Firm Profile
@@ -423,13 +458,16 @@ The following claims appeared in a widely shared April 2026 LinkedIn AEO thread 
 
 ### Credibility Guardrail for Viral AEO Claims
 
-Before adopting any AEO number from a social-media thread, vendor blog, or "proprietary study," run this three-check pattern. When **all three** fire, treat the claim as directional only and cite the verified row above instead.
+Before adopting any AEO number from a social-media thread, vendor blog, or "proprietary study," run the three stat-credibility checks. When **all three** fire, treat the claim as directional only and cite the verified row above instead. Then run the fourth check on the *tactic itself*, independent of how well-sourced the number is.
 
 1. **Traceability** — Is the claimed number traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land)? If the numbers match an unattributed public study, treat as repackaged.
 2. **Closed loop** — Does the author own a tool that produced the data? Closed-loop marketing data is directional at best.
 3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers**? If not, flag as basket-specific or unsupported.
+4. **Google-official contradiction** — Does the tactic contradict Google's official Search guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide, 2026-05-15)? If Google explicitly disclaims it as a Google Search input (e.g. llms.txt, AI-specific chunking, structured-data overfocus), scope the tactic to non-Google engines with an explicit caveat. If Google classifies it as spam (inauthentic mentions, scaled content abuse), the tactic is removed/reversed, not scoped — it is disingenuous on every engine. A well-sourced number does not rehabilitate a Google-disclaimed or spam tactic.
 
-Three-of-three triggers a warning, not a block. Single trigger is informational only. The guardrail mirrors the one in the `digest` skill — keep the wording aligned when editing either file.
+Checks 1-3: three-of-three triggers a warning, not a block; a single trigger is informational only. Check 4 is a scope/removal decision, not a stat warning — it changes *whether and where* the tactic is recommended, never silently deletes engine-legitimate guidance. The whole guardrail is warn-and-scope, never a hard audit-time block.
+
+**Sync contract (semantic, not byte-identical).** This guardrail is one of **three surfaces** that carry it: this block, the `/seo:seo-aeo` command's "Source Credibility Check", and the `digest` skill's §5b. (Historically the documented sync was seo-aeo ↔ digest §5b only; this `aeo.md` block is now explicitly enrolled as the third surface.) Keep the **four checks and the warn-and-scope/never-block severity posture** aligned across all three when editing any of them. Do **not** force them byte-identical — each intentionally keeps its own structure (this block's verified-playbook framing; the command's "Reference test"; digest §5b's two-trigger gate + "Effect on output" block). What stays in sync is the check logic and severity behavior, not the prose.
 
 ### Quarterly Citation Audit Protocol
 
@@ -491,16 +529,18 @@ Flag these automatically when found during an audit:
 | Mistake | Severity | Why It Kills Citations |
 |---------|----------|----------------------|
 | AI bots blocked in robots.txt | CRITICAL | Zero citations if bots can't crawl |
+| **Seeding inauthentic mentions / coordinated mention-building** | **CRITICAL** | **Google classifies seeking inauthentic mentions as spam (2026-05-15). Sockpuppet/"neutral persona" accounts, astroturfed forum/Reddit/Quora activity, seeded or paid "third-party" mentions, and review manipulation are ineffective AND disqualifying — disingenuous on every engine, not just Google. Flag and reverse, never recommend.** |
+| **Scaled content abuse (mass per-variation/fan-out pages)** | **CRITICAL** | **Google classifies scaled content abuse as spam (2026-05-15). Mass per-fan-out-term / per-variation pages created for ranking coverage are suppressed and a spam-update target. See `fan-out-queries.md` anti-scaled-content guardrail.** |
 | No publication/update dates | HIGH | Signals staleness to AI |
-| Generic AI-written content | HIGH | LLMs detect and ignore it; original insights required |
+| Generic AI-written content (at scale) | HIGH | LLMs detect and ignore it; original insights required. At volume this is **Google scaled-content abuse (2026-05-15)** — spam, not just low-quality |
 | Paragraph prose for comparison queries | HIGH | Tables beat prose 2.8x for these queries |
-| Missing schema markup | HIGH | 2.3-2.5x citation gap vs pages with schema |
+| Missing schema markup (non-Google engines) | MEDIUM | ~2.3-2.5x citation gap on ChatGPT/Bing/Perplexity-class (directional, non-Google, unverified). **Not** a Google AI-features input per Google 2026-05-15 — do not flag as a Google AI-readiness gap; schema still matters for classic rich results |
 | No About/Team page | HIGH | AI can't verify entity identity |
 | Claims without sources | MEDIUM | Reduces trust score; AI prefers verifiable assertions |
 | Skipped heading levels | MEDIUM | 3.2x citation rate difference with proper hierarchy |
 | No FAQ sections | MEDIUM | 72% vs 34% citation rate |
 | Only optimizing for Google | MEDIUM | Misses ChatGPT/Perplexity entirely |
-| Timestamp-only "updates" | LOW | +12% vs +71% for meaningful content updates. AI detects fake freshness. |
+| Timestamp-only "updates" | LOW | +12% vs +71% for meaningful content updates. AI detects fake freshness; faking update recency to game ranking aligns with Google's spam stance (2026-05-15) — make meaningful updates, not cosmetic ones. |
 
 ---
 
@@ -512,7 +552,7 @@ After initial optimization, maintain AI visibility with this weekly routine:
 2. **Content refresh (30 min)** — Update your Answer Hub/Authority Page TL;DR with any new data points, citations, or competitive changes. Add one new FAQ or comparison section.
 3. **Schema & feed health (15 min)** — Fix any schema validation errors. For ecommerce: clear Merchant Center warnings, push 10+ new reviews to weakest product.
 4. **Citation building (25 min)** — One outreach action: pitch a review site, engage on Reddit/Quora, publish a comparison page, or update an external directory listing.
-5. **Fan-out coverage check (15 min)** — Run `site:yoursite.com` with 5 predicted fan-out terms in Google. Score each 0/1/2. Track coverage score over time. Identify and prioritize content gaps.
+5. **Fan-out coverage check (15 min)** — Run `site:yoursite.com [term]` in Google for 5 predicted sub-topic terms. This is an **indexation/coverage self-check** (does Google's core index hold a strong page for each sub-topic?), *not* a model of how Google's AI retrieves — Google grounds over its core index, it does not run `site:` operator fan-out. Score each 0/1/2. Track coverage over time; fill genuine content gaps with substantive pages (not coverage-driven thin pages — see Common AEO Mistakes).
 
 **Monthly:** Refresh `brand-facts.json` / `llms.txt`, validate all PDP schema, update policy changes, re-run full Answer Intent Map audit. Run full Fan-Out Query Audit (see `reference/fan-out-queries.md`).
 
@@ -550,7 +590,7 @@ AI-driven sessions grew 527% YoY in early 2025. ChatGPT referrals went from ~600
 # AEO Audit: [Business Name / Domain]
 **Date:** [date]
 **Pages Reviewed:** [count]
-**AEO Readiness Score:** [X/100]
+**AEO Readiness Score:** [X/125]
 
 ## Score Breakdown
 - AI Crawlability & Access: [X/20]
@@ -608,8 +648,8 @@ Passages needing improvement:
 |-------------|---------------|---------------|------|
 | [feature/topic] | [page found or "no result"] | [0/1/2] | [yes/no] |
 
-### Content Gaps (Priority Targets)
-[Fan-out terms that returned 0 or 1 — these need dedicated pages]
+### Content Gaps (Candidate Targets)
+[Fan-out terms that returned 0 or 1 — *candidate* gaps. For each, recommend a new page **only** where genuinely distinct, substantive expertise exists; otherwise recommend consolidating into an existing strong page. Never recommend mass per-term page generation — scaled content abuse is Google spam (2026-05-15) and a spam-update target. See `reference/fan-out-queries.md` → "Create Content That Matches" anti-scaled-content guardrail.]
 
 ### Third-Party Validation
 | Review Site | Profile Status | Recent Reviews | Rating |

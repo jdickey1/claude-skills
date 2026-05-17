@@ -1,7 +1,7 @@
 ---
 name: seo
 description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR AEO OR answer engine optimization OR AI visibility OR AI citations OR ChatGPT ranking OR Perplexity optimization OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
-version: 2.5.0
+version: 2.6.0
 effort: high
 ---
 
@@ -18,7 +18,7 @@ Comprehensive SEO framework covering technical foundations, on-page optimization
 1. **Start with indexability** — If Google can't find your pages, nothing else matters.
 2. **Prioritize buyers over browsers** — Target "service + city" keywords, not "how to" keywords.
 3. **Local first** — For local businesses, Google Business Profile is the #1 lever.
-4. **Structure for machines** — AI search systems (ChatGPT, Copilot, Gemini, Perplexity) need structured, citable content.
+4. **Structure for machines** — AI search systems (ChatGPT, Copilot, Gemini, Perplexity) benefit from structured, citable content. Note: this is a **non-Google-engine** lever — per Google's 2026-05-15 guidance, Google's AI features need no AI-specific structuring/markup; foundational SEO + non-commodity content is the path there (see `reference/aeo.md` → "Google Search vs AI-Engine Scope").
 5. **E-E-A-T everywhere** — Trust is the foundation. Untrustworthy pages have low E-E-A-T regardless of other signals.
 6. **Prove it with data** — Every finding must reference the specific page, element, or missing item.
 
@@ -46,8 +46,8 @@ Deep-dive references loaded on demand by commands:
 | `reference/audit-checklist.md` | Full 4-tier audit checklist (~180 items) |
 | `reference/ranking-factors.md` | Evidence-based ranking factor priorities, severity calibration, keyword validation |
 | `reference/ai-search.md` | AEO/GEO optimization, platform-specific citation data, AI accessibility |
-| `reference/aeo.md` | Full AEO audit framework: 4-section scoring, Answer Intent Mapping, trust signals, service business adaptations, maintenance loop |
-| `reference/fan-out-queries.md` | Fan-out query optimization: how AI models decompose queries and use `site:` searches, content depth strategy, audit methodology |
+| `reference/aeo.md` | Full AEO audit framework: 5-section scoring (0-125), Answer Intent Mapping, trust signals, service business adaptations, maintenance loop |
+| `reference/fan-out-queries.md` | Fan-out query optimization for **ChatGPT/Bing-class engines** (`site:`-operator fan-out — *not* Google, which grounds over its core index per Google 2026-05-15); genuine content-depth strategy and audit methodology, with an anti-scaled-content guardrail |
 | `reference/local-seo.md` | GBP, citations, NAP, reviews, SABs, Google spam warnings |
 | `reference/link-building.md` | Link profile, tactics, local link building, brand signals |
 | `reference/automation.md` | Full DIY automation system (~$75/mo replaces ~$1,500/mo agency) |
@@ -228,7 +228,7 @@ For the full checklist with ~180 items, see `reference/audit-checklist.md`.
 | **AEO** | Descriptive clarity | Make content machine-readable, structured, extractable |
 | **GEO** | Justification & trust | Build authority signals AI systems can verify and cite |
 
-SEO is the foundation. AEO drives understanding. GEO drives confidence. You need all three to be recommended by AI search. See `reference/ai-search.md` for citation data and `reference/aeo.md` for the full AEO audit framework.
+SEO is the foundation. AEO drives understanding. GEO drives confidence. You need all three to be recommended by AI search. The AEO "machine-readable/extractable" emphasis is a **non-Google-engine** lever (per Google 2026-05-15, Google's AI features require no AI-specific markup/chunking — foundational SEO + non-commodity content is the path there). See `reference/ai-search.md` for citation data and `reference/aeo.md` for the full AEO audit framework and the governing "Google Search vs AI-Engine Scope" principle.
 
 ---
 

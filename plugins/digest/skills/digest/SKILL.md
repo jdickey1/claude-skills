@@ -463,16 +463,20 @@ When both triggers are present, run the three-check pattern:
 1. **Traceability** — Is the claimed number traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land, industry associations)? If the numbers match an unattributed public study, treat as **repackaged**.
 2. **Closed loop** — Does the author own a tool that produced the data? A vendor selling analytics of the category they're analyzing = **closed-loop marketing data, directional at best**.
 3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers or studies**? If not, flag as basket-specific, overstated, or unsupported.
+4. **Google-official contradiction** — Does the *tactic* contradict Google's official Search guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide, 2026-05-15)? If Google explicitly disclaims it as a Google Search input (llms.txt, AI-specific chunking, structured-data overfocus), the recommendation must scope it to non-Google engines. If Google classifies it as spam (inauthentic mentions, scaled content abuse), the recommendation must reverse it, not scope it — disingenuous on every engine. A well-sourced number does not rehabilitate a Google-disclaimed or spam tactic. (This check is about the tactic, independent of how well-sourced the number is.)
 
 **Effect on output when the check triggers:**
 
 - **Sentiment** must include an explicit line: `Credibility: LOW / MEDIUM / HIGH — <one-sentence reason>`.
-  - LOW: all three checks fire (repackaged data from a closed loop with no triangulation).
+  - LOW: all three stat-checks (1-3) fire (repackaged data from a closed loop with no triangulation).
   - MEDIUM: two of three fire.
   - HIGH: zero or one fires.
 - **Recommendations** must **not** propose action on unverified headline numbers. Where the content contains a tactical playbook, adopt the tactics only if they are directionally supported by the verified sources — and call out in each recommendation which specific numbers come from the underlying public research vs. the author's repackaging.
+- **Check 4 (Google-official contradiction) is a separate scope/removal axis, not part of the LOW/MEDIUM/HIGH stat score.** When it fires, the recommendation must explicitly scope the tactic to non-Google engines (Google-disclaimed) or reverse it (Google-spam) regardless of the credibility rating. It warns and scopes — it never blocks the digest.
 
-**LinkedIn-AEO specific:** When the subject matter is LinkedIn AEO / LLM citation patterns / AI search visibility, the canonical verified equivalent lives at `~/Projects/claude-skills/plugins/seo/skills/seo/reference/aeo.md` → "Verified LinkedIn AEO Playbook." Point the user there for the triangulated version of what the viral thread claims. Keep the wording of this check aligned with the matching guardrail in the `seo-aeo` command — edit both when either changes.
+**LinkedIn-AEO specific:** When the subject matter is LinkedIn AEO / LLM citation patterns / AI search visibility, the canonical verified equivalent lives at `~/Projects/claude-skills/plugins/seo/skills/seo/reference/aeo.md` → "Verified LinkedIn AEO Playbook." Point the user there for the triangulated version of what the viral thread claims.
+
+**Sync contract (semantic, not byte-identical).** This guardrail is one of **three surfaces**: this §5b, the `/seo:seo-aeo` command's "Source Credibility Check", and `seo` skill `reference/aeo.md`'s "Credibility Guardrail for Viral AEO Claims". Keep the **four checks and the warn-and-scope/never-block severity posture** aligned across all three when editing any of them. Do **not** force them byte-identical — §5b intentionally keeps its two-trigger gate and this "Effect on output" block, which the other two surfaces do not have. What stays in sync is the check logic and severity behavior, not the prose.
 
 **Example trigger:** A thread stating "LinkedIn beats YouTube + Wikipedia for AI citations" from a vendor selling an AEO monitoring tool, citing "our data" with no public methodology. All three checks fire → Credibility: LOW. Recommendation adopts the article-length, platform-split, and educational-tone tactics (verified via Semrush/Profound) but does **not** cite the headline "beats YouTube + Wikipedia" number.
 
