@@ -202,6 +202,7 @@ See `reference/local-seo.md` for full citation details and quality hierarchy.
 - [ ] FAQ content answers real customer questions (voice-search friendly)
 - [ ] **Content updated meaningfully when new information exists**
 - [ ] **Hub-and-spoke internal links** — 3-10 contextual links per page, descriptive anchors
+- [ ] **Internal link equity diagnostic run** — for sites >50 URLs, top high-intent pages have been counted for inbound internal links and starved pages identified before commissioning new content (workflow in `reference/link-building.md` → "Internal Link Equity Diagnostic")
 - [ ] **Embedded video on key pages** with VideoObject schema and chapter timestamps
 
 #### Local Business Content
