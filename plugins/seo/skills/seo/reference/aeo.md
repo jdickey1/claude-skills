@@ -25,6 +25,12 @@ For foundational AI search data (citation stats, platform comparison, content fo
 
 This scope statement is the anchor the rest of this reference is reconciled toward. Dated caveats below ("per Google's 2026-05-15 guidance") mark text that this principle supersedes.
 
+**Stance (the rhetorical position this reconciliation takes):**
+
+Industry response to every Google guidance update oscillates between two unhelpful camps: "SEE? IT'S JUST SEO" (Google as scripture) and "see, here's the proof they're lying" (Google as adversary). Both flatten Google's guidance into a posture rather than treating it as one self-interested input among several. This reference rejects both camps. Google's guidance is the authoritative input *for Google's AI features* because Google defines those surfaces — but Google's optimization layer covers one engine of many. ChatGPT, Perplexity, Claude, Copilot, Gemini, and a long tail of vertical agents make their own retrieval decisions on different infrastructure with different incentives. The shared optimization layer is shrinking; the per-engine surface area is growing. The "Scoped (temper) vs Reversed (remove)" framework above is the technical implementation of that stance.
+
+External articulation of this position, with citations to the Bing-published counter-guidance referenced below: Mike King (iPullRank), *"Google's Guidance on AI Search is Naive and Self-Serving"* — https://ipullrank.com/google-ai-search-guidance (May 2026).
+
 ---
 
 ## AEO Audit Scoring (0-125)
@@ -126,9 +132,20 @@ Score every substantive content block on the page (paragraphs between headings, 
 
 ### JSON-LD Schema Markup (15 pts)
 
-> **Engine scope (per Google 2026-05-15):** Google's guidance is explicit that **structured data is not a required input to Google's AI features** (AI Overviews / AI Mode) and that **structured-data overfocus is not the path** to Google AI visibility. Structured data still supports classic rich results and is good general SEO hygiene — but do not score or present schema as a Google-AI-citation lever. The "2.3-2.5x" figure below is a **directional, non-Google, unverified estimate** for ChatGPT/Bing/Perplexity-class engines (full stat re-triangulation is out of scope here; see `ai-search.md`). This schema sub-score is a non-Google-engine signal.
+> **Engine scope (per Google 2026-05-15):** Google's guidance is explicit that **structured data is not a required input to Google's AI features** (AI Overviews / AI Mode) and that **structured-data overfocus is not the path** to Google AI visibility. Structured data still supports classic rich results and is good general SEO hygiene — but do not score or present schema as a Google-AI-citation lever. The "2.3-2.5x" figure below is a **directional, non-Google estimate** supported by four independent studies and counter-balanced by one rigorous null result; cite directionally, not as a load-bearing number. This schema sub-score is a non-Google-engine signal.
 
-Schema markup is associated with **~2.3-2.5x more AI citations on ChatGPT/Bing/Perplexity-class engines** (directional, non-Google, unverified — not a Google AI-features input). All schema should still be JSON-LD format (Google's stated preference for rich results; separates data from HTML).
+Schema markup is associated with **~2.3-2.5x more AI citations on ChatGPT/Bing/Perplexity-class engines** (directional, non-Google, not a Google AI-features input). All schema should still be JSON-LD format (Google's stated preference for rich results; separates data from HTML).
+
+**Evidence base (multi-study triangulation, May 2026):**
+
+- **OtterlyAI** ([speakerdeck.com/thomaspeham/geo-experiments-2026](https://speakerdeck.com/thomaspeham/geo-experiments-2026-what-we-tested-what-failed-and-what-actually-works)) — 2,000+ URLs, Google AI Overviews citations +1,500% after schema; **ChatGPT citations dropped** (engine asymmetry — schema is not uniformly positive across AI engines).
+- **AirOps / Kevin Indig** ([airops.com/report/the-fan-out-effect](https://www.airops.com/report/the-fan-out-effect-what-happens-between-a-query-and-a-citation)) — JSON-LD pages gained 6.5% over non-JSON-LD.
+- **UC Berkeley 2025 paper** ([arxiv.org/html/2509.10762v1](https://arxiv.org/html/2509.10762v1)) — +39% AI citation lift correlated with structured data; reportedly examined depth-of-schema effects.
+- **Digital Applied** ([digitalapplied.com/blog/we-analyzed-1000-ai-overviews-citation-pattern-study](https://www.digitalapplied.com/blog/we-analyzed-1000-ai-overviews-citation-pattern-study)) — 1,000 Google AI Overviews; schema-marked pages cited 2.3x more than unstructured.
+- **Ahrefs (counter-study, must cite for honesty)** ([ahrefs.com/blog/schema-ai-citations](https://ahrefs.com/blog/schema-ai-citations/)) — no improvement in AI citations after schema; **the only one of the cited studies that tested *same pages* with/without schema**. The four positive studies above all carry possible site-level selection bias (schema-using sites are run by more SEO-aware teams that do many things better).
+- Cross-synthesis (2026-05-19): [@CyrusShepard on X](https://x.com/cyrusshepard/status/2056661659876245591) reviewed 40+ AI studies and landed on "use schema, but don't bank your strategy on it" — the operator-grade stance encoded in this section.
+
+**Engine-asymmetry caveat:** Treat schema as a positive signal for Google rich results (high confidence) and for Perplexity / Bing / non-Google AI engines (directional). For ChatGPT specifically, OtterlyAI's same-URLs data showed citations *decrease* after schema was added — mechanism unknown. Don't assume positive transfer across all AI engines.
 
 **Required schema by page type:**
 
@@ -534,7 +551,7 @@ Flag these automatically when found during an audit:
 | No publication/update dates | HIGH | Signals staleness to AI |
 | Generic AI-written content (at scale) | HIGH | LLMs detect and ignore it; original insights required. At volume this is **Google scaled-content abuse (2026-05-15)** — spam, not just low-quality |
 | Paragraph prose for comparison queries | HIGH | Tables beat prose 2.8x for these queries |
-| Missing schema markup (non-Google engines) | MEDIUM | ~2.3-2.5x citation gap on ChatGPT/Bing/Perplexity-class (directional, non-Google, unverified). **Not** a Google AI-features input per Google 2026-05-15 — do not flag as a Google AI-readiness gap; schema still matters for classic rich results |
+| Missing schema markup (non-Google engines) | MEDIUM | ~2.3-2.5x citation gap on ChatGPT/Bing/Perplexity-class (directional, multi-study supported with one null counter-study; see Section 3 for citations). **Not** a Google AI-features input per Google 2026-05-15 — do not flag as a Google AI-readiness gap; schema still matters for classic rich results. **ChatGPT exception:** OtterlyAI same-URL data showed ChatGPT citations *drop* after schema added |
 | No About/Team page | HIGH | AI can't verify entity identity |
 | Claims without sources | MEDIUM | Reduces trust score; AI prefers verifiable assertions |
 | Skipped heading levels | MEDIUM | 3.2x citation rate difference with proper hierarchy |
