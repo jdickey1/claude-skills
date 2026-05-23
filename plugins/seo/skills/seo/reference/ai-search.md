@@ -88,6 +88,14 @@ See `reference/fan-out-queries.md` for the full framework, audit methodology, an
 - **Perplexity** — Most transparent/trackable. Indexes fresh content within hours. Only 11% domain overlap with ChatGPT citations.
 - **Voice assistants** — Only 1% answer overlap across Google, Siri, and Alexa. Must optimize for all platforms, not just Google.
 
+## Measurement Tools for Non-Google AI Engines
+
+Google Search Console covers Google's surface only. For ChatGPT/Copilot/Bing AI summaries, the practitioner-facing measurement layer is fragmented but growing:
+
+- **Bing Webmaster Tools — AI Performance (public preview, Feb 2026)** — exposes per-page citation activity across Bing AI summaries and Copilot, plus the **grounding queries** (the actual phrases the AI used when retrieving the page). Microsoft has framed it explicitly as "an early step toward Generative Engine Optimization (GEO) tooling." This is the closest analogue to GSC's Performance report for the ChatGPT/Bing pipeline (ChatGPT GPT 5.4 runs on Bing's index, so Bing-citation data is directionally informative for ChatGPT visibility). Set up on every site already using Bing Webmaster Tools — no separate verification needed if Bing has already verified the property.
+- **Direct LLM probing** — for ChatGPT/Claude/Perplexity citation tracking outside Bing's pipeline, periodic manual probing against a fixed query set remains the only first-party method. Vendor monitoring tools (Profound, Peec AI, LLM Pulse) sit on top of this but the underlying signal is still query-the-engine-and-parse-citations.
+- **Server log filtering for AI bots** — GPTBot, ClaudeBot, PerplexityBot, GoogleOther (Google AI Overviews) all identify themselves in User-Agent. Filter access logs for these to confirm crawl coverage; useful as a sanity check that the AI bots are reaching pages you expect them to cite.
+
 ## LinkedIn as an AEO Surface
 
 LinkedIn is an increasingly cited surface for professional/B2B queries, driven by Microsoft's preferential ingestion into Bing (which feeds ChatGPT Search). **LinkedIn's own robots.txt blocks all major AI crawlers** — citations flow via the LinkedIn → Bing → ChatGPT pipeline, not direct crawling.
