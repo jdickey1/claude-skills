@@ -7,12 +7,45 @@ Backlinks remain a core ranking factor but the game has shifted: **topical relev
 - [ ] **Balanced homepage vs deep page links** — natural profiles mix both. Heavily homepage-concentrated profiles are a red flag. Deep links to service/landing pages build topical authority for specific terms.
 - [ ] **Anchor text distribution is safe** — 30-50% branded, 20-30% partial-match, <10% exact-match keywords. Over-optimized exact-match anchors trigger Penguin penalties.
 - [ ] No spammy or irrelevant backlinks (PBNs, paid links, link exchanges, directory spam)
-- [ ] Internal linking strategy connects service pages to homepage (see audit checklist B4 for detailed internal linking)
+- [ ] Internal linking strategy connects service pages to homepage (see audit checklist B4 for detailed internal linking, and "Internal Link Equity Diagnostic" below for the audit-and-relink workflow)
 - [ ] **Link reclamation performed** — 66.5% of backlinks across top sites point to 404 pages. Identify broken backlinks and create 301 redirects. Unlinked brand mentions converted to links (25%+ conversion rate). Faster ROI than new link building.
 - [ ] Competitor backlink sources identified for prospecting (use Link Intersect to find sites linking to competitors but not you)
 - [ ] **Link velocity is natural** — new sites: 5-10 links/month initially. Established sites: +5-14.5% monthly growth in referring domains. Sudden spikes trigger scrutiny; consistent pace is safe.
 - [ ] **Original research and data-driven content** created as link magnets — original research earns 8x more backlinks than curated/opinion content. 90%+ of successful digital PR campaigns use data-led content.
 - [ ] **Nofollow/sponsored/UGC attributes** used correctly on outbound links — Google treats these as "hints" not strict exclusions; they may still pass some value
+
+## Internal Link Equity Diagnostic
+
+Most sites concentrate internal-link equity on the homepage and global nav while starving the pages that actually convert (service pages, comparison pages, location pages, bottom-of-funnel landing pages). Before commissioning new content or paying for new backlinks, run this diagnostic — it's a one-afternoon audit with no marginal cost that often surfaces the highest-ROI fix on the site.
+
+### When to run
+
+- Before commissioning new content for a site that already has >50 indexed URLs.
+- During the standard audit (Tier 4, B4) any time the site has both (a) a healthy content archive to link *from* and (b) underperforming high-intent pages.
+- As a recurring diagnostic when GSC shows pages with impressions but few clicks, or pages with thin internal link counts in a crawler report.
+
+### Diagnostic workflow
+
+1. **Identify the high-value page set.** Pick 5-10 pages by commercial intent, not by current traffic. For a SaaS site that's comparison, alternatives, and bottom-of-funnel landing pages. For a local service business that's "service + city" pages and primary practice/service-area pages. For a publication it's the cornerstone explainers you'd link to in any future piece.
+2. **Count internal inbound links per URL.** Use any crawler (Screaming Frog, Ahrefs Site Audit, Semrush Site Audit) or the GSC Links → Internal Links report. Sort ascending. The "best pages with the fewest internal links" are the targets.
+3. **Compare against the hub baseline.** The homepage and primary nav pages will typically have inbound internal-link counts in the dozens to hundreds. If a high-intent page sits at single digits while a low-intent page (About, Privacy, Blog index) is in the dozens, that's the starvation signal.
+4. **Find linkable existing content.** For each starved page, search the site for existing pages that mention the target keyword or a close variant. These are the candidate link sources — no new content is required.
+5. **Add contextual links with descriptive anchor text.** Add the new internal links inline within paragraphs (not in nav, sidebars, or related-posts widgets, which carry less weight). Anchor text should be 3-8 words, descriptive of the destination, and varied — don't use the same exact-match anchor on every link.
+6. **Re-crawl and verify.** Confirm the new links are crawlable and the destination pages are indexed. Track ranking and impression movement in GSC over 4-8 weeks.
+
+### Calibration
+
+- The directional claim — more inbound internal links → better rankings for the link target — is well-established across Ahrefs, Semrush, Moz, and Backlinko. The widely-circulated specific multipliers ("a page with 40 links pulls X% more traffic than the same page with 4") are typically unsourced founder-thread claims; adopt the workflow, not the specific percentages.
+- Diminishing returns kick in. The first 10-20 contextual internal links to a starved page move the needle most; going from 50 → 80 rarely produces a proportional lift.
+- Anchor text variety matters more than link count beyond a point. 20 contextual links with varied descriptive anchors outperform 50 links all using the same exact-match phrase (Penguin-style over-optimization risk).
+- This is **not a substitute** for genuine topical depth or external authority. If the page is thin or the site has no E-E-A-T signals, relinking won't fix it.
+
+### Anti-patterns
+
+- **Stuffing nav or footer with links to "boost" pages.** Sitewide links from nav/footer get heavily discounted — they're already counted once across every page. Contextual in-body links carry the lift.
+- **Adding links between unrelated pages.** Topical relevance still matters; an internal link from a content piece on a different subject signals nothing useful to Google.
+- **Treating this as a one-time fix.** Sites that publish on cadence drift back into starvation as new pages dilute the link graph. Re-run the diagnostic quarterly.
+- **Doing this before fixing crawl/index issues.** Internal-link equity can't reach a page Google can't crawl. Indexation and technical foundations come first.
 
 ## Link Building Tactics (Prioritized)
 
