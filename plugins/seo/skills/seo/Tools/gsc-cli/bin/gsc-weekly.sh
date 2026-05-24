@@ -95,6 +95,16 @@ run_step() {
 
   echo
   echo "--- gsc bwt pull (per site; skips unregistered or unkeyed) ---"
+  # Canonical BWT_API_KEY lives on the VPS at /etc/vps-monitor/config.env
+  # (owned by nonrootadmin, mode 600). Source the file remotely (same as the
+  # VPS-side bwt-weekly.sh does) so bash handles the quoting; a naive
+  # `grep | cut` would pass the literal quoted string to Bing's API.
+  if [ -z "${BWT_API_KEY:-}" ]; then
+    if k=$(ssh -o BatchMode=yes nonrootadmin "bash -c 'set -e; . /etc/vps-monitor/config.env; printf %s \"\$BWT_API_KEY\"'" 2>/dev/null) && [ -n "$k" ]; then
+      export BWT_API_KEY="$k"
+      echo "  BWT_API_KEY: sourced from VPS (len=${#BWT_API_KEY})"
+    fi
+  fi
   if [ -n "${BWT_API_KEY:-}" ]; then
     if "$GSC" bwt pull; then
       echo "  → ok"
@@ -102,7 +112,7 @@ run_step() {
       echo "  → FAILED (continuing — BWT pull is best-effort)"
     fi
   else
-    echo "  skip (BWT_API_KEY not set)"
+    echo "  skip (BWT_API_KEY not set; VPS fetch also failed)"
   fi
 
   run_step "gsc digest" "$GSC" digest
