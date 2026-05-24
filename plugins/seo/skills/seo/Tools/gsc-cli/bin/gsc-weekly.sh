@@ -76,6 +76,35 @@ run_step() {
     done
   fi
 
+  echo
+  echo "--- gsc crawl (per site, internal-link diagnostic) ---"
+  # Same site-source-of-truth pattern as inspect above.
+  for site in $sites; do
+    if [[ "$site" == "sc-domain:dickeylawgroup.com" && "$TODAY" < "$DLG_HOLD_UNTIL" ]]; then
+      echo "  skip $site (held until $DLG_HOLD_UNTIL)"
+      continue
+    fi
+    echo "  $site:"
+    if "$GSC" crawl --site "$site"; then
+      echo "    → ok"
+    else
+      echo "    → FAILED"
+      step_status=1
+    fi
+  done
+
+  echo
+  echo "--- gsc bwt pull (per site; skips unregistered or unkeyed) ---"
+  if [ -n "${BWT_API_KEY:-}" ]; then
+    if "$GSC" bwt pull; then
+      echo "  → ok"
+    else
+      echo "  → FAILED (continuing — BWT pull is best-effort)"
+    fi
+  else
+    echo "  skip (BWT_API_KEY not set)"
+  fi
+
   run_step "gsc digest" "$GSC" digest
 
   echo

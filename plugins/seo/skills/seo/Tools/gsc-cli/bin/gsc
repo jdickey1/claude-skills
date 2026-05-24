@@ -13,6 +13,8 @@ import { sitemapList, sitemapSubmit, sitemapDelete } from '../commands/sitemap.m
 import { pullCmd } from '../commands/pull.mjs';
 import { inspectCmd } from '../commands/inspect.mjs';
 import { digestCmd } from '../commands/digest.mjs';
+import { crawlCmd } from '../commands/crawl.mjs';
+import { bwtCmd } from '../commands/bwt.mjs';
 
 // Flags that never take a value — without this, `--request-indexing https://...`
 // would consume the URL as the flag's value and lose the positional arg.
@@ -65,6 +67,16 @@ const HELP = `gsc — Google Search Console CLI
     Per-site weekly digest from seo_db: top movers, losers, queries, pages,
     sitemap state, recent inspections. Writes HTML + Markdown to
     ~/Library/Logs/gsc-cli/digest-YYYY-MM-DD/ (drafts only — no email send).
+
+  gsc crawl [--site <site>] [--sitemap <url>] [--concurrency N]
+    Fetch the sitemap, crawl every URL, count inbound internal links per URL,
+    store in seo_db. Surfaces the worst-starved high-impression pages on
+    stdout. Default concurrency 8.
+
+  gsc bwt status                            Show BWT site state (verified, key set)
+  gsc bwt pull [--site <site>] [--days N]   Pull BWT page/query stats into seo_db
+    Requires BWT_API_KEY env var. See sql/schema.sql:bwt_sites for per-site
+    enablement. Days defaults to 7. Use 'gsc bwt status' first if unsure.
 
   Site format: 'sc-domain:jdkey.com' (Domain property) or 'https://jdkey.com/' (URL prefix property)
 `;
@@ -122,6 +134,18 @@ async function main() {
           out: flags.out,
           json: flags.json,
         });
+      case 'crawl':
+        return crawlCmd({
+          site: flags.site,
+          sitemap: flags.sitemap,
+          concurrency: flags.concurrency,
+        });
+      case 'bwt status':
+        return bwtCmd({ action: 'status' });
+      case 'bwt pull':
+        return bwtCmd({ action: 'pull', site: flags.site, days: flags.days });
+      case 'bwt register':
+        return bwtCmd({ action: 'register', site: flags.site });
       default:
         console.error(`Unknown command: ${group} ${sub || ''}\n`);
         console.log(HELP);
