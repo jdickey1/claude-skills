@@ -181,6 +181,69 @@ async function recentInspections(db, siteUrl, limit) {
   return rows;
 }
 
+async function starvedPages(db, siteUrl, aStart, aEnd, limit) {
+  // Join the most-recent internal_links crawl with this digest window's
+  // impressions. Surfaces high-impression URLs with low inbound link counts.
+  const { rows } = await db.query(
+    `with latest_crawl as (
+        select id from internal_link_crawls
+         where site_url = $1 and status in ('success', 'partial')
+         order by finished_at desc nulls last, started_at desc
+         limit 1
+      ),
+      perf as (
+        select page,
+               sum(impressions)::int as impressions,
+               sum(clicks)::int as clicks
+          from gsc_perf
+         where site_url = $1
+           and date between $2 and $3
+           and page <> ''
+         group by page
+      )
+      select il.url,
+             il.inbound_count,
+             il.outbound_count,
+             perf.impressions,
+             perf.clicks
+        from internal_links il
+        join latest_crawl lc on lc.id = il.crawl_id
+        join perf          on perf.page = il.url
+       where il.in_sitemap = true
+         and perf.impressions >= 10
+       order by perf.impressions::numeric / nullif(il.inbound_count, 0) desc nulls first,
+                il.inbound_count asc,
+                perf.impressions desc
+       limit $4`,
+    [siteUrl, aStart, aEnd, limit]
+  );
+  return rows;
+}
+
+async function bwtTotals(db, siteUrl, aStart, aEnd) {
+  const { rows } = await db.query(
+    `select source,
+            sum(clicks)::int as clicks,
+            sum(impressions)::int as impressions
+       from bwt_perf
+      where site_url = $1
+        and date between $2 and $3
+      group by source
+      order by impressions desc`,
+    [siteUrl, aStart, aEnd]
+  );
+  return rows;
+}
+
+async function bwtSiteState(db, siteUrl) {
+  const { rows } = await db.query(
+    `select bwt_host, verified, api_key_set, last_pulled_at, notes
+       from bwt_sites where site_url = $1`,
+    [siteUrl]
+  );
+  return rows[0] || null;
+}
+
 async function activeSites(db, onlySite) {
   if (onlySite) {
     const { rows } = await db.query(
@@ -204,6 +267,7 @@ async function buildDigest(db, site, { aStart, aEnd, bStart, bEnd, limit }) {
     topQs, topPs,
     { movers, losers },
     sitemap, inspections,
+    starved, bwt_totals, bwt_state,
   ] = await Promise.all([
     totals(db, site.site_url, aStart, aEnd),
     totals(db, site.site_url, bStart, bEnd),
@@ -212,6 +276,9 @@ async function buildDigest(db, site, { aStart, aEnd, bStart, bEnd, limit }) {
     moversAndLosers(db, site.site_url, aStart, aEnd, bStart, bEnd, limit),
     recentSitemapState(db, site.site_url),
     recentInspections(db, site.site_url, limit),
+    starvedPages(db, site.site_url, aStart, aEnd, limit),
+    bwtTotals(db, site.site_url, aStart, aEnd),
+    bwtSiteState(db, site.site_url),
   ]);
 
   return {
@@ -227,6 +294,8 @@ async function buildDigest(db, site, { aStart, aEnd, bStart, bEnd, limit }) {
     losers,
     sitemap,
     inspections,
+    starved,
+    bwt: { totals: bwt_totals, state: bwt_state },
     generated_at: new Date().toISOString(),
   };
 }
@@ -300,6 +369,41 @@ function renderMarkdown(d) {
     for (const r of d.top_pages) {
       out.push(`| ${r.page} | ${r.clicks} | ${fmtNum(r.impressions)} | ${fmtPct(r.ctr)} | ${fmtPos(r.avg_position)} |`);
     }
+  }
+  out.push('');
+
+  out.push('## Internal-Link Starvation (high-impression URLs with few inbound links)');
+  out.push('');
+  if (!d.starved || d.starved.length === 0) {
+    out.push('_No internal-link crawl data for this site yet — run `gsc crawl --site ' + d.site_url + '`._');
+  } else {
+    out.push('| Page | Inbound | Outbound | Imp 7d | Clicks 7d |');
+    out.push('|---|---:|---:|---:|---:|');
+    for (const r of d.starved) {
+      out.push(`| ${r.url} | ${r.inbound_count} | ${r.outbound_count} | ${fmtNum(r.impressions)} | ${r.clicks} |`);
+    }
+    out.push('');
+    out.push('_Ranked by impressions ÷ inbound — top rows are the worst-starved relative to demand. Workflow in [[2026-05-19-denohawari-2056813892139995264]]._');
+  }
+  out.push('');
+
+  out.push('## Bing & AI Engine Performance (Bing Webmaster Tools)');
+  out.push('');
+  if (!d.bwt.state || !d.bwt.state.bwt_host) {
+    out.push('_BWT not registered for this site. Run `gsc bwt register --site ' + d.site_url + '` after verifying the domain in Bing Webmaster Tools._');
+  } else if (!d.bwt.state.api_key_set) {
+    out.push(`_BWT registered (host: ${d.bwt.state.bwt_host}) but BWT_API_KEY not yet set. Add the API key from Bing Webmaster Tools → Settings → API Access, then re-run \`gsc bwt pull\`._`);
+  } else if (d.bwt.totals.length === 0) {
+    const last = d.bwt.state.last_pulled_at ? new Date(d.bwt.state.last_pulled_at).toISOString().slice(0, 10) : 'never';
+    out.push(`_No BWT data in window. Last pulled: ${last}._`);
+  } else {
+    out.push('| Source | Clicks 7d | Impressions 7d |');
+    out.push('|---|---:|---:|');
+    for (const r of d.bwt.totals) {
+      out.push(`| ${r.source} | ${fmtNum(r.clicks)} | ${fmtNum(r.impressions)} |`);
+    }
+    out.push('');
+    out.push(`_Source = engine surface. \`bing\` = classic Bing search; \`copilot\` / \`ai_grounding\` populate when BWT exposes AI Performance via API (currently GUI-only preview as of 2026-02)._`);
   }
   out.push('');
 
@@ -439,6 +543,36 @@ function renderHtml(d) {
     'No sitemap activity recorded.'
   );
 
+  const starvedTable = (!d.starved || d.starved.length === 0)
+    ? `<p class="empty">No internal-link crawl data for this site yet — run <code>gsc crawl --site ${escapeHtml(d.site_url)}</code>.</p>`
+    : renderTable(
+        [{ label: 'Page' }, { label: 'Inbound', num: true }, { label: 'Outbound', num: true }, { label: 'Imp 7d', num: true }, { label: 'Clicks 7d', num: true }],
+        d.starved.map(r => [
+          { html: `<span class="url">${escapeHtml(r.url)}</span>` },
+          String(r.inbound_count),
+          String(r.outbound_count),
+          fmtNum(r.impressions),
+          String(r.clicks),
+        ]),
+        ''
+      );
+
+  let bwtHtml;
+  if (!d.bwt.state || !d.bwt.state.bwt_host) {
+    bwtHtml = `<p class="empty">BWT not registered for this site. Run <code>gsc bwt register --site ${escapeHtml(d.site_url)}</code> after verifying the domain in Bing Webmaster Tools.</p>`;
+  } else if (!d.bwt.state.api_key_set) {
+    bwtHtml = `<p class="empty">BWT registered (host: <code>${escapeHtml(d.bwt.state.bwt_host)}</code>) but <code>BWT_API_KEY</code> not yet set. Add the API key from Bing Webmaster Tools → Settings → API Access, then re-run <code>gsc bwt pull</code>.</p>`;
+  } else if (d.bwt.totals.length === 0) {
+    const last = d.bwt.state.last_pulled_at ? new Date(d.bwt.state.last_pulled_at).toISOString().slice(0, 10) : 'never';
+    bwtHtml = `<p class="empty">No BWT data in window. Last pulled: ${escapeHtml(last)}.</p>`;
+  } else {
+    bwtHtml = renderTable(
+      [{ label: 'Source' }, { label: 'Clicks 7d', num: true }, { label: 'Impressions 7d', num: true }],
+      d.bwt.totals.map(r => [r.source, fmtNum(r.clicks), fmtNum(r.impressions)]),
+      ''
+    );
+  }
+
   const inspectionsTable = renderTable(
     [{ label: 'Inspected' }, { label: 'Status' }, { label: 'Coverage' }, { label: 'Last crawl' }, { label: 'URL' }],
     d.inspections.map(r => [
@@ -487,6 +621,13 @@ function renderHtml(d) {
 
   <h2>Top Pages</h2>
   ${topPTable}
+
+  <h2>Internal-Link Starvation (high-impression URLs with few inbound links)</h2>
+  ${starvedTable}
+  <p class="meta">Ranked by impressions ÷ inbound — top rows are the worst-starved relative to demand.</p>
+
+  <h2>Bing &amp; AI Engine Performance</h2>
+  ${bwtHtml}
 
   <h2>Sitemap State</h2>
   ${sitemapTable}

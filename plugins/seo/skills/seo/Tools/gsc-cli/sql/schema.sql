@@ -63,10 +63,10 @@ create table if not exists gsc_sitemap_log (
 
 create index if not exists gsc_sitemap_log_site_idx on gsc_sitemap_log (site_url, performed_at desc);
 
--- Run-level audit: one row per cron invocation of pull/inspect/digest.
+-- Run-level audit: one row per cron invocation of pull/inspect/digest/crawl/bwt.
 create table if not exists gsc_run_log (
   id              bigserial primary key,
-  command         text not null,              -- 'pull', 'inspect', 'digest'
+  command         text not null,              -- 'pull', 'inspect', 'digest', 'crawl', 'bwt'
   site_url        text references sites(site_url) on delete set null,
   started_at      timestamptz not null default now(),
   finished_at     timestamptz,
@@ -76,3 +76,61 @@ create table if not exists gsc_run_log (
 );
 
 create index if not exists gsc_run_log_started_idx on gsc_run_log (started_at desc);
+
+-- Internal-link crawl audit: one row per `gsc crawl --site <site>` invocation.
+create table if not exists internal_link_crawls (
+  id              bigserial primary key,
+  site_url        text not null references sites(site_url) on delete cascade,
+  started_at      timestamptz not null default now(),
+  finished_at     timestamptz,
+  urls_attempted  int,
+  urls_fetched    int,
+  urls_failed     int,
+  status          text,                       -- 'success', 'error', 'partial'
+  detail          jsonb
+);
+
+create index if not exists internal_link_crawls_site_started_idx on internal_link_crawls (site_url, started_at desc);
+
+-- Per-URL internal-link counts. crawl_id groups all rows from one crawl so
+-- we can diff over time without losing prior-crawl rows.
+create table if not exists internal_links (
+  crawl_id        bigint not null references internal_link_crawls(id) on delete cascade,
+  site_url        text not null references sites(site_url) on delete cascade,
+  url             text not null,
+  inbound_count   int  not null default 0,
+  outbound_count  int  not null default 0,
+  in_sitemap      boolean not null default true,
+  http_status     int,
+  primary key (crawl_id, url)
+);
+
+create index if not exists internal_links_site_url_idx on internal_links (site_url, url);
+
+-- Bing Webmaster Tools site state. One row per site; tracks whether the
+-- domain is verified in BWT and whether an API key is available.
+create table if not exists bwt_sites (
+  site_url        text primary key references sites(site_url) on delete cascade,
+  bwt_host        text not null,              -- 'jdkey.com' (host, not URL)
+  verified        boolean not null default false,
+  api_key_set     boolean not null default false,
+  last_pulled_at  timestamptz,
+  notes           text
+);
+
+-- BWT performance data — page + query stats per day.
+-- source distinguishes plain Bing search from AI-grounded sources (Copilot, etc).
+create table if not exists bwt_perf (
+  site_url        text not null references sites(site_url) on delete cascade,
+  date            date not null,
+  query           text not null default '',
+  page            text not null default '',
+  source          text not null default 'bing',  -- 'bing', 'copilot', 'ai_grounding'
+  clicks          int  not null default 0,
+  impressions     int  not null default 0,
+  avg_position    numeric(7,3),
+  pulled_at       timestamptz not null default now(),
+  primary key (site_url, date, query, page, source)
+);
+
+create index if not exists bwt_perf_site_date_idx on bwt_perf (site_url, date desc);
