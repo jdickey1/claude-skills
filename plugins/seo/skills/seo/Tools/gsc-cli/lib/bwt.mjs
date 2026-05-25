@@ -10,9 +10,13 @@
 //
 // We use a small subset of the documented JSON API:
 //   GetUserSites               (account-level — owned/verified sites)
-//   GetPageStats               (per-site, last 6 months daily totals)
-//   GetPageQueryStats          (per-site, page-query joins)
-//   GetQueryStats              (per-site, query-level totals)
+//   GetRankAndTrafficStats     (per-site, per-day clicks/impressions totals)
+//   GetPageStats               (per-site, per-page totals)
+//   GetQueryStats              (per-site, per-query totals)
+//
+// GetPageQueryStats also exists but is per-page (requires a `page` parameter
+// in addition to siteUrl). Not used by the pull path; kept here as a stub for
+// potential future "deep dive on this page's queries" workflows.
 //
 // AI Performance (Feb 2026 public preview) is currently surfaced in the BWT
 // GUI only. The JSON API has no documented method yet; when Microsoft ships
@@ -51,20 +55,32 @@ export async function getUserSites() {
   return r.d ?? [];
 }
 
-// GetPageStats returns per-day clicks/impressions for a site.
+// GetRankAndTrafficStats returns per-day site totals (clicks, impressions, date).
+// This is the per-day series — closest BWT analogue to GSC's daily perf rows.
+export async function getRankAndTrafficStats(siteUrl) {
+  const r = await call('GetRankAndTrafficStats', { siteUrl });
+  return r.d ?? [];
+}
+
+// GetPageStats returns per-page rollup (one row per top page, with clicks,
+// impressions, position). Not a time series — Bing exposes only the aggregate.
 export async function getPageStats(siteUrl) {
   const r = await call('GetPageStats', { siteUrl });
   return r.d ?? [];
 }
 
+// GetQueryStats returns per-query rollup (one row per top query, with clicks,
+// impressions, position). Not a time series.
 export async function getQueryStats(siteUrl) {
   const r = await call('GetQueryStats', { siteUrl });
   return r.d ?? [];
 }
 
-// GetPageQueryStats returns rows of (page, query) joins for a site.
-export async function getPageQueryStats(siteUrl) {
-  const r = await call('GetPageQueryStats', { siteUrl });
+// GetPageQueryStats — per-page query breakdown. Requires a `page` parameter
+// (a specific URL within the site), not just `siteUrl`. Reserved for future
+// page-level deep-dive workflows; not called from the pull path.
+export async function getPageQueryStats(siteUrl, page) {
+  const r = await call('GetPageQueryStats', { siteUrl, page });
   return r.d ?? [];
 }
 

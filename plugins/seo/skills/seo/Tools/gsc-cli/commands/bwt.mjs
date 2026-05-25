@@ -100,9 +100,12 @@ async function registerAction({ site }) {
 }
 
 function parseBwtDate(s) {
-  // BWT GetPageStats returns Date strings like "/Date(1700000000000)/"
+  // BWT returns Date strings like "/Date(1700000000000)/" or with an embedded
+  // timezone offset for time-series methods: "/Date(1779519600000-0700)/".
+  // Take the milliseconds-since-epoch part; ignore the offset (the absolute
+  // instant is what matters for our daily UTC bucket).
   if (!s) return null;
-  const m = String(s).match(/Date\((-?\d+)\)/);
+  const m = String(s).match(/Date\((-?\d+)(?:[-+]\d+)?\)/);
   if (!m) return null;
   return new Date(parseInt(m[1], 10)).toISOString().slice(0, 10);
 }
@@ -140,29 +143,26 @@ async function pullAction({ site: onlySite, days }) {
 
       try {
         console.log(`\n→ ${site.display_name} (${bwtUrl})`);
-        const stats = await bwt.getPageStats(bwtUrl);
-        console.log(`  GetPageStats: ${stats.length} day rows`);
-
-        // Day-totals row gets page='' query='' (matches gsc_perf shape).
         const today = new Date().toISOString().slice(0, 10);
+        const cutoff = new Date();
+        cutoff.setUTCDate(cutoff.getUTCDate() - numDays);
+        const cutoffIso = cutoff.toISOString().slice(0, 10);
+
+        // 1) Per-day site totals from GetRankAndTrafficStats — the only BWT
+        //    method that returns a time series. Written as (page='', query='').
+        const rats = await bwt.getRankAndTrafficStats(bwtUrl);
         const dayRows = [];
-        for (const s of stats) {
+        for (const s of rats) {
           const d = parseBwtDate(s.Date);
-          if (!d) continue;
+          if (!d || d < cutoffIso) continue;
           dayRows.push({
             date: d,
             clicks: Number(s.Clicks || 0),
             impressions: Number(s.Impressions || 0),
           });
         }
-
-        // Constrain to the recent window.
-        const cutoff = new Date();
-        cutoff.setUTCDate(cutoff.getUTCDate() - numDays);
-        const cutoffIso = cutoff.toISOString().slice(0, 10);
-        const recent = dayRows.filter(r => r.date >= cutoffIso);
-
-        for (const r of recent) {
+        console.log(`  GetRankAndTrafficStats: ${rats.length} total rows, ${dayRows.length} in window`);
+        for (const r of dayRows) {
           await db.query(
             `insert into bwt_perf (site_url, date, query, page, source, clicks, impressions)
              values ($1, $2, '', '', 'bing', $3, $4)
@@ -174,33 +174,55 @@ async function pullAction({ site: onlySite, days }) {
           );
         }
 
-        // PageQueryStats — list of recent (page, query, clicks, impressions, position)
-        const pageQuery = await bwt.getPageQueryStats(bwtUrl).catch(e => {
-          console.log(`  GetPageQueryStats failed (continuing): ${e.message}`);
+        // 2) Per-page rollup from GetPageStats — not a time series; record
+        //    under today as a fresh snapshot of "top pages this week".
+        const pages = await bwt.getPageStats(bwtUrl).catch(e => {
+          console.log(`  GetPageStats failed (continuing): ${e.message}`);
           return [];
         });
-
-        let pqWritten = 0;
-        for (const r of pageQuery) {
-          const page = r.Page || r.Url || '';
-          const query = r.Query || '';
-          const clicks = Number(r.Clicks || 0);
-          const impressions = Number(r.Impressions || 0);
-          const position = r.Position == null ? null : Number(r.Position);
-          // BWT PageQueryStats lacks a per-day breakdown; record under today.
+        let pageWritten = 0;
+        for (const p of pages) {
+          const page = p.Page || p.Url || '';
+          if (!page) continue;
           await db.query(
             `insert into bwt_perf (site_url, date, query, page, source, clicks, impressions, avg_position)
-             values ($1, $2, $3, $4, 'bing', $5, $6, $7)
+             values ($1, $2, '', $3, 'bing', $4, $5, $6)
              on conflict (site_url, date, query, page, source) do update set
                clicks = excluded.clicks,
                impressions = excluded.impressions,
                avg_position = excluded.avg_position,
                pulled_at = now()`,
-            [site.site_url, today, query, page, clicks, impressions, position]
+            [site.site_url, today, page,
+             Number(p.Clicks || 0), Number(p.Impressions || 0),
+             p.Position == null ? null : Number(p.Position)]
           );
-          pqWritten++;
+          pageWritten++;
         }
-        console.log(`  ✓ wrote ${recent.length} day rows + ${pqWritten} page-query rows`);
+
+        // 3) Per-query rollup from GetQueryStats — same shape as #2 but query side.
+        const queries = await bwt.getQueryStats(bwtUrl).catch(e => {
+          console.log(`  GetQueryStats failed (continuing): ${e.message}`);
+          return [];
+        });
+        let queryWritten = 0;
+        for (const q of queries) {
+          const query = q.Query || '';
+          if (!query) continue;
+          await db.query(
+            `insert into bwt_perf (site_url, date, query, page, source, clicks, impressions, avg_position)
+             values ($1, $2, $3, '', 'bing', $4, $5, $6)
+             on conflict (site_url, date, query, page, source) do update set
+               clicks = excluded.clicks,
+               impressions = excluded.impressions,
+               avg_position = excluded.avg_position,
+               pulled_at = now()`,
+            [site.site_url, today, query,
+             Number(q.Clicks || 0), Number(q.Impressions || 0),
+             q.Position == null ? null : Number(q.Position)]
+          );
+          queryWritten++;
+        }
+        console.log(`  ✓ wrote ${dayRows.length} day + ${pageWritten} page + ${queryWritten} query rows`);
 
         await db.query(
           `update bwt_sites set last_pulled_at = now(), api_key_set = true where site_url = $1`,
@@ -209,8 +231,8 @@ async function pullAction({ site: onlySite, days }) {
         await db.query(
           `insert into gsc_run_log (command, site_url, started_at, finished_at, rows_written, status, detail)
            values ('bwt', $1, $2, now(), $3, 'success', $4)`,
-          [site.site_url, runStart.toISOString(), recent.length + pqWritten,
-           JSON.stringify({ day_rows: recent.length, pq_rows: pqWritten })]
+          [site.site_url, runStart.toISOString(), dayRows.length + pageWritten + queryWritten,
+           JSON.stringify({ day_rows: dayRows.length, page_rows: pageWritten, query_rows: queryWritten })]
         );
         succeeded++;
       } catch (err) {
