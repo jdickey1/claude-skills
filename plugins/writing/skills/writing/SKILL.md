@@ -197,6 +197,7 @@ Beyond individual banned words, AI produces recognizable *structural* patterns t
 | Pattern | Example | Fix |
 |---------|---------|-----|
 | Throat-clearers | "Here's the thing:" / "Let me be clear:" | Delete. Start with the actual point. |
+| Talk-down moves | "Read what's actually being proposed" / "Look at this carefully" / "Consider what this really means" / "Pay attention to..." | Describe the thing directly. These phrases position the reader as having read sloppily — condescending, and a recognizable AI-shaped tic. Distinct from throat-clearers because they don't just delay the point; they insult the reader. |
 | False exclusivity | "Nobody's talking about this" | If it's novel, the content proves it. Cut the hook. |
 | Manufactured urgency | "This changes everything" / "Drop everything" | Show urgency with evidence (deadlines, data), don't assert it. |
 | Dramatic fragmentation | "Let that sink in." / "Read that again." | Write a compelling paragraph instead. |

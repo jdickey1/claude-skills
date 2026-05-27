@@ -109,6 +109,36 @@ For persuasive articles and essays:
 7. **IMPLICATIONS**: What changes if you're right?
 8. **CALL TO ACTION**: What should the reader do now?
 
+## Common Advocacy Mistakes
+
+Two failure modes that show up most often in first drafts of advocacy writing. Both apply specifically to persuasion content — analytical, news, or balanced-explainer formats may handle the same situations differently.
+
+### 1. Concessive openers that validate the opposing impulse
+
+Phrasings like *"the concern is real,"* *"the impulse makes sense,"* *"the questions are legitimate,"* or *"there are good arguments on both sides"* — used before pivoting to the actual rebuttal — grant ground you then have to win back. The first paragraph is the strongest position you'll occupy in the piece. Don't spend it conceding.
+
+- Wrong: "The impulse to pause new development is understandable. Real questions exist about infrastructure capacity. But before any moratorium, the legal question must come first."
+- Right: "What's being proposed is this: a county government, without any specific grant of authority from the Legislature, would tell a landowner that he can't sell or develop his property for a lawful purpose because the commissioners court isn't sure yet whether it approves. Since when does Texas government work that way?"
+
+The Right version doesn't ignore the legitimate adjacent concerns. It addresses them later, by **referring them to the right institution or process** rather than by conceding the opponent's framing. ("TCEQ handles air and water impacts. PUCT handles grid impacts. Counties get the plat-review tools the Legislature actually authorized.") The concession is built into the structure of the argument, not telegraphed in the opener.
+
+**When concession IS appropriate:** analytical pieces, explainers, balanced commentary, internal memos, or contexts where the reader expects neutrality. The rule is for advocacy — content whose job is to move a reader from one position to another.
+
+### 2. Preemptive obscure rebuttals (straw-manning your own opponents)
+
+Don't rebut cases, arguments, or framings that your opponents haven't actually raised in public. Two failure modes:
+
+**Strategic:** A preemptive rebuttal of an obscure case (a buried precedent, a niche policy framework, a technical defense only a specialist would find) hands opposing counsel a roadmap to an argument they didn't have. You teach them the playbook.
+
+**Rhetorical:** Framing "Advocates point to X..." or "Defenders sometimes argue Y..." is straw-manning when nobody's actually pointing to X or arguing Y. You invent an opponent's position to knock it down. Readers who know the topic will spot it; readers who don't will be misled into thinking the rebuttal is responsive to something real.
+
+The line: **address arguments already in the public debate** (per the Argument Builder's #6 — the 2 strongest objections actually in play). **Don't introduce arguments you'd then have to defeat.** If you're unsure whether a counterargument is in play, that's a signal to skip it.
+
+- Wrong: "Defenders of moratoriums sometimes point to [obscure 30-year-old precedent]. That decision involved very different facts..." [when nobody is actually citing that precedent]
+- Right: Stay silent on the obscure precedent. Address only what's actually being argued.
+
+The defensive-lawyer reflex (anticipate every counterargument) is wrong for advocacy writing aimed at shifting public or policy opinion. Comprehensive rebuttal belongs in legal briefs, not op-eds.
+
 ## Content Remix Quick Reference
 
 One piece of source content can become:
