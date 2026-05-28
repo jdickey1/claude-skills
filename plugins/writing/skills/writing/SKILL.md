@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.6.1
+version: 2.6.2
 effort: high
 ---
 
@@ -356,7 +356,7 @@ Before finalizing branded or public-facing content, run a second-pass self-audit
 
 1. **Hold the draft.** Have the leading draft (or selected variation) ready.
 2. **Self-critique.** Ask explicitly: *"What makes this still obviously AI-generated?"* Answer in 2–4 honest bullets. Look for: structural patterns the lexical rules don't catch, evenly-paced rhythm, "clean but soulless" cadence, copula avoidance that slipped through, inline-header lists, qualifier sandwiches, throat-clearers, dramatic fragments, AI vocabulary not on the banned list but still off.
-3. **Revise.** Produce a final version that addresses each tell from step 2. The revision should rewrite affected sentences, not search-and-replace single words.
+3. **Revise.** Produce a final version that addresses each tell from step 2. The revision should rewrite affected sentences, not search-and-replace single words. It also shouldn't swap one template for another: replacing "Moreover" with "Picture this:", or academic voice with fake-startup-blog voice, just relocates the tell. After revising, re-scan the new version against the same tell list to confirm the fix didn't introduce a fresh one.
 4. **Deliver.** Present the FINAL version. If you produced multiple draft variations, the audit applies to whichever variation gets selected.
 
 **Output format on mandatory channels:**
