@@ -51,10 +51,12 @@ Check these signals in priority order for each note:
 
 6. **Topical similarity** (LOW) — Only propose when there is HIGH confidence the connection would be genuinely useful. Do not force connections based on vague thematic overlap.
 
+> **web-analyses / x-analyses agents — hard constraint.** A digest of an external post or repo `informs`/`source-for` a project ONLY when it covers a **named subject that project specifically works on** (signal `audit-subject` or `source-for` with the subject named in the context line). Do NOT propose bare `topical-similarity` links from a `web-analyses/`/`x-analyses/` note to a project-design doc — "patterns applicable to", "engagement strategy", "methodology" rationales are shared-theme rejects, not connections. If you cannot name the specific subject the digest and the project share, skip it. (2026-05-31: 40 of 97 accepted proposals were exactly this low-value pattern; they were the dominant skip class.)
+
 ### Rules
 
 - **Targets must be files** — always point to a specific `.md` file path from the registry, never a directory (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`, not `01-Projects/Hyperscale/`). If a project is mentioned but no specific file is obvious, pick the most relevant file from that project in the registry.
-- SKIP same-directory connections (except `supersedes` between date-versioned files in the same directory)
+- SKIP same-directory connections (except `supersedes` between date-versioned files in the same directory). **Self-check before returning:** for every proposal, compare the source's parent directory to the target's parent directory — if equal and the type is not `supersedes`, drop it yourself. (2026-05-31: 20 of 150 raw proposals were same-dir; the "rest of projects" agent was the repeat offender.)
 - SKIP connections that already exist in the note's `existing_connections`
 - Every connection MUST have a one-sentence `context` explaining why it matters
 - Only propose connections where the context line would help an LLM decide whether to follow the link

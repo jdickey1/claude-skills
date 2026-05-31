@@ -11,10 +11,12 @@ Each dimension is scored as a percentage of its weight, then summed:
 ### Connection Coverage (30 points)
 
 ```
-score = (connected_notes / total_non_inbox_notes) * 30
+score = (connected_notes / total_non_excluded_notes) * 30
 ```
 
 A note counts as "connected" if it has at least one connection (existing or newly proposed) to a note outside its own directory.
+
+`total_non_excluded_notes` uses **the same exclusion set as orphan counting** (below): drop `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series. Do NOT use a "non-inbox only" denominator — that pulls 300+ agent-log/system notes into the denominator and understates coverage by ~13 points versus the orphan-exclusion logic. Coverage and orphans must measure the same population. (2026-05-31: non-inbox denom read 76.4%; the consistent non-excluded denom read 89.5% and matches prior audits.)
 
 ### Action-Pending Clearance (25 points)
 
@@ -30,7 +32,7 @@ Each uncleared `action-pending` item costs 1 point, floored at 0.
 score = max(0, 20 - (orphan_count * 0.5))
 ```
 
-Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` are excluded from orphan counting — these categories (system files, inbox staging, journal entries, agent logs) are not intended to carry cross-project connections.
+Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and **recurring auto-generated dated series** (directories with ≥10 `YYYY-MM-DD.md` children, e.g. `01-Projects/X-Intel/`) are excluded from orphan counting — these categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams) are not intended to carry cross-project connections.
 
 An orphan is a note with zero connections (existing + proposed) to notes outside its own directory.
 
@@ -60,8 +62,8 @@ After collecting proposals from all subagents:
 
 ## Stale Connection Detection
 
-- If a `target` path points to a file that does not exist → stale (broken link)
-- If an `action-pending` connection is older than 60 days → stale (needs triage)
+- If a `target` path points to a file that does not exist → stale (broken link). **Exclude** `{...}` placeholder targets and connections inside `_TEMPLATE.md` / template files — these are format illustrations, not real links.
+- If an `action-pending` connection is older than 60 days → stale (needs triage). For `web-analyses/`/`x-analyses/` sources, stale `action-pending` items ("evaluate tool X for project Y" that has sat untouched) should be **converted to `informs`** during triage — they are reference signals, not tracked open work. Genuine commitment-sourced `action-pending` (from `05-Commitments/open/`) stays.
 
 ## Report Template
 
