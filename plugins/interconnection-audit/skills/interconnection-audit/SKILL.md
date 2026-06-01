@@ -1,7 +1,7 @@
 ---
 name: interconnection-audit
 description: Use when auditing vault connections, checking vault health, finding orphan notes, discovering missing cross-note links, or improving interconnection between Obsidian vault notes. Also use after a batch of new content (20+ notes) or on a monthly cadence.
-version: 1.1.0
+version: 1.2.0
 effort: high
 ---
 
@@ -98,9 +98,18 @@ Each agent can propose connections to **any note in the vault** (not just its pa
 
 Read `references/subagent-prompt.md` for the complete prompt template, discovery signals, and output format.
 
-## Phase 2.5: Wikilink Backlink Enrichment
+## Phase 2.5: Wikilink Backlink Enrichment (conditional)
 
-After subagents return but before deduplication, run `obsidian-cli` to surface wikilink-based relationships that content analysis may have missed.
+After subagents return but before deduplication, optionally run `obsidian-cli` to surface wikilink-based relationships that content analysis may have missed.
+
+**Precondition — confirm the vault actually uses body `[[wikilinks]]` before running.** This phase only yields results on vaults that link via inline `[[wikilinks]]` in note bodies. A vault that links exclusively via typed `connections:` frontmatter returns zero Linked Mentions for every note, so the phase is pure overhead. Check first:
+
+```bash
+# Count body wikilinks across the vault (excluding frontmatter is fine — this is a cheap signal)
+grep -rlE '\[\[[^]]+\]\]' "{vault_root}" --include='*.md' | wc -l
+```
+
+If the count is near zero (vault links via frontmatter, not wikilinks), **skip Phase 2.5 entirely and record it as N/A in the report** — do not run per-orphan `obsidian-cli` calls. (2026-05-31: this vault returned zero Linked Mentions for every distinctively-named orphan because it links via typed frontmatter; the phase was dead weight.) Only proceed below when the vault demonstrably uses body wikilinks.
 
 **Requires:** `obsidian-cli` installed locally (`brew install yakitrak/yakitrak/obsidian-cli`).
 
@@ -125,8 +134,8 @@ After all subagents return (and Phase 2.5 enrichment, if available):
 
 1. **Deduplicate** — merge identical proposals, consolidate expected reverse pairs
 2. **Check reverse links** — per the reverse link pairs table, flag missing reverses
-3. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` — these categories are not intended to carry project connections)
-4. **Detect stale connections** — broken targets or `action-pending` items older than 60 days
+3. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` — these categories are not intended to carry project connections). **Also exclude recurring auto-generated dated series** — directories holding a daily/periodic stream of `YYYY-MM-DD.md` notes (e.g. `01-Projects/X-Intel/`). Treat these like journal/agent-log: ephemeral by design, not a connectivity failure. Detect a series as a directory where ≥10 children match `^\d{4}-\d{2}-\d{2}.*\.md$`; exclude those dated children from the orphan count (the directory's non-dated docs still count). (2026-05-31: 27 of 116 orphans were X-Intel dailies — structural, not missing links.)
+4. **Detect stale connections** — broken targets or `action-pending` items older than 60 days. When counting **broken** targets, ignore (a) literal placeholder targets containing `{...}` and (b) any connection inside a `_TEMPLATE.md` / template file — these are illustrative format examples, not real links. (2026-05-31: `_TEMPLATE.md`'s `01-Projects/{ProjectName}/{main-design-doc}.md` was mis-counted as a broken link.)
 5. **Score vault health** — calculate overall score out of 100 using five dimensions:
    - Connection coverage (30pts)
    - Action-pending clearance (25pts)
@@ -273,7 +282,8 @@ Report saved: {path}
 - **Health score dimensions must cite the actual counts** used in calculation, not just the final weighted score.
 - **"No same-directory connections" must be enforced programmatically**, not just by convention.
 - **Connection context strings must be specific and actionable** — verify each answers "why would someone following this link benefit?"
-- **Orphan detection must exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/`** as documented in constraints. These categories (system files, inbox staging, journal entries, agent logs) are by design not connected to project content.
+- **Orphan detection must exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series** (directories with ≥10 `YYYY-MM-DD.md` children, e.g. `01-Projects/X-Intel/`) as documented in constraints. These categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams) are by design not connected to project content.
+- **Broken-link counts must exclude `{...}` placeholder targets and template files** — illustrative format examples in `_TEMPLATE.md` are not real broken links.
 
 ## References
 
