@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.6.2
+version: 2.6.3
 effort: high
 ---
 
@@ -335,6 +335,7 @@ Read the appropriate reference before writing:
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)
 - **Persuasion frameworks**: See [references/persuasion-frameworks.md](references/persuasion-frameworks.md)
 - **Interview scripts**: See [references/interview-scripts.md](references/interview-scripts.md)
+- **Project & technical work summaries (recaps, "what we did" lists)**: See [references/project-summaries.md](references/project-summaries.md)
 
 ## Self-Audit Pass
 
