@@ -71,6 +71,8 @@ A strong closer works ONCE. Never reuse a closing line across posts. The audienc
 - Reframe: "The grid isn't slow. It's full."
 - Consequence: "The next drought won't ask permission."
 
+**Advocacy closers: hold the frame.** Section 3's "end with a debatable question" is for engagement-first posts. On an advocacy thread, an open question can hand the opposition its next attack: "If property values aren't the issue, which limit holds up, water or grid?" invites every reply to pivot to water and grid, the exact fight you were trying to avoid. Close on the strongest declarative instead, or a question that *presumes* your conclusion ("a claim with zero evidence is still writing local policy. Why?"). Both draw replies; only one keeps the argument on your ground. See rule #20 in SKILL.md.
+
 ### 6. 280 Characters Is the Hard Limit
 
 Posts that fit in the viewport without "Show more" get higher completion rates and dwell time. Write to 280 chars or less. If a detail is interesting but not essential for the hook to land, cut it.
