@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.6.3
+version: 2.7.0
 effort: high
 ---
 
@@ -28,6 +28,7 @@ Before writing any content, confirm you know:
 1. **Who is the audience?** (general public, developers, clients, voters, etc.)
 2. **What voice/brand?** (personal, company, publication; check CLAUDE.md for voice context from `/teach-writing`)
 3. **What format?** (X post, blog, newsletter, etc.; may already be clear from the command used)
+4. **What posture?** (neutral analyst reporting a finding, or advocate making a case?) For advocacy, plan to state the thesis and land the payoff, not just present the evidence (see rule #20).
 
 If voice/brand context exists in CLAUDE.md (via `/teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content. A casual tone for a law firm or formal tone for a podcast social account wastes a draft.
 
@@ -116,6 +117,8 @@ Specific numbers, names, places, and examples beat abstract claims every time.
 - Don't over-explain obvious things
 - Let evidence make your case, not admonishments
 - Trust the reader's intelligence
+
+**Posture exception:** this is the analyst default. For advocacy content aimed at a persuadable or sympathetic audience, an explicit thesis ("the data is in, and it's clear") is the right move, not preaching. See rule #20.
 
 ### 8. Evidence After Claims
 
@@ -311,6 +314,22 @@ When you list deals, proof-points, or competing examples, the first item anchors
 
 **Applies** to any prose with three or more named items, including comma-separated runs in a sentence. **Doesn't apply** to alphabetical indexes, chronological lists, or rankings where another order is load-bearing (final standings, search results). **Why:** the first item is the anchor; the rest live in its shadow. Magnitude signals size, recognizability signals shape; either beats alphabetical or arrival order.
 
+### 20. Match the Rhetorical Posture (Analyst vs. Advocate)
+
+Every piece sits somewhere between *neutral analyst* (report the finding, let the reader judge) and *advocate* (the author is making a case and wants the reader to agree or act). The default rules above lean analyst. When the author's voice or the assignment is advocacy, several of them invert. Detect the posture in the Pre-Write Context Check and write to it.
+
+**For advocacy content, do all of these:**
+
+- **State the thesis and land the payoff.** Don't stop at the neutral finding ("the effect is indistinguishable from zero"). Say what it means for the reader's side ("so the fear driving these hearings has no evidence behind it"). An analyst reports; an advocate concludes.
+- **Translate evidence into the reader's stake.** After the number, name what it means in their terms. "A data center adds taxable value without adding students" is the fact; "no new cost, just new revenue, and room to cut everyone else's taxes" is the stake. Specificity (rule #5) isn't only digits, it's consequence.
+- **Close on the win, not an open question that surrenders the frame.** A neutral "which of these concerns actually holds up: water, grid, or none?" hands the opposition its next attack. Close on the strongest declarative, or a question that *presumes* your conclusion ("why is a claim with no evidence still writing local policy?"). The thread-specific version is in [references/x-posts.md](references/x-posts.md).
+- **Move non-load-bearing caveats to the source or a reply.** In short-form advocacy, a methodological caveat that doesn't change the conclusion (a trivially small pre-trend, a secondary robustness wrinkle) belongs in the linked study or a reply, not a dedicated beat in the main piece. Disclosing it in the source is honest; spending a thread tweet on it is self-sabotage. This is placement, not omission: never bury a caveat that would change the reader's conclusion.
+- **Let punch beat precision when a number invites a side-fight.** A precise signed point estimate the opposition can argue about (a "+0.2%" they will call "so it's negative?") is a liability in the hook. Lead with the bold, defensible claim ("statistically zero") and park the exact figure and interval for a reply or the linked source. This extends rule #15's channel calibration to the persuasion goal.
+
+**Rule #7 ("Show, Don't Preach") relaxes for advocacy.** An explicit thesis is correct for a persuadable audience, not preaching. The guard that stays on: advocacy is not overclaim. On a null result, "zero evidence of harm" is defensible; "zero harm" or "this proves there is no effect" is not. Make the case as hard as the evidence allows, and not one notch harder.
+
+**Posture changes the conclusion, not the hygiene.** No em dashes, no buzzwords, no corrective reframing (rule #10), no copula avoidance (rule #16), in advocacy or analysis alike. What posture changes is what you conclude and how hard you push, not the prose rules.
+
 ## Hook Patterns (Universal)
 
 The first line of anything has one job: stop the scroll. Patterns that work:
@@ -412,6 +431,7 @@ Before finalizing any content:
 - [ ] Self-audit pass completed (mandatory for X, LinkedIn, web/blog, newsletter, branded content; see Self-Audit Pass section)
 - [ ] Editorial-edit pressure-test passed (no defensive disclaimers, no hedging epilogues at section closes, no false-neutral conclusions, no clever "the question isn't X, it's Y" closer; see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) and rule #18)
 - [ ] Captured voice idiosyncrasies preserved over generic defaults (rule #15: deliberate quirks in voice context kept, not smoothed)
+- [ ] Posture matched (rule #20): advocacy pieces state the thesis and close on the win (not a frame-surrendering open question) and push only as hard as the evidence allows; analyst pieces stay neutral
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after
 - [ ] Achievements framed as earned, not just listed
@@ -474,6 +494,7 @@ These are the rationalizations the skill must refuse, with the counter to apply:
 | "The two-part question ('Should the city act, or does the market clear?') is more nuanced." | Two-part engagement questions are the AI shape (ai-slop-patterns.md). Pick one clause. Single-clause questions land; compound ones stall. |
 | "The vendor cratered, and the language matches the moment." | Spectacle framing reaches for verbs the facts don't earn. State the mechanic: "The vendor missed three deadlines and the contract was terminated." Mechanics over spectacle (ai-slop-patterns.md). |
 | "$5.27B is the actual number from the filing, so I'll use it verbatim." | Fractional-magnitude precision past meaningful digits is an AI tic (ai-slop-patterns.md). Round to "$5.3B" or "~$5B" unless the trailing digits carry argumentative weight (e.g., "$5.27B vs. the $5.30B reported"). |
+| "I kept it neutral and let the evidence speak, even though this is advocacy." | Rule #20: match the posture. For advocacy, state the thesis, land the payoff, and close on the win, not an open question that hands the opposition its next attack. Neutral-analyst voice on an advocacy assignment is a miss, not a safe default. The guard that stays on: push only as hard as the evidence allows ("zero evidence of harm," not "zero harm"). |
 
 If a rationalization isn't on this list, write it down before acting on it. New rationalizations are the most valuable signal for the next skill iteration.
 
