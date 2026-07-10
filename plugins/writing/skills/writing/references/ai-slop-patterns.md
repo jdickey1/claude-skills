@@ -30,7 +30,8 @@ Comprehensive catalog of AI-generated writing patterns to actively avoid. Source
 | 22 | [Synonym Cycling (Elegant Variation)](#synonym-cycling-elegant-variation) | Renaming the same thing every paragraph |
 | 23 | [Filler and Hedging Bloat](#filler-and-hedging-bloat) | "in order to" / "the fact that" |
 | 24 | [Curly Quotes and Em-Char Drift](#curly-quotes-and-em-char-drift) | Typographic AI fingerprints |
-| 25 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
+| 25 | [Conversational Validation and Meta-Commentary](#conversational-validation-and-meta-commentary) | "That's the spine." / "Fair hit." / assistant-voice tics |
+| 26 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
 
 ## Throat-Clearers
 
@@ -462,6 +463,64 @@ ChatGPT (and Word's autocorrect) substitutes Unicode "smart" characters for ASCI
 **Fix:** Run a literal grep on the final draft. Use ASCII straight quotes and three-period ellipsis unless the brand style guide explicitly requires otherwise. Some long-form web publications style-guide curly quotes in; most platforms (X, LinkedIn, plain email) should use straight.
 
 **Greppable check:** `grep -P '[\x{2018}\x{2019}\x{201C}\x{201D}\x{2013}\x{2014}\x{2026}]' draft.md`. Any output flags AI residue.
+
+## Conversational Validation and Meta-Commentary
+
+The register of an assistant talking *to* you, leaking onto the page. Instead of writing the point, the text stamps a verdict on it, concedes to an imagined interlocutor, or invites reflection nobody asked for. In a chat window these read as engagement signals; in prose they read as an AI narrating its own text instead of writing it. The tell is uniform: delete the fragment and the surrounding sentence loses nothing.
+
+**1. Verdict stamps.** Pointing at something just said and rating its significance with a short noun-phrase.
+
+| Pattern |
+|---------|
+| "That's the spine." |
+| "That's the whole thing." |
+| "That's doing real work." |
+| "A real observation." |
+| "That's the real insight." |
+| "That's the tension." |
+| "That's the move." |
+| "That's the point." (as a standalone verdict beat) |
+
+**2. Conceding and coaching.** The assistant's conversational-feedback voice: granting a point, then telling the reader how to improve it.
+
+| Pattern |
+|---------|
+| "Fair hit." / "Fair point." |
+| "Sharpen that: say the word." |
+| "Notice the arc of what just happened." |
+| "Say the quiet part." |
+| "Name the thing." |
+
+**3. Reflection prompts (therapy-speak).** Inviting contemplation the reader didn't ask for. Close cousin of Dramatic Fragmentation (#5).
+
+| Pattern |
+|---------|
+| "That's something to sit with." |
+| "Let that land." |
+| "There's something here." |
+| "Sit with that." |
+
+**4. Adverb-only emphasis fragments.** A one-word sentence made of an adverb: faux-gravitas with no verb behind it. Overlaps the AI Adverbs flag list (#15), but the tell here is the *fragment*, not the density.
+
+| Pattern |
+|---------|
+| "Genuinely." |
+| "Quietly." (as a standalone beat) |
+| "Honestly." (as emphasis, not a real qualifier) |
+| "Truly." |
+
+**Also: the "honest / plain" frame.** "One honest caveat...", "stated plainly," "to put it plainly," "let me be honest" all imply the surrounding text was neither honest nor plain. If the caveat matters, just state it. Don't announce its honesty. (This is a hard rule for James's content: never label a section "the honest part" — it implies the rest is dishonest.)
+
+**Why it's slop:** Same core sin as corrective reframing (rule #10) and the talk-down moves in rule #13: the writer stepping in front of the evidence to tell the reader how to weigh it. A verdict stamp is the writer grading their own sentence. If a point needs "that's the whole thing" to signal it matters, it isn't landing on its own — rewrite the point, don't stamp it.
+
+**Fix:** Delete the fragment. Let the sentence it points at stand alone.
+
+- Wrong: "The water returns upstream, not on site. That's the whole thing. Genuinely."
+- Right: "The water returns upstream, not on site."
+- Wrong: "You're conflating capacity with generation. Fair hit. Sharpen that: say the word."
+- Right: "You're conflating capacity with generation."
+
+**Greppable check:** `grep -inE "that's (the |doing real)|fair (hit|point)|something to sit with|a real (observation|insight)|the arc of what|say the (word|quiet part)|let that (land|sink)" draft.md`. Read each hit; any that's the writer stamping a verdict on their own line, rather than a real claim, is this pattern.
 
 ## Self-Assessment
 
