@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.6.3
+version: 2.7.0
 effort: high
 ---
 
@@ -207,6 +207,7 @@ Beyond individual banned words, AI produces recognizable *structural* patterns t
 | Fake closers | "Buckle up." / "We're still early." / "Act accordingly." | End with something specific: a number, name, or concrete next step. |
 | AI adverb clusters | literally, incredibly, fundamentally, genuinely | Cut them. If the sentence is weaker without the adverb, rewrite the sentence. |
 | Fill-in-the-blank templates | "[X] is the new [Y]." / "If you're still [old method], you're already behind." | If your sentence fits a template, it's not insight. Rewrite with specifics. |
+| Validation / meta-commentary | "That's the spine." / "Fair hit." / "That's something to sit with." / "A real observation." / "That's doing real work." / "Genuinely. Quietly." | Assistant-voice tics: the writer stamping a verdict on their own line instead of writing it. Delete the fragment; let the sentence stand. See [ai-slop-patterns.md](references/ai-slop-patterns.md). |
 
 **Scoring rule:** If a draft triggers 4+ patterns from the full list, it needs a rewrite, not a polish. The patterns compound: readers who spot one start looking for the rest.
 
@@ -401,6 +402,7 @@ Before finalizing any content:
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
 - [ ] Zero AI slop patterns (throat-clearers, false exclusivity, fake urgency, dramatic fragments, fake closers; see [ai-slop-patterns.md](references/ai-slop-patterns.md))
+- [ ] Zero conversational validation / meta-commentary (no "That's the spine," "Fair hit," "something to sit with," "A real observation," "That's doing real work," adverb-only fragments like "Genuinely. Quietly."; delete the verdict stamp, see [ai-slop-patterns.md](references/ai-slop-patterns.md))
 - [ ] Zero time-deixis (no "today's newsletter," "in today's post," "this week's brief"; open with substance, see [ai-slop-patterns.md](references/ai-slop-patterns.md))
 - [ ] Zero two-part engagement questions ("Should X, or does Y?"): single-clause questions only (see [ai-slop-patterns.md](references/ai-slop-patterns.md))
 - [ ] Zero spectacle framing around failure (no "cratered," "vendors walked," "lesson writes itself"; mechanics over spectacle, see [ai-slop-patterns.md](references/ai-slop-patterns.md))
@@ -474,6 +476,7 @@ These are the rationalizations the skill must refuse, with the counter to apply:
 | "The two-part question ('Should the city act, or does the market clear?') is more nuanced." | Two-part engagement questions are the AI shape (ai-slop-patterns.md). Pick one clause. Single-clause questions land; compound ones stall. |
 | "The vendor cratered, and the language matches the moment." | Spectacle framing reaches for verbs the facts don't earn. State the mechanic: "The vendor missed three deadlines and the contract was terminated." Mechanics over spectacle (ai-slop-patterns.md). |
 | "$5.27B is the actual number from the filing, so I'll use it verbatim." | Fractional-magnitude precision past meaningful digits is an AI tic (ai-slop-patterns.md). Round to "$5.3B" or "~$5B" unless the trailing digits carry argumentative weight (e.g., "$5.27B vs. the $5.30B reported"). |
+| "'That's the spine' / 'Fair hit' lands the point conversationally, so it stays." | Conversational validation and meta-commentary (ai-slop-patterns.md): assistant-voice tics where the writer stamps a verdict on their own line. If the point lands, the stamp is redundant; if it doesn't, the stamp won't save it. Delete it. Same for adverb-only fragments ("Genuinely. Quietly.") and the "one honest caveat / stated plainly" frame, which implies the rest wasn't honest. |
 
 If a rationalization isn't on this list, write it down before acting on it. New rationalizations are the most valuable signal for the next skill iteration.
 
