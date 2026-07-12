@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest command.
-version: 1.12.0
+version: 1.13.0
 effort: high
 ---
 
@@ -688,6 +688,11 @@ Question: When the trigger conditions in Section 5d hold (Frameworks section non
 Pass: Adoption Recommendations section appended with Hit/Partial/No-op verdicts for each (framework × target) cell, capped at 5 target docs, including at least one No-op or Partial when applicable
 Fail: Pass was skipped despite triggers firing, OR pass ran but only reported Hits (suppressing No-ops), OR pass exceeded the 5-target cap, OR pass auto-edited a project doc instead of recording recommendations in the digest
 
+**EVAL 10: Hyperscale DB registration when triggered**
+Question: When both Section 7b gates hold (substantively about data centers/AI infrastructure AND citable reference material), was the source registered in hyperscale_db?
+Pass: INSERT with ON CONFLICT (url) DO NOTHING executed via ssh hyperscale; resulting id (new or pre-existing) reported in completion status; notes field carries citable stats + digest path
+Fail: Registration skipped despite both gates holding, OR an X post/GitHub repo/ephemeral news item was registered, OR a URL was invented for a local file with no canonical publisher URL, OR a duplicate row was created
+
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
@@ -956,6 +961,43 @@ Save to the vault's `web-analyses/` directory (external content analysis, not PA
 - Trim to reasonable length (max ~60 chars for the slug portion)
 - Before writing, check if the file already exists. If it does, inform the user and ask whether to overwrite
 
+## 7b. Hyperscale DB Source Registration (conditional)
+
+Citable data-center reference material should land in the `hyperscale_db` `sources` table automatically, so Hyperscale News content work can find it later without anyone remembering to register it by hand. Run this step after saving the digest.
+
+**Register when BOTH are true:**
+
+1. **Topic gate** — the content is substantively about data centers / AI infrastructure: siting, power/grid, water, land use, noise, opposition politics, tax/abatement policy, or messaging research on any of those. A passing mention of data centers in unrelated content does not qualify.
+2. **Citability gate** — it is reference material Hyperscale would cite: a report, white paper, survey, academic/analyst essay, government document, or a recurring publisher worth tracking. Do NOT register X/Twitter posts, GitHub repos, or ephemeral news items — news flows in through `feed_sources`/`raw_articles`; the `sources` table is for durable citable references.
+
+If either gate fails, skip silently (note "not hyperscale-relevant" in the completion status and move on).
+
+**Schema** (see vault `01-Projects/Hyperscale/hyperscale-db-quick-reference.md` for the full DB reference): `name` and `url` are both NOT NULL and UNIQUE. Access is `ssh hyperscale "psql -d hyperscale_db ..."` (peer auth, no password).
+
+**URL requirement:** for local files, find the canonical publisher URL (search the publisher's site) — that is what goes in `url`. If no canonical URL exists anywhere, skip registration and tell the user why; never invent a URL to satisfy the constraint.
+
+**Insert pattern** — write the SQL to a temp file and pipe it (avoids quoting bugs), always with conflict protection so re-digesting the same source is a no-op:
+
+```sql
+INSERT INTO sources (name, url, source_type, category, notes)
+VALUES
+('{Publisher} - {Short Title}',
+ '{canonical url}',
+ '{source_type}', '{category}',
+ '{2-3 sentences: what it is, the load-bearing citable stats, local PDF path if any,
+   vault digest path (web-analyses/YYYY-MM-DD-....md), and any caution flags}')
+ON CONFLICT (url) DO NOTHING;
+SELECT id, name FROM sources WHERE url = '{canonical url}';
+```
+
+If the SELECT returns a row but the INSERT reported `INSERT 0 0`, the source was already registered — report the existing id rather than re-inserting.
+
+**Field conventions** (match existing rows; coin new values sparingly):
+
+- `source_type`: `white_paper` (reports, surveys, research decks), `article` (essays, journalism, substantive Substack analysis), `website` (recurring publishers tracked as an org).
+- `category`: `Policy`, `Polling`, `Commentary` — pick the closest existing value.
+- `notes`: this is what a future session sees first. Lead with the citable numbers, include where the digest and any local PDF live, and flag adversarial framings the source contains that house rules say to rebut rather than repeat (e.g., abatements-erode-tax-base).
+
 ## 8. Presentation
 
 After saving, present inline:
@@ -963,6 +1005,7 @@ After saving, present inline:
 1. One-line summary of the content.
 2. Top 2-3 recommendations (mix of content ideas and action items).
 3. Full file path where the analysis was saved.
+4. If registered in hyperscale_db: the sources id (or "already registered as id N").
 
 Keep the inline presentation brief — the full analysis is in the file.
 
@@ -981,10 +1024,10 @@ Keep the inline presentation brief — the full analysis is in the file.
 
 If multiple URLs or file paths are detected in the current context, process each one sequentially. After all are processed, present a summary table:
 
-| Source | Type | Top Recommendation | File Saved |
-|--------|------|--------------------|------------|
-| @user1 | X Post | {brief rec} | /path/to/file.md |
-| techcrunch.com | Article | {brief rec} | /path/to/file.md |
+| Source | Type | Top Recommendation | File Saved | hyperscale_db |
+|--------|------|--------------------|------------|---------------|
+| @user1 | X Post | {brief rec} | /path/to/file.md | — |
+| techcrunch.com | Article | {brief rec} | /path/to/file.md | id 19 |
 
 ## Escalation Protocol
 
@@ -1004,6 +1047,7 @@ If multiple URLs or file paths are detected in the current context, process each
 - Classifying input type and selecting fetch/read strategy
 - Generating project connections for clearly relevant content
 - Dispatching background code review agents for GitHub repos
+- Registering a hyperscale-relevant source in hyperscale_db (Section 7b) — the insert is idempotent; the only escalation case is a qualifying local file with no findable canonical URL
 
 ## Completion Status
 
@@ -1018,6 +1062,7 @@ Content length: {word count of raw content}
 Connections: {count} project connections proposed
 File saved: {full path}
 Code review: {dispatched/completed/skipped/N/A}
+Hyperscale DB: {registered id N / already registered id N / skipped — not hyperscale-relevant / skipped — no canonical URL}
 ═══════════════════════════
 ```
 
@@ -1028,6 +1073,7 @@ Code review: {dispatched/completed/skipped/N/A}
 - **"No issues found" in security assessment must state what was checked**, not just the absence of findings.
 - **Fetch tier fallback must log why the previous tier failed** (e.g., "Tier 1 returned login wall", not just "fell back to Tier 2").
 - **Frontmatter connection targets must be verified to exist** before writing them.
+- **Hyperscale DB registration claims must show the psql SELECT output** (id + name) — "registered" without a returned id is unverified.
 
 ## Learning
 
@@ -1049,3 +1095,4 @@ Track these patterns:
 - Wikilinking hit rate (how many vault notes match per digest? which sections get the most links?)
 - Frameworks extraction rate (what % of digests have extractable frameworks vs. skipping the section?)
 - Open Questions usefulness (do users act on the open questions or ignore them?)
+- Hyperscale DB registration rate (how often do both 7b gates fire? any user corrections on gate judgment — registered when it shouldn't have been, or vice versa?)
