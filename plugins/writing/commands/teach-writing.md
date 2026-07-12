@@ -38,4 +38,4 @@ Write a `## Writing Context` section to the project's CLAUDE.md:
 
 - If the project CLAUDE.md already has a `## Writing Context` section, update it rather than duplicating
 - Keep the section concise — this is context for future commands, not a brand guide
-- After writing, confirm what was saved and suggest trying `/write-x` or `/write-linkedin` as next steps
+- After writing, confirm what was saved and suggest trying `/writing:write-x` or `/writing:write-linkedin` as next steps

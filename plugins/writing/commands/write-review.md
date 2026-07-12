@@ -20,7 +20,7 @@ Review the provided content (`$ARGUMENTS`) for AI tells, quality issues, and adh
 9. Flag every corrective reframe ("That's not X. That's Y." and all variants — replace with direct statements backed by evidence)
 10. Scan for the four reference families in `references/ai-slop-patterns.md`: Significance Inflation, Synonym Cycling, Filler & Hedging Bloat, Curly Quotes & Em-Char Drift
 11. Check hook strength (first line) and closer strength (last line)
-12. **Run the mandatory self-audit pass** on the post-fix draft (writing skill: "Self-Audit Pass" section). Output 2–4 honest "still-AI" bullets, then produce the FINAL revised version. `/write-review` is the audit command — this step is the core of the review, not a postscript.
+12. **Run the mandatory self-audit pass** on the post-fix draft (writing skill: "Self-Audit Pass" section). Output 2–4 honest "still-AI" bullets, then produce the FINAL revised version. `/writing:write-review` is the audit command — this step is the core of the review, not a postscript.
 13. Provide the FINAL revised version
 
 ## Checklist

@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.7.0
+version: 2.7.1
 effort: high
 ---
 
@@ -13,23 +13,25 @@ Universal writing standards for all content. Format-specific guidance in referen
 
 | Command | What it does |
 |---------|-------------|
-| `/write-x <topic>` | Write an X/Twitter post |
-| `/write-linkedin <topic>` | Write a LinkedIn post |
-| `/write-web <topic>` | Write website copy or blog post |
-| `/write-headline <topic>` | Generate 5+ headline candidates |
-| `/write-newsletter <topic>` | Write email/newsletter content |
-| `/write-review <content>` | Review/edit content for AI tells |
-| `/teach-writing` | Write voice/brand context to CLAUDE.md |
+| `/writing:write-x <topic>` | Write an X/Twitter post |
+| `/writing:write-linkedin <topic>` | Write a LinkedIn post |
+| `/writing:write-web <topic>` | Write website copy or blog post |
+| `/writing:write-headline <topic>` | Generate 5+ headline candidates |
+| `/writing:write-newsletter <topic>` | Write email/newsletter content |
+| `/writing:write-review <content>` | Review/edit content for AI tells |
+| `/writing:teach-writing` | Write voice/brand context to CLAUDE.md |
+
+These are plugin-namespaced **commands** — invoke them with the `writing:` prefix (the bare `/write-x`, `/teach-writing`, etc. do not resolve). Note the distinction: `writing:writing` (this file) is the *skill*; the rows above are *commands*, which live under the same `writing:` namespace but are separate `/writing:<name>` invocations, not skills.
 
 ## Pre-Write Context Check
 
 Before writing any content, confirm you know:
 
 1. **Who is the audience?** (general public, developers, clients, voters, etc.)
-2. **What voice/brand?** (personal, company, publication; check CLAUDE.md for voice context from `/teach-writing`)
+2. **What voice/brand?** (personal, company, publication; check CLAUDE.md for voice context from `/writing:teach-writing`)
 3. **What format?** (X post, blog, newsletter, etc.; may already be clear from the command used)
 
-If voice/brand context exists in CLAUDE.md (via `/teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content. A casual tone for a law firm or formal tone for a podcast social account wastes a draft.
+If voice/brand context exists in CLAUDE.md (via `/writing:teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content. A casual tone for a law firm or formal tone for a podcast social account wastes a draft.
 
 When captured voice context exists, it overrides universal defaults where they conflict (see rule #15). The universal rules are defaults, not mandates. Voice wins.
 
@@ -217,7 +219,7 @@ Don't just list what you are. Show that you earned it. "Diligence and fidelity t
 
 ### 15. Preserve Idiosyncrasies, Don't Auto-Smooth
 
-Captured voice beats generic "good writing." When a writer's voice context (from `/teach-writing`, project CLAUDE.md, or explicit instruction) contains deliberate stylistic quirks, preserve them even when they conflict with the universal rules above.
+Captured voice beats generic "good writing." When a writer's voice context (from `/writing:teach-writing`, project CLAUDE.md, or explicit instruction) contains deliberate stylistic quirks, preserve them even when they conflict with the universal rules above.
 
 **Examples of voice signals that override defaults:**
 
@@ -237,7 +239,7 @@ Captured voice beats generic "good writing." When a writer's voice context (from
 - Recurring transitions or signature phrases
 - Idioms a grammar checker would flag
 
-Then mirror those signals in the rewrite. Don't just remove AI patterns, replace them with patterns from the sample. If they write short sentences, don't produce long ones. If they say "stuff" and "things," don't upgrade to "elements" and "components." Inline samples are one-shot; persistent voice context (`/teach-writing` or project CLAUDE.md) wins for ongoing work.
+Then mirror those signals in the rewrite. Don't just remove AI patterns, replace them with patterns from the sample. If they write short sentences, don't produce long ones. If they say "stuff" and "things," don't upgrade to "elements" and "components." Inline samples are one-shot; persistent voice context (`/writing:teach-writing` or project CLAUDE.md) wins for ongoing work.
 
 **What's NOT an idiosyncrasy:** Em dashes (rule #1), banned AI buzzwords (rule #2), AI slop patterns (rule #13, throat-clearers, fake vulnerability, pivot hype, fake closers, etc.), corrective reframing (rule #10), copula avoidance (rule #16), and inline-header vertical lists (rule #17) are always wrong. Those aren't voice choices, they're AI tells. Rule #15 protects deliberate human quirks, not AI artifacts. If a captured voice corpus contains these patterns, they're contamination from AI editing, not real voice. Strip them.
 
@@ -343,12 +345,12 @@ Read the appropriate reference before writing:
 Before finalizing branded or public-facing content, run a second-pass self-audit. Drafts that *technically* clear the universal rules can still feel AI-shaped because patterns compound in ways no checklist enumerates. The audit forces the model to look at its own draft as a critic.
 
 **Mandatory for:**
-- X / Twitter posts (`/write-x`)
-- LinkedIn posts (`/write-linkedin`)
-- Web copy and blog posts (`/write-web`)
-- Newsletters (`/write-newsletter`)
+- X / Twitter posts (`/writing:write-x`)
+- LinkedIn posts (`/writing:write-linkedin`)
+- Web copy and blog posts (`/writing:write-web`)
+- Newsletters (`/writing:write-newsletter`)
 - Any content under a brand identity (Hyperscale, JD Key, Winning on Issues, Sharper Stories, DLG, Link2s, PodStyle Video, VidPublish, TRU)
-- Anything `/write-review` is reviewing
+- Anything `/writing:write-review` is reviewing
 
 **Optional for:**
 - Internal scratch drafts and conversational replies
