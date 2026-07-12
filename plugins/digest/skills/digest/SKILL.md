@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest command.
-version: 1.11.0
+version: 1.12.0
 effort: high
 ---
 
@@ -141,6 +141,7 @@ This API is lightweight and usually works. Use it for metadata (likes, date, art
 If both twitter-cli and dev-browser fail, ask the user to paste the content or share a ThreadReader/Typefully unrolled link.
 
 **Do NOT attempt these — they consistently fail on X:**
+- `npx defuddle parse` (JSDOM-based, hits the same cookie/auth wall)
 - `npx playbooks get` (returns "Something went wrong" or cookie wall)
 - `WebFetch` (returns 402 or login prompt)
 - `ThreadReaderApp` (requires auth, returns login page)
@@ -160,21 +161,29 @@ The syndication API response tells you the content type:
 - Analyze the complete thread, not just the hook tweet
 - Never dismiss a tweet as "engagement bait" or "missing promised content" without first attempting to fetch replies
 
-### For All Other URLs (2-Tier Fallback)
+### For All Other URLs (3-Tier Fallback)
 
-**Tier 1: npx playbooks get**
+**Tier 1: npx defuddle parse**
+
+```bash
+npx defuddle parse "$URL" --md
+```
+
+`defuddle` is the content-extraction engine behind Obsidian Web Clipper — it strips nav/ads/clutter and returns clean markdown, and it also exposes structured metadata (see §4). Use this output if it returns meaningful page content (headings, paragraphs, body text). Reject it if the output is mostly empty, a cookie wall, or a login prompt. On a 403, retry once with `-u "<a normal browser UA>"`.
+
+**Tier 2: npx playbooks get**
 
 ```bash
 npx playbooks get "$URL"
 ```
 
-Use this output if it returns meaningful page content (headings, paragraphs, body text). Reject it if the output is mostly empty, a cookie wall, or a login prompt.
+A different JSDOM-based converter. Both defuddle and playbooks skip JavaScript, so a JS-heavy SPA that defeats defuddle usually defeats playbooks too — but on ordinary pages one sometimes succeeds where the other returns thin content, so it's worth the second try before WebFetch.
 
-**Tier 2: WebFetch tool**
+**Tier 3: WebFetch tool**
 
 Fall back to the WebFetch tool with a prompt asking for the full page content as structured markdown.
 
-If both tiers fail, report the failure to the user.
+If all three tiers fail, report the failure to the user.
 
 ### For GitHub Repo URLs
 
@@ -419,10 +428,21 @@ After fetching, extract metadata for the output template:
 - `page_count`: For PDFs, total page count
 
 **For Web URLs:**
-- `source_label`: Page title if available, otherwise the domain name
-- `source_type`: Infer from content — `Article`, `Blog Post`, `Documentation`, `News`, `Report`, `Thread`, etc.
-- `domain`: Extract from URL (e.g., `techcrunch.com`, `github.com`)
-- `author`: Extract from page metadata/byline if available
+
+If Tier 1 (`defuddle`) succeeded, don't infer metadata by hand — pull the structured fields it already parsed:
+
+```bash
+npx defuddle parse "$URL" --json | python3 -c "import json,sys; d=json.load(sys.stdin); print(json.dumps({k:d.get(k) for k in ['title','author','published','domain','description','wordCount']}, indent=2))"
+```
+
+Map the fields to the template:
+- `source_label`: `title` if present, otherwise `domain`
+- `source_type`: Infer from content — `Article`, `Blog Post`, `Documentation`, `News`, `Report`, `Thread`, etc. (defuddle doesn't classify this; you still judge it)
+- `domain`: `domain` field (falls back to extracting from the URL)
+- `author`: `author` field (empty string means no byline was found — omit the line rather than guessing)
+- `published`: `published` field, if present, for the analysis date context
+
+If defuddle didn't run (a lower tier produced the content), fall back to inferring `title`/`author`/`domain` from the page text as before. A single missing field is normal — defuddle returns `""` for anything it can't find; treat empty as absent, not as an error.
 
 ## 5. Analysis Instructions
 
@@ -950,7 +970,7 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **Local file path ambiguity** — A string like `report.pdf` could be a relative path. If a bare filename is provided without a path prefix (`/`, `~/`, `./`), check the current working directory first, then ask the user to confirm the full path if not found.
 - **Large PDFs** — The Read tool has a 20-page-per-call limit for PDFs. For documents over 20 pages, loop through page ranges. For very large PDFs (100+ pages), read the first 40 pages and the last 10 pages, then summarize with a note about partial coverage.
 - **DOCX without tooling** — `pandoc` or `python-docx` may not be installed. Check availability before attempting conversion. If neither is available, escalate to the user.
-- **twitter-cli is the preferred X fetcher** — use `twitter tweet URL` first. It handles auth, threads, articles, and search natively via cookie-based authentication. Falls back to dev-browser if twitter-cli is unavailable or fails. npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls — never use them. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
+- **twitter-cli is the preferred X fetcher** — use `twitter tweet URL` first. It handles auth, threads, articles, and search natively via cookie-based authentication. Falls back to dev-browser if twitter-cli is unavailable or fails. npx defuddle, npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls — never use them. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
 - **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies. The syndication API only returns the parent tweet. Always attempt to fetch replies via Playwright or ThreadReaderApp before concluding a post lacks substance.
@@ -1019,7 +1039,7 @@ When this skill runs, append observations to `.learnings.jsonl`:
 ```
 
 Track these patterns:
-- Tier 1 vs Tier 2 fallback ratio (how often does playbooks fail?)
+- Tier fallback ratio (how often does defuddle fail and fall through to playbooks or WebFetch?)
 - Which project connections get removed by users? (signals forced connections)
 - Security assessment accuracy for GitHub repos (did flagged issues matter?)
 - Video transcription success rate
