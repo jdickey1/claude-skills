@@ -74,7 +74,14 @@ CWV accounts for ~10-15% of ranking signals. Only 47% of sites currently pass al
 - [ ] **Do NOT recommend URL restructuring for keyword placement** — the redirect risk and broken link cost outweigh the negligible ranking benefit. Only flag URLs that are genuinely unreadable (random IDs, `/page-3` style).
 
 #### Images, Links & Semantic Optimization
-- [ ] Image alt text is descriptive (not empty, not keyword-stuffed) — **<=125 characters**, keyword front-loaded if natural. Directly impacts image SEO and accessibility.
+
+**Image optimization sub-check (run per content/entity image — not decorative/hero images):**
+- [ ] **Descriptive filenames** — `target-keyword-context.jpg`, never `DSC_1234.jpg` / `IMG_*` / `Screenshot-*`. Gives Google context before the page is even crawled. (Cheapest win; usually the biggest gap.)
+- [ ] **Alt text** is descriptive (not empty, not keyword-stuffed) — **<=125 characters**, keyword front-loaded if natural. Directly impacts image SEO and accessibility.
+- [ ] **Format & weight** — WebP or AVIF, **target <100KB** on content/blog images (see A2 for the format-savings detail + `loading="lazy"`, `srcset`). Directly moves Core Web Vitals / LCP.
+- [ ] **`ImageObject` schema** on meaningful images — Person `image`, Article/BlogPosting `image`, Organization/publisher `logo`. Prefer a full `ImageObject` (`url`, `width`, `height`, `caption`) over a bare URL string; a bare string is valid but a richer object is what feeds image rich results, Google Lens, and visual search. Don't schema-mark purely decorative/hero images. (Cross-ref B2.)
+- [ ] **Original visuals** — custom screenshots, diagrams, infographics over stock; Google favors original imagery in Image Search (see A4 Experience). Refresh on a cadence for image-heavy content.
+
 - [ ] Internal linking between related pages with descriptive anchor text (3-8 words, not "click here")
 - [ ] External links to authoritative sources where relevant — not a direct ranking factor per Google, but supports E-E-A-T trust signals and helps search engines understand topical fit
 - [ ] **Semantic keyword coverage** — use related terms and entities naturally throughout content. Entity-based optimization outperforms keyword density (which is not a ranking factor). Semantic SEO yields 20-30% traffic gains. TF-IDF analysis useful for identifying gaps vs competitors.
