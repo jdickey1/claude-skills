@@ -995,7 +995,7 @@ If the SELECT returns a row but the INSERT reported `INSERT 0 0`, the source was
 **Field conventions** (match existing rows; coin new values sparingly):
 
 - `source_type`: `white_paper` (reports, surveys, research decks), `article` (essays, journalism, substantive Substack analysis), `website` (recurring publishers tracked as an org).
-- `category`: `Policy`, `Polling`, `Commentary` — pick the closest existing value.
+- `category`: pick the closest existing value — `Datacenter`, `Policy`, `Polling`, `Energy`, `Nuclear`, `Computing`, or `Commentary`. Coin new values sparingly.
 - `notes`: this is what a future session sees first. Lead with the citable numbers, include where the digest and any local PDF live, and flag adversarial framings the source contains that house rules say to rebut rather than repeat (e.g., abatements-erode-tax-base).
 
 ## 8. Presentation
