@@ -92,13 +92,6 @@
       "homepage": "https://github.com/jdickey1/claude-skills"
     },
     {
-      "name": "business-mileage",
-      "description": "Monthly business driving mileage from calendar events for expense reimbursement. Fetches Outlook events, filters virtual meetings, builds trip chains, looks up distances via Google Maps, and generates IRS mileage reports.",
-      "source": "./plugins/business-mileage",
-      "category": "productivity",
-      "homepage": "https://github.com/jdickey1/claude-skills"
-    },
-    {
       "name": "gsc-bigquery",
       "description": "Analyze Google Search Console data via BigQuery bulk exports. 22 SQL query templates for SEO analysis including anonymous traffic, content decay, cannibalization, ARIMA forecasting, and anomaly detection. Replaces a 26-tool MCP server with zero overhead.",
       "source": "./plugins/gsc-bigquery",
