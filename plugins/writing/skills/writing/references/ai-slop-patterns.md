@@ -33,7 +33,8 @@ Comprehensive catalog of AI-generated writing patterns to actively avoid. Source
 | 25 | [Conversational Validation and Meta-Commentary](#conversational-validation-and-meta-commentary) | "That's the spine." / "Fair hit." / assistant-voice tics |
 | 26 | [Insinuating Adverbs](#insinuating-adverbs) | "quietly rewriting" / "conveniently timed" |
 | 27 | [Hedge vs. Quantifier](#hedge-vs-quantifier) | Cutting "many" is not cutting a hedge |
-| 28 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
+| 28 | [Narrator Lines (Mid-Body Throat-Clearing)](#narrator-lines-mid-body-throat-clearing) | "The mechanics matter here." / "What's key:" |
+| 29 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
 
 ## Throat-Clearers
 
@@ -554,6 +555,24 @@ Anti-slop rules ban hedging, and writers over-apply the ban to words that are do
 "The permit class Texas data centers run on" is directionally true and literally false, because the largest campuses can trigger major-source review. "The permit class **many** Texas data centers run on" is literally true. The quantifier is not softening the claim, it is what makes the claim survive a fact check.
 
 **Test:** Remove the word. If the sentence gets *bolder*, it was a hedge, so leave it out. If the sentence gets *wrong*, it was a quantifier, so put it back. Bold and wrong is the worst outcome available, and it is exactly what over-zealous hedge-stripping produces.
+
+## Narrator Lines (Mid-Body Throat-Clearing)
+
+Throat-clearing (#1) is usually described as an opener problem: a line at the top that delays the point. The same move shows up more often in the *middle* of a piece, where a writer who has not ordered the argument narrates it instead of making it. It is format-agnostic: it appears in X threads, LinkedIn posts, newsletters, and long-form alike, wherever a writer reaches for a signpost in place of structure.
+
+Three forms, all cuts:
+
+| Form | Example | Why it fails |
+|---|---|---|
+| Reader-instruction | "The mechanics matter here." / "Read this carefully." / "Note that..." / "Stay with me." | Tells the reader how to read instead of writing something worth reading. |
+| Importance assertion | "...because the precision is the whole story." / "This is the part that matters." | Asserts significance the sentence should demonstrate. If it were the whole story, it would land as one. |
+| Colon-label | "What's key:" / "The structure, precisely:" / "What does happen:" / "The tension:" | A section header pretending to be prose. It exists because the surrounding blocks are out of order. |
+
+**Test:** delete the line. If the piece still reads, it was scaffolding, and reading *better* is the proof. If it now feels abrupt, the problem is the order of the surrounding blocks, not the missing label. Fix the sequence and the label stops being necessary.
+
+The colon-label is the most diagnostic of the three. Reaching for one is a reliable signal that two adjacent blocks want to swap.
+
+**Fix:** cut the narrator line and let the content next to it carry its own weight. If it can't, the content is the problem, and no amount of signposting rescues it.
 
 ## Self-Assessment
 

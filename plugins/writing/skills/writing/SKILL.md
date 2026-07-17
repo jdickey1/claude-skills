@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.8.0
+version: 2.8.1
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---

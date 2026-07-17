@@ -63,17 +63,9 @@ This is LinkedIn-specific. On X, the 280-char limit forces compression; tail-of-
 
 ### Narrator Lines (Mid-Body Throat-Clearing)
 
-Throat-clearing is usually described as an opener problem ("Here's what you need to know"). On LinkedIn it more often shows up in the *middle* of a post, where a writer who has not structured the argument narrates it instead. Three forms, all cuts:
+The most common throat-clear on LinkedIn is not the opener, it is the *mid-body* narrator line: a reader-instruction ("Read this carefully"), an importance assertion ("this is the part that matters"), or a colon-label ("What's key:") dropped between paragraphs by a writer who narrates the argument instead of ordering it. LinkedIn is especially prone to it because the paragraph breaks tempt you to label each block like a slide.
 
-| Form | Example | Why it fails |
-|---|---|---|
-| Reader-instruction | "Read the mechanics carefully." / "Note that..." / "Stay with me here." | Tells the reader how to read instead of writing something worth reading. |
-| Importance assertion | "...because the precision is the whole story." / "This is the part that matters." | Asserts significance the paragraph should demonstrate. If it were the whole story, it would land as one. |
-| Colon-label | "What does happen:" / "The structure, precisely:" / "The tension:" | A section header pretending to be prose. It exists because the blocks around it are out of order. |
-
-**Test:** delete the line. If the post still reads, it was scaffolding, and the fact that it reads *better* is the point. If the post now feels abrupt, the problem is the sequence of the blocks, not the missing label. Fix the order and the label stops being necessary.
-
-A colon-label is the most diagnostic of the three. Reaching for one is a reliable signal that two adjacent blocks are in the wrong order.
+The full catalog, the three forms, and the delete-the-line test live in [Narrator Lines](ai-slop-patterns.md#narrator-lines-mid-body-throat-clearing) in ai-slop-patterns.md (#28). Cut every one. On LinkedIn, if deleting a colon-label leaves two paragraphs that now feel out of order, that is the [Argument Order](#argument-order) problem below, not a reason to keep the label.
 
 ### Argument Order
 
