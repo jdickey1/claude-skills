@@ -1,6 +1,6 @@
 ---
 name: plan-review
-description: Use when reviewing an implementation plan, design doc, or feature spec before writing code — especially "review this plan", "check my approach", "does this design make sense", or "critique this spec". Two depths available: standard (4-section) and mega (10-section exhaustive).
+description: 'Use when reviewing an implementation plan, design doc, or feature spec before writing code — especially "review this plan", "check my approach", "does this design make sense", or "critique this spec". Two depths available: standard (4-section) and mega (10-section exhaustive).'
 version: 1.1.0
 effort: high
 allowed-tools:
@@ -9,6 +9,7 @@ allowed-tools:
   - Glob
   - Bash
   - AskUserQuestion
+expires_when: Claude reviewing a plan unprompted produces a scope challenge, numbered issues with lettered options, and a failure-mode registry
 ---
 
 # Plan Review

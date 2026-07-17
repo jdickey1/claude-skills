@@ -1,6 +1,6 @@
 ---
 name: hearing-transcript
-description: Use when the user provides an auto-generated transcript file (.sbv, .vtt, .srt, .txt) of a legislative or government meeting — committee, council, board, commission, or YouTube auto-captions of a public hearing — and asks to clean, fix, correct, edit, revise, or improve it. A bare path to such a file pasted into conversation also triggers when surrounding context is about a hearing or public meeting. Slash command: /clean-hearing.
+description: 'Use when the user provides an auto-generated transcript file (.sbv, .vtt, .srt, .txt) of a legislative or government meeting — committee, council, board, commission, or YouTube auto-captions of a public hearing — and asks to clean, fix, correct, edit, revise, or improve it. A bare path to such a file pasted into conversation also triggers when surrounding context is about a hearing or public meeting. Slash command: /clean-hearing.'
 version: 0.1.0
 effort: high
 ---
