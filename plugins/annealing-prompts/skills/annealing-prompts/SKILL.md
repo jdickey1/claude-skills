@@ -2,7 +2,7 @@
 name: annealing-prompts
 description: Use when optimizing a prompt for Haiku or another cheap model to match Opus quality on a defined task, diagnosing eval-set overfitting, designing LLM evals with train/val/holdout splits, or building iterative prompt-improvement loops. Triggers on "my prompt works on Opus but fails on Haiku", "evals pass but production fails", "prompt keeps adding examples", "annealing a prompt", "cheap-model quality gap", or "prompt optimization loop".
 effort: medium
-expires_when: A cheap model reaches the target accuracy from a concise prompt, with no iterative mutation loop needed to avoid overfitting the eval set
+expires_when: "A cheap model hits the target accuracy from a concise prompt with no mutation loop, retiring the iterative loop; the eval-science discipline — train/val/holdout splits, overfitting thresholds, loop-state schema, curated MIT origin — stays"
 ---
 
 # Prompt Anneal Methodology

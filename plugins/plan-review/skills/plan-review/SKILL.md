@@ -9,7 +9,7 @@ allowed-tools:
   - Glob
   - Bash
   - AskUserQuestion
-expires_when: Claude reviewing a plan unprompted produces a scope challenge, numbered issues with lettered options, and a failure-mode registry
+expires_when: "Claude reviewing a plan unprompted produces a scope challenge, numbered issues with lettered options, and a failure-mode registry, retiring that behavioral scaffold; James's ranked Engineering Preferences rubric, the output-contract table schemas, and the TODOS.md capture format stay"
 ---
 
 # Plan Review

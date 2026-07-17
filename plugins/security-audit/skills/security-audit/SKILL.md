@@ -3,7 +3,7 @@ name: security-audit
 description: Comprehensive cybersecurity audit for web applications. USE WHEN reviewing apps for vulnerabilities, hardening security, auditing auth/API/DB/infra, or performing penetration-style code review. Follows OWASP Top 10, NIST 800-53, and real-world red team methodologies.
 version: 1.0.0
 effort: high
-expires_when: Claude's security findings unprompted carry file and line evidence, a confidence rating, and a full attack chain for every high-severity finding
+expires_when: "Claude's findings unprompted carry file:line evidence, a confidence rating, and a full attack chain, retiring the evidence-discipline machinery; the delegation hooks into James's tooling, the stack-specific checks (NEXT_PUBLIC_ leakage, PM2, idrivee2/VPS), and the severity/response and output-format contracts stay"
 ---
 
 # Security Audit - Hardened Cybersecurity Review

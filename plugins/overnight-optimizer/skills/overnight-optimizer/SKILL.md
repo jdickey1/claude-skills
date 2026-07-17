@@ -5,7 +5,7 @@ description: >-
   iterative config improvement, or any modify-eval-keep/revert loop. Supports
   script-based evals (fast, programmatic) and assertion-based evals (Claude-judged).
 effort: high
-expires_when: Claude runs long optimization loops with disciplined single-variable mutations and reliable self-tracked state across compaction, without an external state machine
+expires_when: "Claude runs long optimization loops with disciplined single-variable mutations and self-tracked state across compaction, retiring the coaching and state-survival scaffolding; the experiment.yaml schema, eval-harness scripts, dashboard, git-as-state contract, and example configs stay"
 ---
 
 ## 1. Context Recovery (FIRST)

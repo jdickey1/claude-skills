@@ -7,7 +7,7 @@ allowed-tools:
   - Read
   - Grep
   - Glob
-expires_when: Claude interrogates one focused question at a time and withholds answers, unprompted
+expires_when: "Claude interrogates one focused question at a time and withholds answers unprompted, retiring the interaction-discipline rules; the 10-category question rubric, the stopping criteria, and the final-summary template stay"
 ---
 
 # Grill Me
