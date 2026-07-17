@@ -3,6 +3,7 @@ name: web-reader
 description: This skill should be used when needing to "read a web page", "get page content", "fetch URL as markdown", "scrape page text", or any time web page content needs to be retrieved as text/markdown rather than viewed visually. Not suitable for visual inspection of pages.
 version: 1.1.0
 effort: low
+expires_when: WebFetch reliably strips nav, ads, and clutter and returns clean markdown equivalent to defuddle's output
 ---
 
 # Web Reader

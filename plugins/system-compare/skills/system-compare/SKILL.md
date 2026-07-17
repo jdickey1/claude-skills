@@ -1,6 +1,7 @@
 ---
 name: system-compare
 description: Use when comparing two skills, tools, plugins, or systems head-to-head and you need a verdict — "X vs Y", "should we switch from X to Y", "is this better than ours", "keep, merge, or deprecate", or "is this actually a skill or a system". Produces a forced-verdict matrix, 10-vector fitness scorecard, and ranked steal list. Markdown output by default.
+expires_when: Claude produces decisive per-dimension verdicts without being told to avoid both-have-strengths framing
 ---
 
 # System Compare

@@ -3,6 +3,7 @@ name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
 version: 2.7.1
 effort: high
+expires_when: Claude's unprompted prose stops exhibiting em dashes, the banned-buzzword list, corrective-reframe constructions, copula avoidance, and the cataloged slop patterns
 ---
 
 # Writing

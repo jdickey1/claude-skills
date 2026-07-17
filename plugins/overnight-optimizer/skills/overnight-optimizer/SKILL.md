@@ -5,6 +5,7 @@ description: >-
   iterative config improvement, or any modify-eval-keep/revert loop. Supports
   script-based evals (fast, programmatic) and assertion-based evals (Claude-judged).
 effort: high
+expires_when: Claude runs long optimization loops with disciplined single-variable mutations and reliable self-tracked state across compaction, without an external state machine
 ---
 
 ## 1. Context Recovery (FIRST)

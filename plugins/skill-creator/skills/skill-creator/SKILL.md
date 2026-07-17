@@ -209,8 +209,11 @@ Once all runs complete:
 **1. Grade each run** — spawn a grader subagent (or grade inline) using `agents/grader.md`. Save to `grading.json`. The expectations array must use fields `text`, `passed`, and `evidence` (the viewer depends on these exact names). For programmatically checkable assertions, write and run a script.
 
 **2. Aggregate into benchmark:**
+Pass the model IDs the subagents *actually ran as* — not the orchestrator's model by default. `--executor-model` is the model used for the Step 1 eval subagents (with-skill / without-skill); if those dispatches set an explicit model override, use that ID; otherwise use the orchestrator model they inherited. `--analyzer-model` is the model used for the Step 4.1 grader subagent, with the same override-vs-inheritance logic. If either is unknown or uncertain, omit that flag (do not guess).
 ```bash
-python -m scripts.aggregate_benchmark <workspace>/iteration-N --skill-name <name>
+python -m scripts.aggregate_benchmark <workspace>/iteration-N --skill-name <name> \
+  --executor-model <model-id-that-ran-eval-subagents> \
+  --analyzer-model <model-id-that-ran-grader>
 ```
 Produces `benchmark.json` and `benchmark.md`. If generating manually, see `references/schemas.md` for the schema.
 

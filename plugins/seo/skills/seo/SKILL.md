@@ -3,6 +3,7 @@ name: seo
 description: Comprehensive SEO audit, optimization, and automation. USE WHEN audit SEO OR review website SEO OR check GBP OR optimize local search OR technical SEO OR on-page optimization OR AI search readiness OR AEO OR answer engine optimization OR AI visibility OR AI citations OR ChatGPT ranking OR Perplexity optimization OR content strategy OR link building OR citation building OR keyword research OR backlink analysis OR content brief OR SEO automation OR replace SEO agency OR analyze SEO report OR review GSC data OR weekly SEO tasks.
 version: 2.7.0
 effort: high
+expires_when: Extraction tools return full structural HTML including nav, header, footer, and meta, so findings no longer need separate raw-HTML curl verification
 ---
 
 # SEO - Website Audit, Optimization & Automation

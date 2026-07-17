@@ -7,6 +7,7 @@ allowed-tools:
   - Read
   - Grep
   - Glob
+expires_when: Claude interrogates one focused question at a time and withholds answers, unprompted
 ---
 
 # Grill Me

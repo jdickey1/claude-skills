@@ -7,6 +7,7 @@
 import { readdirSync, readFileSync, writeFileSync, statSync, existsSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
 import { homedir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 
 const args = process.argv.slice(2);
 const flags = {
@@ -290,30 +291,8 @@ function checkDarkSkill(s) {
     add('warn', s.id, 'dark-skill', 'Description lacks trigger phrase ("Use when", "Whenever", "After", etc.) — routing reliability unknown');
 }
 
-// ---------- Main ----------
-
-const paths = findSkills();
-if (!paths.length) {
-  console.error(`No SKILL.md files found under ${SEARCH_ROOTS.join(', ')}`);
-  process.exit(2);
-}
-
-const skills = paths.map(p => {
-  const { frontmatter, body } = parseFrontmatter(readFileSync(p, 'utf8'));
-  return {
-    path: p,
-    id: frontmatter?.name || relative(flags.root, p),
-    pluginDir: inferPluginDir(p),
-    frontmatter,
-    body,
-  };
-});
-
-for (const s of skills) { checkFrontmatter(s); checkScripts(s); checkDarkSkill(s); }
-checkOrphans(skills);
-checkCollisions(skills);
-
-// ---------- Fix mode ----------
+// ---------- Fix mode helpers ----------
+// Defined at module scope so rewriteSkillFile can be imported without running the CLI.
 
 async function rewriteDescription({ name, description, issue, model }) {
   const prompt = `You are rewriting a Claude Code skill description to improve routing reliability.
@@ -349,7 +328,7 @@ Output ONLY the new description text. No quotes, no markdown, no explanation.`;
   return data.content[0].text.trim().replace(/^["']|["']$/g, '');
 }
 
-function rewriteSkillFile(skillPath, newDescription) {
+export function rewriteSkillFile(skillPath, newDescription) {
   const raw = readFileSync(skillPath, 'utf8');
   const m = raw.match(/^(---\r?\n)([\s\S]*?)(\r?\n---\r?\n)/);
   if (!m) throw new Error(`No frontmatter in ${skillPath}`);
@@ -366,82 +345,109 @@ function rewriteSkillFile(skillPath, newDescription) {
   writeFileSync(skillPath, open + replaced + close + raw.slice(m[0].length));
 }
 
-if (flags.fix || flags.fixDry) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('--fix requires ANTHROPIC_API_KEY in env');
+// ---------- Main ----------
+
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const paths = findSkills();
+  if (!paths.length) {
+    console.error(`No SKILL.md files found under ${SEARCH_ROOTS.join(', ')}`);
     process.exit(2);
   }
-  const fixable = findings.filter(f =>
-    (f.check === 'frontmatter' && /Description is \d+ chars/.test(f.msg)) ||
-    f.check === 'dark-skill'
-  );
-  const bySkill = new Map();
-  for (const f of fixable) {
-    if (!bySkill.has(f.skill)) bySkill.set(f.skill, []);
-    bySkill.get(f.skill).push(f);
-  }
-  console.log(`\n── ${flags.fixDry ? 'fix-dry' : 'fix'}: ${bySkill.size} skills, model=${flags.fixModel} ──`);
-  for (const [skillId, fs] of bySkill) {
-    const skill = skills.find(s => s.id === skillId);
-    if (!skill?.frontmatter?.description) { console.log(`  skip ${skillId} (no description)`); continue; }
-    const issue = fs.map(f => f.msg).join('; ');
-    try {
-      const newDesc = await rewriteDescription({
-        name: skill.frontmatter.name || skillId,
-        description: skill.frontmatter.description,
-        issue,
-        model: flags.fixModel,
-      });
-      console.log(`\n  ${skillId}`);
-      console.log(`    old: ${skill.frontmatter.description}`);
-      console.log(`    new: ${newDesc}`);
-      if (!flags.fixDry) {
-        rewriteSkillFile(skill.path, newDesc);
-        console.log(`    → wrote ${relative(flags.root, skill.path)}`);
-      }
-    } catch (e) {
-      console.error(`    ✗ ${skillId}: ${e.message}`);
+
+  const skills = paths.map(p => {
+    const { frontmatter, body } = parseFrontmatter(readFileSync(p, 'utf8'));
+    return {
+      path: p,
+      id: frontmatter?.name || relative(flags.root, p),
+      pluginDir: inferPluginDir(p),
+      frontmatter,
+      body,
+    };
+  });
+
+  for (const s of skills) { checkFrontmatter(s); checkScripts(s); checkDarkSkill(s); }
+  checkOrphans(skills);
+  checkCollisions(skills);
+
+  // ---------- Fix mode ----------
+
+  if (flags.fix || flags.fixDry) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('--fix requires ANTHROPIC_API_KEY in env');
+      process.exit(2);
     }
-  }
-  console.log();
-  process.exit(0);
-}
-
-// ---------- Report ----------
-
-if (flags.json) {
-  console.log(JSON.stringify({
-    root: flags.root,
-    skillsScanned: skills.length,
-    findings,
-  }, null, 2));
-} else {
-  const errs = findings.filter(f => f.severity === 'error');
-  const warns = findings.filter(f => f.severity === 'warn');
-  const byCheck = {};
-  for (const f of findings) (byCheck[f.check] ||= []).push(f);
-
-  console.log(`skill-doctor v0`);
-  console.log(`Root:    ${flags.root}`);
-  console.log(`Scanned: ${skills.length} skills`);
-  console.log(`Errors:  ${errs.length}`);
-  console.log(`Warnings:${warns.length}\n`);
-
-  const order = ['frontmatter', 'scripts', 'dark-skill', 'collision', 'orphan'];
-  for (const check of order) {
-    const items = byCheck[check];
-    if (!items?.length) continue;
-    console.log(`── ${check} (${items.length}) ──`);
-    for (const f of items) console.log(`  [${f.severity}] ${f.skill}: ${f.msg}`);
+    const fixable = findings.filter(f =>
+      (f.check === 'frontmatter' && /Description is \d+ chars/.test(f.msg)) ||
+      f.check === 'dark-skill'
+    );
+    const bySkill = new Map();
+    for (const f of fixable) {
+      if (!bySkill.has(f.skill)) bySkill.set(f.skill, []);
+      bySkill.get(f.skill).push(f);
+    }
+    console.log(`\n── ${flags.fixDry ? 'fix-dry' : 'fix'}: ${bySkill.size} skills, model=${flags.fixModel} ──`);
+    for (const [skillId, fs] of bySkill) {
+      const skill = skills.find(s => s.id === skillId);
+      if (!skill?.frontmatter?.description) { console.log(`  skip ${skillId} (no description)`); continue; }
+      const issue = fs.map(f => f.msg).join('; ');
+      try {
+        const newDesc = await rewriteDescription({
+          name: skill.frontmatter.name || skillId,
+          description: skill.frontmatter.description,
+          issue,
+          model: flags.fixModel,
+        });
+        console.log(`\n  ${skillId}`);
+        console.log(`    old: ${skill.frontmatter.description}`);
+        console.log(`    new: ${newDesc}`);
+        if (!flags.fixDry) {
+          rewriteSkillFile(skill.path, newDesc);
+          console.log(`    → wrote ${relative(flags.root, skill.path)}`);
+        }
+      } catch (e) {
+        console.error(`    ✗ ${skillId}: ${e.message}`);
+      }
+    }
     console.log();
+    process.exit(0);
   }
 
-  if (flags.verbose) {
-    console.log(`── skills (${skills.length}) ──`);
-    for (const s of skills) console.log(`  ${s.id}  (${relative(flags.root, s.path)})`);
+  // ---------- Report ----------
+
+  if (flags.json) {
+    console.log(JSON.stringify({
+      root: flags.root,
+      skillsScanned: skills.length,
+      findings,
+    }, null, 2));
+  } else {
+    const errs = findings.filter(f => f.severity === 'error');
+    const warns = findings.filter(f => f.severity === 'warn');
+    const byCheck = {};
+    for (const f of findings) (byCheck[f.check] ||= []).push(f);
+
+    console.log(`skill-doctor v0`);
+    console.log(`Root:    ${flags.root}`);
+    console.log(`Scanned: ${skills.length} skills`);
+    console.log(`Errors:  ${errs.length}`);
+    console.log(`Warnings:${warns.length}\n`);
+
+    const order = ['frontmatter', 'scripts', 'dark-skill', 'collision', 'orphan'];
+    for (const check of order) {
+      const items = byCheck[check];
+      if (!items?.length) continue;
+      console.log(`── ${check} (${items.length}) ──`);
+      for (const f of items) console.log(`  [${f.severity}] ${f.skill}: ${f.msg}`);
+      console.log();
+    }
+
+    if (flags.verbose) {
+      console.log(`── skills (${skills.length}) ──`);
+      for (const s of skills) console.log(`  ${s.id}  (${relative(flags.root, s.path)})`);
+    }
+
+    if (!findings.length) console.log('All checks passed.');
   }
 
-  if (!findings.length) console.log('All checks passed.');
+  process.exit(findings.some(f => f.severity === 'error') ? 2 : findings.length ? 1 : 0);
 }
-
-process.exit(findings.some(f => f.severity === 'error') ? 2 : findings.length ? 1 : 0);

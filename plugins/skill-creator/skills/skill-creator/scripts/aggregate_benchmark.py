@@ -224,7 +224,9 @@ def aggregate_results(results: dict) -> dict:
     return run_summary
 
 
-def generate_benchmark(benchmark_dir: Path, skill_name: str = "", skill_path: str = "") -> dict:
+def generate_benchmark(benchmark_dir: Path, skill_name: str = "",
+                        skill_path: str = "", executor_model: str = "",
+                        analyzer_model: str = "") -> dict:
     """
     Generate complete benchmark.json from run results.
     """
@@ -264,8 +266,8 @@ def generate_benchmark(benchmark_dir: Path, skill_name: str = "", skill_path: st
         "metadata": {
             "skill_name": skill_name or "<skill-name>",
             "skill_path": skill_path or "<path/to/skill>",
-            "executor_model": "<model-name>",
-            "analyzer_model": "<model-name>",
+            "executor_model": executor_model or "<model-name>",
+            "analyzer_model": analyzer_model or "<model-name>",
             "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "evals_run": eval_ids,
             "runs_per_configuration": 3
@@ -355,6 +357,16 @@ def main():
         help="Path to the skill being benchmarked"
     )
     parser.add_argument(
+        "--executor-model",
+        default="",
+        help="Model ID that ran the eval subagents (with-skill / without-skill)"
+    )
+    parser.add_argument(
+        "--analyzer-model",
+        default="",
+        help="Model ID that ran the grader subagent"
+    )
+    parser.add_argument(
         "--output", "-o",
         type=Path,
         help="Output path for benchmark.json (default: <benchmark_dir>/benchmark.json)"
@@ -367,7 +379,13 @@ def main():
         sys.exit(1)
 
     # Generate benchmark
-    benchmark = generate_benchmark(args.benchmark_dir, args.skill_name, args.skill_path)
+    benchmark = generate_benchmark(
+        args.benchmark_dir,
+        args.skill_name,
+        args.skill_path,
+        args.executor_model,
+        args.analyzer_model,
+    )
 
     # Determine output paths
     output_json = args.output or (args.benchmark_dir / "benchmark.json")

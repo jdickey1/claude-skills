@@ -3,6 +3,7 @@ name: autoreason
 description: Refine subjective content through adversarial multi-agent debate. Use when writing quality matters — newsletters, arguments, analysis, copy. Iterates critic → author → synthesizer → blind judge until convergence. Use when asked to "autoreason", "refine through debate", "adversarial refinement", or when content needs to be substantially stronger than a single draft.
 version: 1.0.0
 effort: high
+expires_when: One model instance can critique, rewrite, and judge its own content in a single context without sycophancy or anchoring bias
 ---
 
 # AutoReason — Adversarial Refinement Through Debate
