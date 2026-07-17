@@ -1,23 +1,26 @@
 # expires_when Frontmatter
 
-Optional custom frontmatter key for Claude Code skills that record when a skill becomes redundant.
+Optional custom frontmatter key recording what stops earning its keep, and when.
 
 ---
 
-## Purpose
+## Start here: expiry is usually partial
 
-Skills fall into two categories:
+**Most skills are mixtures, and the common outcome is that a *section* dies, not the skill.**
 
-1. **Perishable** — they compensate for a current model weakness. When a newer model absorbs that capability, the skill is dead weight. These should carry `expires_when:`.
-2. **Durable** — they encode private or organizational context (paths, house rules, product knowledge). The model will never "learn" that context. These do not need the key.
+A skill is durable where it encodes private context — your paths, your house rules, your methodology, your product knowledge. A model release never absorbs that. A skill is perishable where it compensates for something the model can't yet do, or works around a broken tool. Those are bets, and bets come due.
 
-Absence of `expires_when:` means durable — either the skill was never evaluated for perishability, or it is treated as lasting context. Do not invent a separate "unevaluated" state; missing key = durable.
+Almost every real skill contains both. When the condition fires, you delete the paragraph that was propping up the weak spot and keep everything else. Whole-skill retirement is the rare case — reserve it for skills that are *nothing but* the workaround.
+
+**So the question is never "does this skill expire?" It is "which part of this skill expires, and what survives?"** Answer the second question in the tag.
+
+This is not theoretical. It is the finding that came out of classifying all 59 first-party skills (recorded in the vault at `project-status/skill-durability-audit-2026-07-16.md`). An earlier version of this doc opened by asserting skills "fall into two categories," and that binary directly produced a wrong verdict: `seo` was tagged perishable on the strength of an ~18-line raw-HTML verification workaround, while ~294 lines of audit methodology — the actual reason the skill exists, invoked weekly by `/seo-audit` — were durable. The binary forced an all-or-nothing call on a mixed file and lost.
 
 ---
 
 ## Value shape
 
-The value is a **condition**, not a date and not a vague hope. Name an **observable model behavior** that would make the skill redundant:
+The value is a **condition**, not a date and not a vague hope. Name an **observable** behavior — model or tooling — that retires the thing:
 
 ```yaml
 expires_when: Claude decomposes multi-step tasks without prompting
@@ -25,7 +28,39 @@ expires_when: Claude decomposes multi-step tasks without prompting
 
 Not a calendar date. Not "maybe someday". Not "when models get better."
 
-`expires_when: never` is permitted. It records an explicit check: "this skill encodes private/organizational context, not a model-capability workaround." It is never required — omitting the key already means durable.
+**When the skill is a mixture — which is most of the time — name the part.** A condition that reads as though the whole skill dies will get the whole skill deleted by whoever acts on it later, including you in a year:
+
+```yaml
+# Good — scopes the expiry to what actually dies
+expires_when: Extraction tools return full structural HTML, retiring the raw-HTML verification rules (the audit methodology and scoring stay)
+
+# Bad — same condition, but implies the skill is disposable
+expires_when: Extraction tools return full structural HTML
+```
+
+If you cannot name what survives, that is the signal to check whether the skill is genuinely all-workaround. Usually it isn't.
+
+`expires_when: never` is permitted. It records an explicit check: "this is private context, not a workaround." It is never required — omitting the key already means durable.
+
+Absence of the key means durable — either never evaluated, or treated as lasting context. Do not invent a separate "unevaluated" state; missing key = durable.
+
+---
+
+## Which clock
+
+Name it in the condition when it isn't the model:
+
+- **Model clock** — expires when a release absorbs the capability. The `model-watch` SessionStart hook fires on new model IDs, so these get noticed automatically.
+- **Tooling clock** — expires when a tool stops being broken (extractors, CLIs, APIs). **No model-arrival hook will ever fire for these.** `web-reader` is the standing example: tagged, but effectively unwatched.
+- **Infra clock** — expires when infrastructure changes underneath it.
+
+A tag on the tooling or infra clock is a note to your future self, not a trigger. Do not assume it will page you.
+
+---
+
+## What this key is not
+
+It is not a deprecation marker and not a removal queue. It is inert — the loader ignores unknown frontmatter keys, and `skill-doctor` neither reads nor validates it. Tagging a skill changes nothing at runtime; it records a bet and its terms so the bet can be *rechecked* when the condition plausibly fires. Frequency of use is not an input: a perishable section invoked daily is still perishable, and a durable skill untouched for a year is still durable.
 
 ---
 
