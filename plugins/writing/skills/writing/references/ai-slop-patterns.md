@@ -31,7 +31,9 @@ Comprehensive catalog of AI-generated writing patterns to actively avoid. Source
 | 23 | [Filler and Hedging Bloat](#filler-and-hedging-bloat) | "in order to" / "the fact that" |
 | 24 | [Curly Quotes and Em-Char Drift](#curly-quotes-and-em-char-drift) | Typographic AI fingerprints |
 | 25 | [Conversational Validation and Meta-Commentary](#conversational-validation-and-meta-commentary) | "That's the spine." / "Fair hit." / assistant-voice tics |
-| 26 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
+| 26 | [Insinuating Adverbs](#insinuating-adverbs) | "quietly rewriting" / "conveniently timed" |
+| 27 | [Hedge vs. Quantifier](#hedge-vs-quantifier) | Cutting "many" is not cutting a hedge |
+| 28 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
 
 ## Throat-Clearers
 
@@ -310,6 +312,8 @@ literally, incredibly, fundamentally, genuinely, essentially, significantly, arg
 
 **Fix:** Cut them. If the sentence is weaker without the adverb, the sentence needs rewriting, not intensifying.
 
+A separate species of adverb smuggles in a motive rather than an intensity. See [Insinuating Adverbs](#insinuating-adverbs) (#26).
+
 ## AI Adjectives (Empty Intensifiers)
 
 Vague intensifiers that could describe literally anything.
@@ -521,6 +525,35 @@ The register of an assistant talking *to* you, leaking onto the page. Instead of
 - Right: "You're conflating capacity with generation."
 
 **Greppable check:** `grep -inE "that's (the |doing real)|fair (hit|point)|something to sit with|a real (observation|insight)|the arc of what|say the (word|quiet part)|let that (land|sink)" draft.md`. Read each hit; any that's the writer stamping a verdict on their own line, rather than a real claim, is this pattern.
+
+## Insinuating Adverbs
+
+An adverb that asserts a motive the reporting does not support. Distinct from the AI Adverbs flag list (#15): those inflate intensity and read as filler, these smuggle in a claim about someone's intent and read as insight. One is enough to be a problem, so the "three in a paragraph" density test does not apply.
+
+quietly, conveniently, suddenly, notably (when it means "suspiciously"), curiously, tellingly
+
+| Pattern | Why it's slop |
+|---|---|
+| "EPA is quietly rewriting the notice rules" | The rule was published with a hearing date and a comment docket. "Quietly" asserts stealth that the facts contradict. |
+| "The filing conveniently landed after the deadline" | Imputes intent from timing alone. |
+| "The operator suddenly withdrew" | Dramatizes a decision whose timeline the writer never checked. |
+
+The tell: strike the adverb and ask whether you could source what remains of the claim. "EPA is rewriting the notice rules" is checkable. "Quietly" is not, because it is an accusation wearing an adverb's clothes.
+
+**Fix:** Cut it. If stealth or bad timing is genuinely the story, prove it with the mechanics: who was noticed, when, and what the record shows. A reader who reaches that conclusion from your facts is persuaded. A reader handed the adverb is being told what to think, and an expert audience reads that as advocacy, not reporting.
+
+## Hedge vs. Quantifier
+
+Anti-slop rules ban hedging, and writers over-apply the ban to words that are doing precision work. These are not the same move and must not be stripped together.
+
+| Kind | Examples | Verdict |
+|---|---|---|
+| Epistemic hedge (the writer's confidence) | arguably, it remains to be seen, some would say, potentially, it's worth noting that | Cut. It hedges the writer, not the claim. |
+| Scope quantifier (the claim's extent) | many, most, certain, roughly, at least, in some cases | Keep when the unquantified sentence would be false. |
+
+"The permit class Texas data centers run on" is directionally true and literally false, because the largest campuses can trigger major-source review. "The permit class **many** Texas data centers run on" is literally true. The quantifier is not softening the claim, it is what makes the claim survive a fact check.
+
+**Test:** Remove the word. If the sentence gets *bolder*, it was a hedge, so leave it out. If the sentence gets *wrong*, it was a quantifier, so put it back. Bold and wrong is the worst outcome available, and it is exactly what over-zealous hedge-stripping produces.
 
 ## Self-Assessment
 

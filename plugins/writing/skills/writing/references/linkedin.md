@@ -61,6 +61,28 @@ When a paragraph ends with a punchy summary line or fragment ("Same word on the 
 
 This is LinkedIn-specific. On X, the 280-char limit forces compression; tail-of-tweet punchlines work fine because the white space between tweets does the same job as paragraph breaks here. On LinkedIn, paragraph breaks are the only white space available, so they have to do more work.
 
+### Narrator Lines (Mid-Body Throat-Clearing)
+
+Throat-clearing is usually described as an opener problem ("Here's what you need to know"). On LinkedIn it more often shows up in the *middle* of a post, where a writer who has not structured the argument narrates it instead. Three forms, all cuts:
+
+| Form | Example | Why it fails |
+|---|---|---|
+| Reader-instruction | "Read the mechanics carefully." / "Note that..." / "Stay with me here." | Tells the reader how to read instead of writing something worth reading. |
+| Importance assertion | "...because the precision is the whole story." / "This is the part that matters." | Asserts significance the paragraph should demonstrate. If it were the whole story, it would land as one. |
+| Colon-label | "What does happen:" / "The structure, precisely:" / "The tension:" | A section header pretending to be prose. It exists because the blocks around it are out of order. |
+
+**Test:** delete the line. If the post still reads, it was scaffolding, and the fact that it reads *better* is the point. If the post now feels abrupt, the problem is the sequence of the blocks, not the missing label. Fix the order and the label stops being necessary.
+
+A colon-label is the most diagnostic of the three. Reaching for one is a reliable signal that two adjacent blocks are in the wrong order.
+
+### Argument Order
+
+Progressive revelation is not only a dwell-time device, it is an argument-order rule: **a correction lands after the claim it corrects.**
+
+If the post stages a dispute (an agency says X, a critic says Y) and you hold a fact that resolves it, that fact goes *after* both positions, not before. Front-loading it means the reader meets the resolution before they have any reason to care, then reads the quotes as re-litigation of something already settled, and the post deflates precisely where it should pay off.
+
+The same ordering applies to any debunk: state what people believe, then dismantle it. A post that opens by dismantling a belief the reader has not yet been shown is arguing with itself.
+
 ## Hook Rules (First 140 Characters)
 
 The hook must pass two tests:
@@ -102,7 +124,7 @@ Comments are **15x more valuable** than likes. Every post MUST end with a specif
 ## Post Formats
 
 ### Text Post (POST 1)
-- 150-225 words (900-1,350 characters)
+- 150-320 words (900-2,000 characters). Casual creator posts sit at the low end. A premium B2B register carrying quotes, named officials, and a mechanics argument runs 250-320, and cutting to 225 there means dropping the sourcing that makes the post worth reading. Length is not what kills dwell time; density is. A 300-word post in 12 short blocks outperforms a 220-word post in 6 thick ones.
 - Short paragraphs (1-2 sentences each)
 - Bold emphasis paragraphs for standalone assertions
 - Ends with discussion question
@@ -136,8 +158,8 @@ Avoid generic "AI infrastructure" or "tech industry" framing. The more specific 
 - **Write 4+ sentence paragraphs** (dwell time killer on mobile)
 - **End with a statement instead of a question** (wastes the comment opportunity)
 - **Use "today's" references** (posts may be reused on different days)
-- **Throat-clear** ("Here's the tension," "Here's what you need to know")
-- **Hedge** ("it remains to be seen," "arguably," "only time will tell")
+- **Throat-clear**, at the top ("Here's the tension," "Here's what you need to know") or mid-body (see [Narrator Lines](#narrator-lines-mid-body-throat-clearing))
+- **Hedge** ("it remains to be seen," "arguably," "only time will tell"). Scope quantifiers ("many," "certain," "roughly") are not hedges; strip them and the claim goes bold and wrong. See Hedge vs. Quantifier in ai-slop-patterns.md.
 - **Repeat themes within 7 days** (the pipeline tracks recent themes and blocks repeats)
 - **Use unprovable superlatives** when concrete comparisons exist
 - **Generic discussion questions** ("What do you think?" "Thoughts?")
