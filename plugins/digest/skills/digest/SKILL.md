@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command.
-version: 1.14.0
+version: 1.15.0
 effort: high
 ---
 
@@ -107,6 +107,37 @@ the thread root. Fetching the root is often what makes a quote-reply legible.
 **Do NOT use `xurl read "$TWEET_ID"`** as the content fetch. It is a convenience wrapper that omits
 `note_tweet` and silently truncates.
 
+**Step 1b: X Articles — xurl returns the full body, but only if you ask for it**
+
+When the post is an X Article, the `data.text` field is just a `t.co` link and `tweet.fields=article`
+alone returns **only the title**. That looks like a dead end. It is not. Adding the **`article.fields`**
+query parameter expands the article object to include **`plain_text`** — the complete article body:
+
+```bash
+xurl "/2/tweets/${TWEET_ID}?tweet.fields=article,note_tweet,text,created_at,public_metrics,author_id,entities&article.fields=title,plain_text,entities,cover_media&expansions=author_id,article.cover_media&user.fields=username,name"
+```
+
+Use `article.plain_text` as the content. `article.entities.tweets[]` lists posts embedded in the
+article — fetch those ids with `/2/tweets?ids=...` to capture what the article is pointing at
+(launch posts, receipts, screenshots). `article.entities.urls[]` lists outbound links.
+
+A title-only response means the request was under-specified, **not** that xurl can't do articles.
+Do not escalate to twitter-cli or dev-browser for an X Article before trying `article.fields`.
+
+**Step 1c: When a field seems missing, probe the API before escalating**
+
+The X API enumerates every legal value in its error message. Send a deliberately bogus value and read
+the list back — this resolves "does this endpoint expose what I need?" in one call, with no browser,
+no cookies, and no guessing:
+
+```bash
+xurl "/2/tweets/${TWEET_ID}?tweet.fields=bogus"   # -> lists every valid tweet.field
+xurl "/2/tweets/${TWEET_ID}?expansions=bogus"     # -> lists every valid expansion
+```
+
+Escalating to a lower tier is only correct once the API has told you the data isn't there. Falling back
+to a browser because the first field set came back thin costs minutes and usually returns less.
+
 **If xurl is unavailable or the account is protected**, fall back to Step 2.
 
 **Step 2: Fetch full content via twitter-cli (FALLBACK)**
@@ -202,7 +233,7 @@ If xurl, twitter-cli, and dev-browser all fail, ask the user to paste the conten
 #### Thread & Article Detection
 
 The syndication API response tells you the content type:
-- **X Article**: `article` field present with `title` and `preview_text` — twitter-cli captures article content automatically; dev-browser captures it from the rendered page; xurl does not return article bodies, so escalate to Step 2 or 3 for these
+- **X Article**: `article` field present with `title` and `preview_text` — xurl returns the full body via `article.fields=plain_text` (Step 1b); twitter-cli and dev-browser are fallbacks, not the first move
 - **Long-form post**: `note_tweet` field present — the visible `text` is clipped; fetch the body per Step 1
 - **Thread**: `conversation_count` > 0 — twitter-cli auto-fetches the full thread; dev-browser requires scrolling to capture self-replies; with xurl, walk `conversation_id` and fetch each id
 - **Quote-reply**: `quoted_tweet` present (or `referenced_tweets[].type == "quoted"` via xurl) — fetch the quoted post AND the conversation root; a reply to a question is usually incomprehensible without both
@@ -754,6 +785,11 @@ Pass: The fetch named `note_tweet` in `tweet.fields` (or used twitter-cli/dev-br
 Fail: Raw Content ends mid-sentence around 280 characters, OR the fetch relied on `xurl read` / default `tweet.fields` / syndication `.text`, OR `note_tweet` was present in the response but the shorter `text` was analyzed
 Note: EVAL 2 cannot catch this — truncated content is not empty and not a login wall, so it passes every other content check while missing most of the argument. This is the only gate that detects it.
 
+**EVAL 12: X Article body captured before escalating**
+Question: For X Articles, was `article.fields=plain_text` requested via xurl before falling back to twitter-cli or dev-browser?
+Pass: Raw Content contains the full `article.plain_text` body; any escalation to a lower tier happened only after the API itself showed the field was unavailable
+Fail: Digest analyzed only the article title/`preview_text`, OR the run escalated to twitter-cli/dev-browser on a title-only response without trying `article.fields`
+
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
@@ -765,6 +801,8 @@ Note: EVAL 2 cannot catch this — truncated content is not empty and not a logi
 | Same-directory connections | Digest files are all in web-analyses/ | Never link to other web-analyses/ files |
 | Dismiss X post as "engagement bait" without fetching replies | Thread content lives in replies, not the hook tweet | Always attempt reply fetching before judging content completeness |
 | Analyze an X post's `text` field when `note_tweet` exists | Silently drops most of a long-form post while looking healthy | Request `tweet.fields=note_tweet` and analyze `note_tweet.text` |
+| Escalate off xurl because a response came back thin | Under-specified requests look identical to missing data; the fallbacks are slower and often fail (keychain, browser launch) | Probe with a bogus field value to get the API's legal field list, then re-request |
+| Treat an X Article as unreachable via xurl | `article.fields=plain_text` returns the complete body | Request `tweet.fields=article&article.fields=plain_text` before any fallback |
 | Over-wikilink with forced matches | Noisy links reduce signal and clutter the graph | Only link exact or near-exact matches on first mention per section |
 | Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
 
@@ -1075,7 +1113,8 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **Local file path ambiguity** — A string like `report.pdf` could be a relative path. If a bare filename is provided without a path prefix (`/`, `~/`, `./`), check the current working directory first, then ask the user to confirm the full path if not found.
 - **Large PDFs** — The Read tool has a 20-page-per-call limit for PDFs. For documents over 20 pages, loop through page ranges. For very large PDFs (100+ pages), read the first 40 pages and the last 10 pages, then summarize with a note about partial coverage.
 - **DOCX without tooling** — `pandoc` or `python-docx` may not be installed. Check availability before attempting conversion. If neither is available, escalate to the user.
-- **xurl is the preferred X fetcher** — `xurl "/2/tweets/${TWEET_ID}?tweet.fields=note_tweet,..."`. It carries its own OAuth credentials, so unlike twitter-cli and dev-browser it needs no browser, cookies, or keychain, and works in tmux, SSH, cron, and headless runs. Fall back to twitter-cli, then dev-browser (both of which do handle X Article bodies, which xurl does not). npx defuddle, npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls — never use them. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
+- **xurl is the preferred X fetcher** — `xurl "/2/tweets/${TWEET_ID}?tweet.fields=note_tweet,..."`. It carries its own OAuth credentials, so unlike twitter-cli and dev-browser it needs no browser, cookies, or keychain, and works in tmux, SSH, cron, and headless runs. It handles long-form posts (`note_tweet`) **and X Article bodies** (`article.fields=plain_text`, Step 1b). Fall back to twitter-cli, then dev-browser. npx defuddle, npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls — never use them. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
+- **Don't abandon xurl on a thin first response** — a title-only article, an empty field, or a short body means the *request* was under-specified far more often than it means the data is absent. Probe with a bogus field value (Step 1c) to get the API's own list of legal fields before dropping to a lower tier. twitter-cli's keychain auth fails by design in tmux/SSH and dev-browser costs a browser launch, so a premature escalation usually trades one working call for several failing ones.
 - **X long-form posts truncate at 280 characters with no error** — the real body lives in `note_tweet`, and `xurl read`, the default `/2/tweets` field set, and the syndication API all return the clipped `text` instead. Nothing in the response looks wrong, so the failure survives every content check except EVAL 11. Name `note_tweet` in `tweet.fields` on every X fetch, and treat a short body plus `reply_count: 0` as a prompt to verify rather than a conclusion that the post is thin.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
