@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.8.1
+version: 2.8.2
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -19,6 +19,7 @@ Universal writing standards for all content. Format-specific guidance in referen
 | `/writing:write-web <topic>` | Write website copy or blog post |
 | `/writing:write-headline <topic>` | Generate 5+ headline candidates |
 | `/writing:write-newsletter <topic>` | Write email/newsletter content |
+| `/writing:write-presentation <topic>` | Write a persuasive talk / slide deck |
 | `/writing:write-review <content>` | Review/edit content for AI tells |
 | `/writing:teach-writing` | Write voice/brand context to CLAUDE.md |
 
@@ -337,6 +338,7 @@ Read the appropriate reference before writing:
 - **X Articles (long-form)**: See [references/x-articles.md](references/x-articles.md)
 - **LinkedIn posts & articles**: See [references/linkedin.md](references/linkedin.md)
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)
+- **Presentations & slide decks (persuasive talks)**: See [references/presentations.md](references/presentations.md)
 - **Persuasion frameworks**: See [references/persuasion-frameworks.md](references/persuasion-frameworks.md)
 - **Interview scripts**: See [references/interview-scripts.md](references/interview-scripts.md)
 - **Project & technical work summaries (recaps, "what we did" lists)**: See [references/project-summaries.md](references/project-summaries.md)
@@ -350,6 +352,7 @@ Before finalizing branded or public-facing content, run a second-pass self-audit
 - LinkedIn posts (`/writing:write-linkedin`)
 - Web copy and blog posts (`/writing:write-web`)
 - Newsletters (`/writing:write-newsletter`)
+- Presentations and talk decks (`/writing:write-presentation`)
 - Any content under a brand identity (Hyperscale, JD Key, Winning on Issues, Sharper Stories, DLG, Link2s, PodStyle Video, VidPublish, TRU)
 - Anything `/writing:write-review` is reviewing
 

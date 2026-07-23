@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<!--
+  Persuasive talk-deck template (writing skill: references/presentations.md).
+  16:9, dark, one accent. Fill the placeholder slides with Fear -> Flip -> Receipts
+  content. Navigate with arrows / click; progress bar tracks position.
+  Print / "Save as PDF" renders one 1600x900 page per slide with a per-page
+  footer (Page X of N + copyright). Set FOOTER_ORG below.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TALK TITLE — SPEAKER</title>
+<style>
+:root{
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ink:#f4f1ea;
+  --ink-dim:#a8a294;
+  --bg:#12100d;
+  --accent:#c8952f;        /* the ONE accent: emphasis + the <em> in each flip */
+  --accent-2:#7fa650;       /* second signal, comparison "good" column only */
+  --rule:#332e26;
+  --top-pad:13vh;
+  --serif: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--sans);
+  overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+.slide{
+  position:absolute;inset:0;display:none;
+  flex-direction:column;justify-content:center;
+  padding:2.6vh 4.5vw;opacity:0;overflow:hidden;
+  transition:opacity 160ms var(--ease-out);
+  --measure:min(1580px,100%);
+}
+/* Content slides pin to a fixed top so the headline block never moves between
+   slides. --top-pad is set by the tallest slide in the deck. */
+.slide.top{justify-content:flex-start;padding-top:var(--top-pad)}
+.slide.on{display:flex;opacity:1}
+
+.kicker{
+  font-size:clamp(.85rem,1.6vh,1.18rem);letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:1.4vh;
+}
+h1{font-family:var(--serif);font-size:clamp(2.9rem,9.4vh,6.6rem);line-height:1.02;font-weight:600;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:clamp(2.3rem,7.5vh,4.8rem);line-height:1.03;font-weight:600;letter-spacing:-.02em;margin-bottom:.7vh}
+.fear{
+  font-family:var(--serif);font-style:italic;color:var(--ink-dim);
+  font-size:clamp(1.18rem,3vh,1.86rem);line-height:1.25;margin-bottom:2.2vh;
+  border-left:3px solid var(--rule);padding-left:1em;max-width:var(--measure);
+}
+.flip{
+  font-size:clamp(1.32rem,3.85vh,2.4rem);line-height:1.2;font-weight:600;
+  max-width:var(--measure);margin-bottom:2.6vh;letter-spacing:-.01em;
+}
+.flip em{color:var(--accent);font-style:normal}
+ul{list-style:none;display:flex;flex-direction:column;gap:1.35vh;max-width:var(--measure)}
+li{
+  font-size:clamp(1.18rem,2.76vh,1.77rem);line-height:1.32;
+  padding-left:1.35em;position:relative;
+}
+li::before{content:"";position:absolute;left:0;top:.56em;width:.62em;height:2px;background:var(--accent)}
+li b{color:#fff;font-weight:700}
+li .src{display:block;color:var(--ink-dim);font-size:.7em;margin-top:.22em}
+
+.hero{display:flex;align-items:baseline;gap:.55em;flex-wrap:wrap;margin:.4vh 0 2.2vh}
+.hero .n{
+  font-family:var(--serif);font-size:clamp(3.6rem,13vh,9rem);line-height:.9;
+  color:var(--accent);font-weight:700;letter-spacing:-.03em;
+}
+.hero .lbl{font-size:clamp(1.2rem,2.88vh,1.82rem);color:var(--ink-dim);max-width:36ch;line-height:1.25}
+
+.verse{
+  font-family:var(--serif);font-size:clamp(1.95rem,6.7vh,4.6rem);line-height:1.22;
+  max-width:28ch;font-weight:500;
+}
+.verse .hi{color:var(--accent)}
+.ref{margin-top:3.2vh;color:var(--ink-dim);letter-spacing:.16em;text-transform:uppercase;font-size:clamp(.82rem,1.65vh,1.12rem)}
+
+.ask{
+  font-family:var(--serif);font-size:clamp(1.68rem,5.7vh,3.8rem);line-height:1.15;
+  max-width:min(1180px,100%);font-weight:600;
+}
+.sub{color:var(--ink-dim);font-size:clamp(1.2rem,2.88vh,1.82rem);margin-top:2.1vh;max-width:var(--measure);line-height:1.38}
+.sub b{color:var(--ink)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:2.4vh 3.5vw;align-items:start;max-width:var(--measure)}
+.two.three{grid-template-columns:repeat(3,1fr);gap:2.2vh 2.4vw}
+.two .cost{display:block;color:#c47a63;font-weight:600;margin-top:.5vh}
+.two .free{display:block;color:var(--accent-2);font-weight:600;margin-top:.5vh}
+.two h3{
+  font-size:clamp(.95rem,1.91vh,1.27rem);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-dim);margin-bottom:.9vh;font-weight:600;
+}
+.two .big{font-family:var(--serif);font-size:clamp(2.36rem,6.9vh,4.43rem);line-height:1;color:var(--accent);font-weight:700}
+.two .big.muted{color:var(--ink-dim)}
+.two p{font-size:clamp(1.1rem,2.47vh,1.5rem);color:var(--ink-dim);margin-top:.7vh;line-height:1.33}
+
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:2.2vh 3.5vw;max-width:var(--measure);margin-bottom:2.4vh}
+.paths .col{border-top:3px solid var(--rule);padding-top:1.4vh}
+.paths .col.good{border-top-color:var(--accent-2)}
+.paths .col.bad{border-top-color:#8a4a3a}
+.paths h3{font-family:var(--serif);font-size:clamp(1.79rem,4.95vh,3.17rem);font-weight:700;margin-bottom:1vh}
+.paths .col.bad h3{color:#c47a63}
+.paths .col.good h3{color:var(--accent-2)}
+.paths p{font-size:clamp(1.16rem,2.69vh,1.66rem);line-height:1.33;color:var(--ink);margin-bottom:.9vh}
+.paths p.dim{color:var(--ink-dim)}
+
+footer{
+  position:absolute;bottom:1.4vh;left:4.5vw;right:4.5vw;
+  display:flex;justify-content:space-between;align-items:center;
+  color:#5a5348;font-size:clamp(.62rem,1.25vh,.82rem);letter-spacing:.1em;text-transform:uppercase;
+}
+.progress{position:absolute;top:0;left:0;height:2px;background:var(--accent);transition:width 160ms var(--ease-out)}
+.title-slide{background:radial-gradient(120% 90% at 12% 10%, #221d16 0%, var(--bg) 62%)}
+.title-slide .by{margin-top:3.6vh;color:var(--ink-dim);font-size:clamp(1.06rem,2.5vh,1.56rem);line-height:1.5}
+.title-slide .by b{color:var(--ink);font-weight:600}
+
+/* 4:3 projectors: not enough height for a fixed top rail, fall back to centred.
+   The densest slide fills the frame, so the footer yields rather than clip it. */
+@media (max-aspect-ratio: 3/2){
+  .slide.top{justify-content:center;padding-top:2.2vh;padding-bottom:2.2vh}
+  footer{display:none}
+}
+@media (prefers-reduced-motion: reduce){ .slide,.progress{transition:none} }
+
+/* Print / Save-as-PDF: one 1600x900 page per slide. The live nav footer and
+   progress bar are hidden; the per-page .pdf-foot (injected below) shows. */
+@media print{
+  @page{size:1600px 900px;margin:0}
+  html,body{height:auto;overflow:visible}
+  body{background:var(--bg);color:var(--ink);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .slide{
+    position:relative;display:flex!important;opacity:1!important;
+    width:1600px;height:900px;break-after:page;
+  }
+  .slide:last-of-type{break-after:auto}
+  .progress,footer{display:none}
+  .pdf-foot{
+    display:flex!important;justify-content:space-between;align-items:center;
+    position:absolute;bottom:1.4vh;left:4.5vw;right:4.5vw;
+    color:#5a5348;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  }
+}
+.pdf-foot{display:none}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+
+<!-- 1 · TITLE + CREDENTIALS (ethos). Kicker frames the shape of the talk.
+     The bio establishes authority once; the last line is the disclosure that
+     defuses the room's first objection to the speaker. -->
+<section class="slide title-slide">
+  <div class="kicker">A talk in N parts</div>
+  <h1>Talk&nbsp;Title<br>Here</h1>
+  <div class="by">
+    <b>Speaker Name</b><br>
+    Title / role that earns the room's attention<br>
+    Second credential, stated once, in full<br>
+    Any disclosure that answers "why should I trust you" up front
+  </div>
+</section>
+
+<!-- 2 · THE FRAME (values anchor). One idea, set BEFORE any evidence, that the
+     whole talk sits inside. A principle, a shared value, or the question the
+     talk answers. Everything after this lands within it. -->
+<section class="slide">
+  <div class="kicker">Where I start</div>
+  <div class="verse">
+    The one <span class="hi">principle</span>, or <span class="hi">value</span>,<br>
+    or <span class="hi">question</span> this entire<br>
+    talk is built on.
+  </div>
+  <div class="ref">Attribution, if any</div>
+</section>
+
+<!-- 3 · OBJECTION UNIT (the repeatable core): Fear -> Flip -> Receipts.
+     Kicker numbers the objection. h2 is the topic in 1-3 words. .fear steelmans
+     the objection in the skeptic's own voice. .flip reframes it as the reason to
+     act. Each bullet = one specific claim + a named source in .src. -->
+<section class="slide top">
+  <div class="kicker">Fear No. 1</div>
+  <h2>Topic</h2>
+  <div class="fear">"State the objection the way the skeptic would say it."</div>
+  <div class="flip">Reframe it as the reason to act. Not a rebuttal, a <em>turn</em>: what following the fear through actually gets them.</div>
+  <ul>
+    <li>One specific, checkable claim with the <b>load-bearing number in bold</b>.<span class="src">Named source, date</span></li>
+    <li>Another claim. Lead with the fact, not a category label.<span class="src">Named source, date</span></li>
+    <li>Concede what's true here if it buys credibility for the rest.</li>
+    <li>Receipts, not promises: name the place, the deal, the dollar figure.<span class="src">Named source, date</span></li>
+  </ul>
+</section>
+
+<!-- 4 · OBJECTION UNIT, continued. A fear that needs two ideas is two slides.
+     This one shows the "hero number" variant: one figure carries the slide. -->
+<section class="slide top">
+  <div class="kicker">Fear No. 1, continued</div>
+  <h2>The number that settles it</h2>
+  <div class="flip">The single figure the whole objection turns on.</div>
+  <div class="hero">
+    <div class="n">+0.2%</div>
+    <div class="lbl">What the figure measures, and why it's effectively the answer to the fear.</div>
+  </div>
+  <ul>
+    <li>The method behind the number, stated so a skeptic can check it.<span class="src">Named source, date</span></li>
+    <li>The teach-them-to-check move: what the other side's number quietly conflates.</li>
+  </ul>
+</section>
+
+<!-- 5 · COMPARISON GRID. The "same input, three uses" pattern makes a tradeoff
+     concrete. Three columns, one number each, one consequence line each. -->
+<section class="slide top">
+  <div class="kicker">Fear No. 2</div>
+  <h2>Same input. Three ways to use it.</h2>
+  <div class="two three">
+    <div>
+      <h3>Option A</h3>
+      <div class="big muted">$X</div>
+      <p>what it returns<span class="free">what it costs the community: little</span></p>
+    </div>
+    <div>
+      <h3>Option B</h3>
+      <div class="big muted">$Y</div>
+      <p>what it returns<span class="cost">what it costs: a lot</span></p>
+    </div>
+    <div>
+      <h3>Option C (the one they fear)</h3>
+      <div class="big">$Z</div>
+      <p>what it returns<span class="free">what it costs: least</span></p>
+    </div>
+  </div>
+  <ul style="margin-top:2.2vh">
+    <li>The one-sentence reading of the grid the audience should walk away with.</li>
+  </ul>
+</section>
+
+<!-- 6 · WHAT TO REQUIRE. Turn the argument into action. The talk stops being a
+     verdict and becomes a checklist the room can hold the other side to. -->
+<section class="slide top">
+  <div class="kicker">What to require</div>
+  <h2>Don't take my word. Take theirs, in writing.</h2>
+  <div class="flip">Every concern above, converted to a <em>term you can demand</em>.</div>
+  <ul>
+    <li><b>The first requirement</b>, phrased as an enforceable commitment.</li>
+    <li><b>The second</b>, with the penalty or reporting cadence that gives it teeth.</li>
+    <li><b>The third.</b> Same shape.</li>
+    <li><b>The fourth.</b> Transparency: the disclosures any comparable project already gives.</li>
+  </ul>
+</section>
+
+<!-- 7 · THE CLOSE. An analogy the room already has intuitions about (one path we
+     stopped and regret, one we built and won), then the fork and the ask. End on
+     the decision, never a "Questions?" slide. -->
+<section class="slide top">
+  <div class="kicker">The choice</div>
+  <h2>We've been here before.</h2>
+  <div class="paths">
+    <div class="col bad">
+      <h3>The path we stopped</h3>
+      <p>The thing we got scared of, refused, and have paid for ever since.</p>
+      <p class="dim">Every projected harm that stopped us was smaller than the harm of stopping.</p>
+    </div>
+    <div class="col good">
+      <h3>The path we built</h3>
+      <p>The thing warned against in the exact same words, that we chose to build and adapt to.</p>
+      <p class="dim">We were told to stop. Building was right.</p>
+    </div>
+  </div>
+  <div class="ask">This decision is the same fork in the same road.</div>
+  <div class="sub" style="color:var(--accent);font-weight:600">The ask, in the speaker's own voice: choose the path that builds.</div>
+</section>
+
+<footer>
+  <span>Talk Title · Speaker Name</span>
+  <span id="count"></span>
+</footer>
+
+<script>
+// Copyright line printed in the per-page PDF footer. Set this per deck.
+const FOOTER_ORG = "© Your Org LLC";
+
+const slides=[...document.querySelectorAll('.slide')];
+let i=0;
+const prog=document.getElementById('prog');
+const count=document.getElementById('count');
+
+// Per-page footer for the printed / PDF leave-behind: each slide gets its own
+// "© Org" + "Page X of N" (the live on-screen footer can't, it's a single
+// element that would show the same count on every page).
+slides.forEach((s, idx) => {
+  const f=document.createElement('div');
+  f.className='pdf-foot';
+  const org=document.createElement('span'); org.textContent=FOOTER_ORG;
+  const pg=document.createElement('span'); pg.textContent=`Page ${idx+1} of ${slides.length}`;
+  f.append(org, pg);
+  s.appendChild(f);
+});
+
+function show(n){
+  i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach(s=>s.classList.remove('on'));
+  slides[i].classList.add('on');
+  prog.style.width=((i+1)/slides.length*100)+'%';
+  count.textContent=(i+1)+' / '+slides.length;
+}
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();show(i+1)}
+  if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();show(i-1)}
+  if(e.key==='Home')show(0);
+  if(e.key==='End')show(slides.length-1);
+});
+document.addEventListener('click',e=>show(e.clientX < window.innerWidth*0.25 ? i-1 : i+1));
+show(0);
+</script>
+</body>
+</html>

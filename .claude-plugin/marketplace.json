@@ -23,7 +23,7 @@
     },
     {
       "name": "writing",
-      "description": "Research-backed writing standards for human-quality content. Anti-AI detection, headline optimization, platform guides for X, LinkedIn, and web copy, persuasion frameworks, and pre-publish quality gates.",
+      "description": "Research-backed writing standards for human-quality content. Anti-AI detection, headline optimization, platform guides for X, LinkedIn, web copy, and persuasive talk decks, persuasion frameworks, and pre-publish quality gates.",
       "source": "./plugins/writing",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"

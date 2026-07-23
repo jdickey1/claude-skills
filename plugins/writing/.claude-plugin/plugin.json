@@ -1,6 +1,6 @@
 {
   "name": "writing",
-  "description": "Universal writing standards for human-quality content. Anti-AI detection, headlines, X posts, LinkedIn, web copy, email/newsletter, interview scripts, persuasion frameworks, and platform-specific optimization. Slash commands: /writing:write-x, /writing:write-linkedin, /writing:write-web, /writing:write-headline, /writing:write-newsletter, /writing:write-review, /writing:teach-writing.",
+  "description": "Universal writing standards for human-quality content. Anti-AI detection, headlines, X posts, LinkedIn, web copy, email/newsletter, presentations and persuasive talk decks, interview scripts, persuasion frameworks, and platform-specific optimization. Slash commands: /writing:write-x, /writing:write-linkedin, /writing:write-web, /writing:write-headline, /writing:write-newsletter, /writing:write-presentation, /writing:write-review, /writing:teach-writing.",
   "author": {
     "name": "James Dickey",
     "url": "https://github.com/jdickey1"
