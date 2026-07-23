@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command.
-version: 1.13.0
+version: 1.14.0
 effort: high
 ---
 
@@ -64,7 +64,7 @@ Do NOT match GitHub issue, PR, or file URLs (those use general web fetch):
 
 ### For X/Twitter URLs
 
-X aggressively blocks scrapers, APIs, and headless fetchers. Use twitter-cli first (fastest, most reliable), then fall back to dev-browser if needed.
+X aggressively blocks scrapers, APIs, and headless fetchers. Use xurl first (authenticated API, no browser or keychain dependency), then twitter-cli, then dev-browser.
 
 Extract `username` and `tweet_id` from the URL:
 
@@ -73,9 +73,45 @@ USERNAME=$(echo "$URL" | grep -oP '(?<=x\.com/|twitter\.com/)[^/]+')
 TWEET_ID=$(echo "$URL" | grep -oP '(?<=status/)[0-9]+')
 ```
 
-**Step 1: Fetch full content via twitter-cli (PRIMARY)**
+**⚠️ The 280-character truncation trap — read this before choosing a fetch method**
 
-twitter-cli uses cookie-based auth and TLS fingerprint impersonation. It handles single tweets, threads, X Articles, and search natively.
+X posts longer than 280 characters store their real body in a separate `note_tweet` field. The
+short `text` field is silently clipped with **no error, no ellipsis, and no other signal** that
+content is missing. All three of these return the clipped version by default:
+
+- `xurl read "$TWEET_ID"`
+- any `/2/tweets/...` call that does not name `note_tweet` in `tweet.fields`
+- the syndication API (`cdn.syndication.twimg.com`), which returns a bare `note_tweet` **id** with no body
+
+A digest built on the clipped text analyzes the hook and misses the entire argument, while looking
+completely healthy — it is not empty, not a login wall, and not a cookie prompt, so EVAL 2 passes on
+it. **Always request `note_tweet` explicitly and verify against it (EVAL 11).**
+
+**Step 1: Fetch full content via xurl (PRIMARY)**
+
+`xurl` holds its own OAuth credentials, so it needs no browser session, no cookies, and no keychain
+access — which makes it the only path that works reliably in tmux, SSH, cron, and headless contexts.
+
+```bash
+# ALWAYS name note_tweet explicitly — this is what unclips long-form posts
+xurl "/2/tweets/${TWEET_ID}?tweet.fields=note_tweet,text,created_at,public_metrics,author_id&expansions=author_id&user.fields=username,name"
+```
+
+Use `note_tweet.text` as the content when present; fall back to `text` only when `note_tweet` is
+absent (a genuinely short post). `public_metrics` supplies likes, reposts, bookmarks, and impressions.
+
+Quoted posts and conversation roots are **not** included — fetch each by id with the same command.
+`referenced_tweets[]` lists them by type (`quoted`, `replied_to`), and `conversation_id` identifies
+the thread root. Fetching the root is often what makes a quote-reply legible.
+
+**Do NOT use `xurl read "$TWEET_ID"`** as the content fetch. It is a convenience wrapper that omits
+`note_tweet` and silently truncates.
+
+**If xurl is unavailable or the account is protected**, fall back to Step 2.
+
+**Step 2: Fetch full content via twitter-cli (FALLBACK)**
+
+twitter-cli uses cookie-based auth and TLS fingerprint impersonation. It handles single tweets, threads, X Articles, and search natively, and returns full long-form text without the note_tweet dance.
 
 ```bash
 # Read a single tweet (includes full text, engagement stats, article content)
@@ -87,9 +123,22 @@ twitter tweet "$URL"
 
 twitter-cli outputs structured text with author, content, engagement metrics, and thread replies. If the tweet contains an X Article, the article content is included automatically.
 
-**If twitter-cli is not installed or fails** (e.g., cookies expired, auth error), fall back to Step 2.
+**If twitter-cli fails with `not_authenticated`**, it could not read browser cookies. Its
+"SSH session detected" message is a misleading label: it fires whenever `SSH_TTY` is set, which a
+tmux session inherits even when `SSH_CONNECTION` is empty and nothing is remote. Confirm the real
+cause before chasing the SSH hint:
 
-**Step 2: Fetch via dev-browser (FALLBACK)**
+```bash
+security show-keychain-info ~/Library/Keychains/login.keychain-db
+```
+
+`User interaction is not allowed` means the Security framework cannot display an authorization
+prompt because the process is not attached to a GUI (Aqua) login session. Retrying inside tmux will
+never clear it. Fixes, in order of durability: export `TWITTER_AUTH_TOKEN` + `TWITTER_CT0` (the only
+option that survives headless and cron), or run `security unlock-keychain` from a Terminal.app window
+in the GUI session and retry there. Neither is needed if Step 1 succeeded.
+
+**Step 3: Fetch via dev-browser (FALLBACK)**
 
 Write a script file to `/tmp/fetch-x-digest.js` and run it with `dev-browser run`:
 
@@ -113,6 +162,9 @@ This returns the full rendered page text. It works because dev-browser uses a re
 - Use `browser.getPage("xdigest")` to get/create a named page
 - Use `p.evaluate("document.body.innerText")` for text content
 - Allow 5 seconds after navigation for X's JS to render
+- On `Executable doesn't exist ... chromium-<N>`, the daemon pins its own Playwright build. Install
+  with the daemon's binary — `~/.dev-browser/node_modules/.bin/playwright install chromium`. The
+  ambient `npx playwright install chromium` fetches a different build number and does not fix it.
 
 For threads via dev-browser, extend the script to scroll:
 
@@ -124,7 +176,7 @@ const text = await p.evaluate("document.body.innerText");
 console.log(text);
 ```
 
-**Step 3: Metadata enrichment via Syndication API (PARALLEL with Step 1 or 2)**
+**Step 4: Metadata enrichment via Syndication API (PARALLEL with Steps 1-3)**
 
 Run this in parallel with the primary fetch to get structured metadata:
 
@@ -132,13 +184,13 @@ Run this in parallel with the primary fetch to get structured metadata:
 curl -s "https://cdn.syndication.twimg.com/tweet-result?id=${TWEET_ID}&token=0"
 ```
 
-Parse JSON for: `.text`, `.user.name`, `.user.screen_name`, `.favorite_count`, `.created_at`, `.conversation_count`, `.article` (for X Articles).
+Parse JSON for: `.user.name`, `.user.screen_name`, `.favorite_count`, `.created_at`, `.conversation_count`, `.article` (for X Articles). It also returns the quoted post inline under `.quoted_tweet`, which is a convenient cross-check on Step 1's `referenced_tweets`.
 
-This API is lightweight and usually works. Use it for metadata (likes, date, article title) — not for content fetching.
+This API is lightweight and usually works. Use it for metadata (likes, date, article title) — **never for content**. Its `.text` is the clipped 280-character field, and on long-form posts `.note_tweet` carries only an id with no body.
 
-**Step 4: Fallback — manual content from user**
+**Step 5: Fallback — manual content from user**
 
-If both twitter-cli and dev-browser fail, ask the user to paste the content or share a ThreadReader/Typefully unrolled link.
+If xurl, twitter-cli, and dev-browser all fail, ask the user to paste the content or share a ThreadReader/Typefully unrolled link.
 
 **Do NOT attempt these — they consistently fail on X:**
 - `npx defuddle parse` (JSDOM-based, hits the same cookie/auth wall)
@@ -150,9 +202,11 @@ If both twitter-cli and dev-browser fail, ask the user to paste the content or s
 #### Thread & Article Detection
 
 The syndication API response tells you the content type:
-- **X Article**: `article` field present with `title` and `preview_text` — twitter-cli captures article content automatically; dev-browser captures it from the rendered page
-- **Thread**: `conversation_count` > 0 — twitter-cli auto-fetches the full thread; dev-browser requires scrolling to capture self-replies
-- **Single tweet**: No article field, low conversation_count — either tool handles this directly
+- **X Article**: `article` field present with `title` and `preview_text` — twitter-cli captures article content automatically; dev-browser captures it from the rendered page; xurl does not return article bodies, so escalate to Step 2 or 3 for these
+- **Long-form post**: `note_tweet` field present — the visible `text` is clipped; fetch the body per Step 1
+- **Thread**: `conversation_count` > 0 — twitter-cli auto-fetches the full thread; dev-browser requires scrolling to capture self-replies; with xurl, walk `conversation_id` and fetch each id
+- **Quote-reply**: `quoted_tweet` present (or `referenced_tweets[].type == "quoted"` via xurl) — fetch the quoted post AND the conversation root; a reply to a question is usually incomprehensible without both
+- **Single tweet**: No article field, no note_tweet, low conversation_count — any tool handles this directly
 
 **Assembling thread content:**
 - Combine the parent tweet text with all same-author replies in order
@@ -160,6 +214,7 @@ The syndication API response tells you the content type:
 - Include the full thread in the Raw Content section
 - Analyze the complete thread, not just the hook tweet
 - Never dismiss a tweet as "engagement bait" or "missing promised content" without first attempting to fetch replies
+- A low `reply_count` means the thread has no body — it does NOT mean the post is short. Check `note_tweet` before concluding a post is thin
 
 ### For All Other URLs (3-Tier Fallback)
 
@@ -693,6 +748,12 @@ Question: When both Section 7b gates hold (substantively about data centers/AI i
 Pass: INSERT with ON CONFLICT (url) DO NOTHING executed via ssh hyperscale; resulting id (new or pre-existing) reported in completion status; notes field carries citable stats + digest path
 Fail: Registration skipped despite both gates holding, OR an X post/GitHub repo/ephemeral news item was registered, OR a URL was invented for a local file with no canonical publisher URL, OR a duplicate row was created
 
+**EVAL 11: X long-form content not silently truncated**
+Question: For X/Twitter posts, was `note_tweet` requested, and does the captured Raw Content match its full length?
+Pass: The fetch named `note_tweet` in `tweet.fields` (or used twitter-cli/dev-browser, which return full text); when `note_tweet` exists, Raw Content contains its complete body
+Fail: Raw Content ends mid-sentence around 280 characters, OR the fetch relied on `xurl read` / default `tweet.fields` / syndication `.text`, OR `note_tweet` was present in the response but the shorter `text` was analyzed
+Note: EVAL 2 cannot catch this — truncated content is not empty and not a login wall, so it passes every other content check while missing most of the argument. This is the only gate that detects it.
+
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
@@ -703,6 +764,7 @@ Fail: Registration skipped despite both gates holding, OR an X post/GitHub repo/
 | Use generic connection context ("Related to this project") | Unactionable connections add noise | Context must be a specific, actionable sentence |
 | Same-directory connections | Digest files are all in web-analyses/ | Never link to other web-analyses/ files |
 | Dismiss X post as "engagement bait" without fetching replies | Thread content lives in replies, not the hook tweet | Always attempt reply fetching before judging content completeness |
+| Analyze an X post's `text` field when `note_tweet` exists | Silently drops most of a long-form post while looking healthy | Request `tweet.fields=note_tweet` and analyze `note_tweet.text` |
 | Over-wikilink with forced matches | Noisy links reduce signal and clutter the graph | Only link exact or near-exact matches on first mention per section |
 | Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
 
@@ -1013,7 +1075,8 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **Local file path ambiguity** — A string like `report.pdf` could be a relative path. If a bare filename is provided without a path prefix (`/`, `~/`, `./`), check the current working directory first, then ask the user to confirm the full path if not found.
 - **Large PDFs** — The Read tool has a 20-page-per-call limit for PDFs. For documents over 20 pages, loop through page ranges. For very large PDFs (100+ pages), read the first 40 pages and the last 10 pages, then summarize with a note about partial coverage.
 - **DOCX without tooling** — `pandoc` or `python-docx` may not be installed. Check availability before attempting conversion. If neither is available, escalate to the user.
-- **twitter-cli is the preferred X fetcher** — use `twitter tweet URL` first. It handles auth, threads, articles, and search natively via cookie-based authentication. Falls back to dev-browser if twitter-cli is unavailable or fails. npx defuddle, npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls — never use them. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
+- **xurl is the preferred X fetcher** — `xurl "/2/tweets/${TWEET_ID}?tweet.fields=note_tweet,..."`. It carries its own OAuth credentials, so unlike twitter-cli and dev-browser it needs no browser, cookies, or keychain, and works in tmux, SSH, cron, and headless runs. Fall back to twitter-cli, then dev-browser (both of which do handle X Article bodies, which xurl does not). npx defuddle, npx playbooks, WebFetch, ThreadReaderApp, and oEmbed all consistently fail on X due to auth walls — never use them. The syndication API (`cdn.syndication.twimg.com`) still works for metadata (likes, dates, article titles) but not full content.
+- **X long-form posts truncate at 280 characters with no error** — the real body lives in `note_tweet`, and `xurl read`, the default `/2/tweets` field set, and the syndication API all return the clipped `text` instead. Nothing in the response looks wrong, so the failure survives every content check except EVAL 11. Name `note_tweet` in `tweet.fields` on every X fetch, and treat a short body plus `reply_count: 0` as a prompt to verify rather than a conclusion that the post is thin.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
 - **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies. The syndication API only returns the parent tweet. Always attempt to fetch replies via Playwright or ThreadReaderApp before concluding a post lacks substance.
@@ -1086,6 +1149,7 @@ When this skill runs, append observations to `.learnings.jsonl`:
 
 Track these patterns:
 - Tier fallback ratio (how often does defuddle fail and fall through to playbooks or WebFetch?)
+- X fetch-path success rate (how often does xurl suffice vs. needing twitter-cli/dev-browser for an X Article? any EVAL 11 truncation misses caught after the fact?)
 - Which project connections get removed by users? (signals forced connections)
 - Security assessment accuracy for GitHub repos (did flagged issues matter?)
 - Video transcription success rate
