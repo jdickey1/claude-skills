@@ -761,7 +761,7 @@ Fail: Any target is a directory, any type is invalid, or any context is generic
 
 **EVAL 7: Thread replies fetched for X/Twitter posts**
 Question: For X/Twitter posts, were thread replies attempted before concluding the post is complete?
-Pass: twitter-cli or dev-browser used as fetch method; thread/article content captured
+Pass: xurl, twitter-cli, or dev-browser used as fetch method; thread/article content captured — with xurl, that means the `conversation_id` walk in Thread & Article Detection, not just the parent fetch
 Fail: Post dismissed as "engagement bait" or "missing promised content" without attempting to fetch replies
 
 **EVAL 8: Vault wikilinking attempted**
@@ -1118,8 +1118,8 @@ Keep the inline presentation brief — the full analysis is in the file.
 - **X long-form posts truncate at 280 characters with no error** — the real body lives in `note_tweet`, and `xurl read`, the default `/2/tweets` field set, and the syndication API all return the clipped `text` instead. Nothing in the response looks wrong, so the failure survives every content check except EVAL 11. Name `note_tweet` in `tweet.fields` on every X fetch, and treat a short body plus `reply_count: 0` as a prompt to verify rather than a conclusion that the post is thin.
 - **Video temp files accumulate** — If transcription fails, /tmp/digest-audio.wav and /tmp/digest-video.mp4 persist on the shared VPS. Always run cleanup even on transcription failure.
 - **Vague project connections** — "Related to Hyperscale" will be rejected. Every frontmatter connection needs a specific, actionable context like "500MW expansion data directly relevant to Q1 infrastructure coverage."
-- **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies. The syndication API only returns the parent tweet. Always attempt to fetch replies via Playwright or ThreadReaderApp before concluding a post lacks substance.
-- **ThreadReaderApp wrong thread** — ThreadReaderApp sometimes returns a different thread by the same author, especially for very recent posts. Always verify the returned content topic matches the original tweet before using it.
+- **X threads live in replies** — Most X "threads" are a hook tweet with the real content in self-replies, and the syndication API only returns the parent tweet. Walk the thread with xurl before concluding a post lacks substance: `xurl "/2/tweets/search/recent?query=conversation_id%3A${TWEET_ID}%20from%3A${USERNAME}&tweet.fields=note_tweet,text&max_results=20"`. URL-encode the space and colons — an unencoded query returns a parse error, not results. Filter to `from:` the author to separate self-replies (the thread body) from the crowd's replies. dev-browser scrolling is the fallback when search access is unavailable.
+- **ThreadReaderApp is user-supplied only** — it is on the never-drive list (auth wall), and it survives solely in the Step 5 manual fallback where the *user* pastes an unrolled link. When one arrives that way, verify the returned thread is the right one: it sometimes serves a different thread by the same author, especially for very recent posts.
 - **Vault wikilinking false positives** — Short note titles (e.g., "Arc", "DLG") can match unrelated content. Only link when the context clearly matches the note's subject. When in doubt, skip the link. Also watch for notes with similar names (e.g., "Claude" the project vs "Claude" the AI model) — pick the one that matches context.
 
 ## 9. Multiple Inputs
