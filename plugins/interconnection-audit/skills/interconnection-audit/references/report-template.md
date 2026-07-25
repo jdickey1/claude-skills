@@ -14,7 +14,7 @@ Each dimension is scored as a percentage of its weight, then summed:
 score = (connected_notes / total_non_excluded_notes) * 30
 ```
 
-A note counts as "connected" if it has at least one connection (existing or newly proposed) to a note outside its own directory.
+A note counts as "connected" if it has at least one connection (existing or newly proposed) to a note outside its own directory, or a project hub carve-out link to its own directory's hub doc.
 
 `total_non_excluded_notes` uses **the same exclusion set as orphan counting** (below): drop `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series. Do NOT use a "non-inbox only" denominator — that pulls 300+ agent-log/system notes into the denominator and understates coverage by ~13 points versus the orphan-exclusion logic. Coverage and orphans must measure the same population. (2026-05-31: non-inbox denom read 76.4%; the consistent non-excluded denom read 89.5% and matches prior audits.)
 
@@ -32,9 +32,13 @@ Each uncleared `action-pending` item costs 1 point, floored at 0.
 score = max(0, 20 - (orphan_count * 0.5))
 ```
 
-Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and **recurring auto-generated dated series** (directories with ≥10 `YYYY-MM-DD.md` children, e.g. `01-Projects/X-Intel/`) are excluded from orphan counting — these categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams) are not intended to carry cross-project connections.
+Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and **recurring auto-generated dated series** are excluded from orphan counting — these categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams) are not intended to carry cross-project connections.
 
-An orphan is a note with zero connections (existing + proposed) to notes outside its own directory.
+**Dated-series detection — anchored match, not a prefix.** A series is a directory with ≥10 children matching `^\d{4}-\d{2}-\d{2}\.md$`: the date must be the entire filename stem (e.g. `01-Projects/X-Intel/2026-07-19.md`). Do **not** use `^\d{4}-\d{2}-\d{2}.*\.md$` — that matches any date-*prefixed* document and on 2026-07-24 excluded 615 notes (all of `web-analyses/`, `05-Commitments/`, `Hyperscale/drafts/`, `JD-Key/`), hiding 71 real orphans and overstating coverage by 4.6 points.
+
+**Always report the exclusion set.** State total excluded, the directories detected as series, and — separately — how many notes the *dated-series* rule removed on its own. Alarm on that series figure, not the total: fixed category exclusions (`99-System`, `00-Inbox`, `04-Journal`, `06-Agent-Log`) legitimately account for ~30-35% of this vault, so a total-exclusion threshold misfires every run. Investigate if the series rule alone removes >10% of notes or detects more than 2-3 series directories. (2026-07-24 calibration: anchored → 1 dir / 110 notes / 5.8%; prefix → 8 dirs / 66.8% total excluded.)
+
+An orphan is a note with zero connections (existing + proposed) to notes outside its own directory — except that a note connected to its own directory's hub doc via the **project hub carve-out** (see SKILL.md Constraints) counts as connected, not orphaned.
 
 ### Link Integrity (15 points)
 
