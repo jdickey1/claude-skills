@@ -1,7 +1,7 @@
 ---
 name: interconnection-audit
 description: Use when auditing vault connections, checking vault health, finding orphan notes, discovering missing cross-note links, or improving interconnection between Obsidian vault notes. Also use after a batch of new content (20+ notes) or on a monthly cadence.
-version: 1.2.0
+version: 1.3.0
 effort: high
 ---
 
@@ -134,7 +134,9 @@ After all subagents return (and Phase 2.5 enrichment, if available):
 
 1. **Deduplicate** — merge identical proposals, consolidate expected reverse pairs
 2. **Check reverse links** — per the reverse link pairs table, flag missing reverses
-3. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` — these categories are not intended to carry project connections). **Also exclude recurring auto-generated dated series** — directories holding a daily/periodic stream of `YYYY-MM-DD.md` notes (e.g. `01-Projects/X-Intel/`). Treat these like journal/agent-log: ephemeral by design, not a connectivity failure. Detect a series as a directory where ≥10 children match `^\d{4}-\d{2}-\d{2}.*\.md$`; exclude those dated children from the orphan count (the directory's non-dated docs still count). (2026-05-31: 27 of 116 orphans were X-Intel dailies — structural, not missing links.)
+3. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` — these categories are not intended to carry project connections). **Also exclude recurring auto-generated dated series** — directories holding a daily/periodic stream of `YYYY-MM-DD.md` notes (e.g. `01-Projects/X-Intel/`). Treat these like journal/agent-log: ephemeral by design, not a connectivity failure. Detect a series as a directory where ≥10 children match **`^\d{4}-\d{2}-\d{2}\.md$`** — the date must be the *entire* filename stem; exclude those dated children from the orphan count (the directory's non-dated docs still count). (2026-05-31: 27 of 116 orphans were X-Intel dailies — structural, not missing links.)
+
+   > **Anchor the regex — do not use a date *prefix* match.** The earlier form `^\d{4}-\d{2}-\d{2}.*\.md$` matches any filename that merely *starts* with a date, which silently swept 615 notes out of measurement on this vault: all 315 `web-analyses/`, all of `03-Resources/web-analyses/`, `05-Commitments/open|completed/`, `01-Projects/Hyperscale/drafts/`, and `01-Projects/JD-Key/`. Those are dated *documents*, not an auto-generated daily series. It hid **71 real orphans** and made coverage read 97.9% when the true figure was 93.3%. It also contradicted this skill's own Phase 2 partition table, which assigns `web-analyses/` a dedicated full-read discovery agent — the audit was reading those notes and then excluding them from every metric. Only a pure `YYYY-MM-DD.md` stem (the X-Intel case this rule was written for) qualifies. (2026-07-24: found and corrected; expect a one-time downward trend break in orphan count the first run after this change.)
 4. **Detect stale connections** — broken targets or `action-pending` items older than 60 days. When counting **broken** targets, ignore (a) literal placeholder targets containing `{...}` and (b) any connection inside a `_TEMPLATE.md` / template file — these are illustrative format examples, not real links. (2026-05-31: `_TEMPLATE.md`'s `01-Projects/{ProjectName}/{main-design-doc}.md` was mis-counted as a broken link.)
 5. **Score vault health** — calculate overall score out of 100 using five dimensions:
    - Connection coverage (30pts)
@@ -188,12 +190,33 @@ ssh nonrootadmin "sudo -u obsidian rm -f '/home/obsidian/automation-vault/PATH'"
 ## Constraints
 
 - **No auto-apply** — all connections require user approval
-- **No same-directory links** — except `supersedes` between date-versioned files in the same directory
+- **No same-directory links** — with two exceptions: `supersedes` between date-versioned files, and the **project hub carve-out** below
 - **Context required** — every connection needs a meaningful one-sentence context
 - **Targets must be files** — always point to a specific `.md` file, never a directory (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`, not `01-Projects/Hyperscale/`)
 - **Paths not wikilinks** — relative paths from vault root
 - **Non-destructive** — only modify frontmatter, never touch note body
 - **Idempotent** — running twice yields same proposals minus already-applied ones
+
+### Project hub carve-out (same-directory exception)
+
+A same-directory connection IS allowed when the **target is that directory's designated hub doc** and the type is `informs` or `extends`.
+
+A hub doc is, in priority order:
+1. a file matching `* - Project Design.md`
+2. `CLAUDE.md`
+3. a file whose name equals the directory name (e.g. `Hyperscale/Hyperscale.md`)
+
+Rules for the carve-out:
+- **Target only, never source.** The hub may receive same-dir links; it must not emit them. This keeps the graph a DAG and prevents hub↔child cycles.
+- **One per source note.** A note gets at most one same-dir hub link.
+- **Only when the note has no cross-directory connection.** If the note is already non-orphaned, don't add a hub link — this exception exists to rescue orphans, not to thicken hubs.
+- **Never `supersedes`, `blocks`, or `contradicts`** to a hub.
+
+**Why this exists.** The blanket no-same-dir rule stranded notes whose only genuine parent is a sibling. It surfaced three runs running (2026-06-29, 2026-07-19, 2026-07-24), blocking semantically correct proposals like `VPS-Infrastructure/Backups-Current-Setup.md` → `VPS-Infrastructure/VPS Infrastructure - Project Design.md`. Those notes stayed orphaned on a technicality while the audit reported them as connectivity failures. The original rule's real target was *lateral* same-dir clutter (sibling→sibling "related" noise), not child→parent structure.
+
+**What this deliberately does NOT rescue.** The carve-out is narrow: the target must be the directory's *hub*, not merely a related sibling. `JD-Key/slide-deck-pdf-generation.md` → `JD-Key/2026-data-center-fears-vs-facts-one-pager.md` is a real relationship but still correctly rejected — the one-pager is not a hub doc, and admitting sibling→sibling links is exactly the lateral clutter the original rule exists to prevent. Such notes remain orphans until they earn a cross-directory link. Accept that; do not widen the carve-out to close it.
+
+**Orphan scoring interacts with this:** a note rescued only by a hub carve-out still counts as connected for coverage/orphan purposes — it now has a real, followable parent link.
 
 ## Binary Quality Checks
 
@@ -204,8 +227,8 @@ Fail: Any target path is a directory, doesn't exist, or is outside the vault
 
 **EVAL 2: No same-directory connections**
 Question: Are all proposed connections between files in different directories?
-Pass: No connection links two files in the same folder (except supersedes/superseded-by)
-Fail: Any same-directory connection proposed (other than supersedes)
+Pass: No connection links two files in the same folder, except (a) `supersedes`/`superseded-by`, or (b) a valid project hub carve-out — target is the directory's hub doc, type is `informs`/`extends`, source is not the hub, source had no cross-directory connection
+Fail: Any other same-directory connection proposed
 
 **EVAL 3: Connection context is actionable**
 Question: Does every connection include a specific, actionable one-sentence context?
@@ -280,9 +303,11 @@ Report saved: {path}
 
 - **Every proposed connection target must be verified to exist** as a real .md file in the vault.
 - **Health score dimensions must cite the actual counts** used in calculation, not just the final weighted score.
-- **"No same-directory connections" must be enforced programmatically**, not just by convention.
+- **The same-directory rule must be enforced programmatically**, not just by convention — the subagent self-check has never once caught them all (same-dir violations recurred in every run 2026-05-31 through 2026-07-24). The code gate compares `dirname(source)` to `dirname(target)` and rejects unless the proposal qualifies as `supersedes` or a valid project hub carve-out.
 - **Connection context strings must be specific and actionable** — verify each answers "why would someone following this link benefit?"
-- **Orphan detection must exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series** (directories with ≥10 `YYYY-MM-DD.md` children, e.g. `01-Projects/X-Intel/`) as documented in constraints. These categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams) are by design not connected to project content.
+- **Orphan detection must exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series** (directories with ≥10 children whose filename stem is *exactly* a date — `^\d{4}-\d{2}-\d{2}\.md$` — e.g. `01-Projects/X-Intel/`) as documented in constraints. These categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams) are by design not connected to project content.
+- **The dated-series regex must be anchored, and the run must report the exclusion set.** Print (a) total excluded, (b) the directories detected as series, and (c) **how many notes the *dated-series* rule removed on its own**, separately from the fixed `99-System`/`00-Inbox`/`04-Journal`/`06-Agent-Log` exclusions. A prefix match silently hid 615 notes and 71 orphans on 2026-07-24; an unreported exclusion set makes an over-broad rule invisible. **Alarm on the series component, not the total:** the fixed category exclusions legitimately run ~30-35% of this vault (agent logs alone are large), so a total-exclusion threshold misfires. If the *dated-series* rule alone removes more than ~10% of the vault, or detects more than 2-3 series directories, treat it as a bug and investigate before reporting a score. (Calibration 2026-07-24: anchored rule → 1 series dir, 110 notes, 5.8%. Prefix rule → 8 series dirs, 66.8% of the vault excluded in total.)
+- **Same-directory connections are permitted only via `supersedes` or the project hub carve-out** — verify the carve-out's four conditions (hub target, `informs`/`extends`, source≠hub, source had no cross-dir link) programmatically, not by convention.
 - **Broken-link counts must exclude `{...}` placeholder targets and template files** — illustrative format examples in `_TEMPLATE.md` are not real broken links.
 
 ## References
