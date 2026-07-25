@@ -1,7 +1,7 @@
 ---
 name: interconnection-audit
 description: Use when auditing vault connections, checking vault health, finding orphan notes, discovering missing cross-note links, or improving interconnection between Obsidian vault notes. Also use after a batch of new content (20+ notes) or on a monthly cadence.
-version: 1.3.0
+version: 1.4.0
 effort: high
 ---
 
@@ -190,33 +190,46 @@ ssh nonrootadmin "sudo -u obsidian rm -f '/home/obsidian/automation-vault/PATH'"
 ## Constraints
 
 - **No auto-apply** — all connections require user approval
-- **No same-directory links** — with two exceptions: `supersedes` between date-versioned files, and the **project hub carve-out** below
+- **Every connection must pass the content test** — the context has to tell the reader something they could not infer from where the two notes already sit. This replaced the blanket no-same-directory rule on 2026-07-25 (see below)
 - **Context required** — every connection needs a meaningful one-sentence context
 - **Targets must be files** — always point to a specific `.md` file, never a directory (e.g., `01-Projects/Hyperscale/Hyperscale News - Project Design.md`, not `01-Projects/Hyperscale/`)
 - **Paths not wikilinks** — relative paths from vault root
 - **Non-destructive** — only modify frontmatter, never touch note body
 - **Idempotent** — running twice yields same proposals minus already-applied ones
 
-### Project hub carve-out (same-directory exception)
+### The content test (replaced the same-directory ban, 2026-07-25)
 
-A same-directory connection IS allowed when the **target is that directory's designated hub doc** and the type is `informs` or `extends`.
+A connection earns its place when its context says something the reader could not infer from where
+the two notes already sit. Location is not the test. Content is.
 
-A hub doc is, in priority order:
-1. a file matching `* - Project Design.md`
-2. `CLAUDE.md`
-3. a file whose name equals the directory name (e.g. `Hyperscale/Hyperscale.md`)
+**What the old rule was.** "No same-directory links," plus a project hub carve-out that let a note
+link its own directory's hub doc when it had no cross-directory connection.
 
-Rules for the carve-out:
-- **Target only, never source.** The hub may receive same-dir links; it must not emit them. This keeps the graph a DAG and prevents hub↔child cycles.
-- **One per source note.** A note gets at most one same-dir hub link.
-- **Only when the note has no cross-directory connection.** If the note is already non-orphaned, don't add a hub link — this exception exists to rescue orphans, not to thicken hubs.
-- **Never `supersedes`, `blocks`, or `contradicts`** to a hub.
+**Why it was dropped.** Measured against the live vault (1926 notes, 5044 connections):
 
-**Why this exists.** The blanket no-same-dir rule stranded notes whose only genuine parent is a sibling. It surfaced three runs running (2026-06-29, 2026-07-19, 2026-07-24), blocking semantically correct proposals like `VPS-Infrastructure/Backups-Current-Setup.md` → `VPS-Infrastructure/VPS Infrastructure - Project Design.md`. Those notes stayed orphaned on a technicality while the audit reported them as connectivity failures. The original rule's real target was *lateral* same-dir clutter (sibling→sibling "related" noise), not child→parent structure.
+| Claim the ban rested on | What the vault showed |
+|---|---|
+| It protects the scores | It cannot. Orphan detection and connection coverage both count *cross-directory* links only, so a same-directory link can never inflate either. |
+| It is followed | 937 same-directory links already existed, 18.5% of all connections. |
+| It stops notes hiding as connected | 96% of notes emitting a same-directory link also linked cross-directory. The 17 that did not were already counted as orphans. |
+| Same-directory links are low quality | Only because of the carve-out. Of 132 contentless same-directory contexts, **111 were the exact string "Parent project design document"** — boilerplate the carve-out itself produced. Excluding those: 2.5% contentless, against 1.7% for cross-directory. Statistically the same. |
 
-**What this deliberately does NOT rescue.** The carve-out is narrow: the target must be the directory's *hub*, not merely a related sibling. `JD-Key/slide-deck-pdf-generation.md` → `JD-Key/2026-data-center-fears-vs-facts-one-pager.md` is a real relationship but still correctly rejected — the one-pager is not a hub doc, and admitting sibling→sibling links is exactly the lateral clutter the original rule exists to prevent. Such notes remain orphans until they earn a cross-directory link. Accept that; do not widen the carve-out to close it.
+**The carve-out never worked.** It was written to rescue
+`01-Projects/VPS-Infrastructure/Backups-Current-Setup.md`. That note carries the prescribed hub link
+to this day, its context even reads "(hub carve-out)", and it was still reported as an orphan in the
+2026-07-25 audit. The section claiming a carve-out link "still counts as connected for coverage and
+orphan purposes" contradicted this skill's own orphan definition ("zero connections outside their
+directory") and the definition is what the code implements. The carve-out bought the appearance of a
+connection with none of the substance, 111 times.
 
-**Orphan scoring interacts with this:** a note rescued only by a hub carve-out still counts as connected for coverage/orphan purposes — it now has a real, followable parent link.
+**What the ban was actually reaching for** was lateral sibling-to-sibling "related" noise. The
+content test targets that directly and without collateral damage: a contentless sibling link fails
+it, and a genuine `source-for` between two notes that share a folder passes.
+
+**Still prefer cross-directory.** That is what connects PARA silos and what the metrics reward. When
+a cross-directory target and a same-directory one are both defensible, propose the cross-directory
+one. But never suppress a real edge to satisfy a location rule, and never manufacture a hub link to
+make an orphan look connected — an honest orphan is more useful than a contentless edge.
 
 ## Binary Quality Checks
 
@@ -225,10 +238,10 @@ Question: Does every proposed connection point to an existing .md file?
 Pass: All target paths resolve to real files in the vault
 Fail: Any target path is a directory, doesn't exist, or is outside the vault
 
-**EVAL 2: No same-directory connections**
-Question: Are all proposed connections between files in different directories?
-Pass: No connection links two files in the same folder, except (a) `supersedes`/`superseded-by`, or (b) a valid project hub carve-out — target is the directory's hub doc, type is `informs`/`extends`, source is not the hub, source had no cross-directory connection
-Fail: Any other same-directory connection proposed
+**EVAL 2: Every connection passes the content test**
+Question: Does each context state something a reader could not infer from where the two notes sit?
+Pass: Every context names the specific relationship, claim, or dependency that links them
+Fail: Any context is a placeholder ("Parent project design document", "Related to this project"), a paraphrase of the target's title, or a bare category statement ("both concern data centers"). Same-directory connections are judged by this test like any other — location is not a failure, an empty context is
 
 **EVAL 3: Connection context is actionable**
 Question: Does every connection include a specific, actionable one-sentence context?
@@ -303,11 +316,11 @@ Report saved: {path}
 
 - **Every proposed connection target must be verified to exist** as a real .md file in the vault.
 - **Health score dimensions must cite the actual counts** used in calculation, not just the final weighted score.
-- **The same-directory rule must be enforced programmatically**, not just by convention — the subagent self-check has never once caught them all (same-dir violations recurred in every run 2026-05-31 through 2026-07-24). The code gate compares `dirname(source)` to `dirname(target)` and rejects unless the proposal qualifies as `supersedes` or a valid project hub carve-out.
+- **Gate on content, not location** (revised 2026-07-25). The old lesson here said the same-directory rule must be enforced programmatically, and a code gate compared `dirname(source)` to `dirname(target)`. That gate was measuring the wrong thing: it rejected genuine edges between sibling notes while passing 111 contentless "Parent project design document" links its own carve-out generated. Replace it with a context-quality gate — reject a proposal whose context is empty, under ~40 characters, matches a known placeholder string, or merely restates the target's title. That check is still worth running in code rather than trusting subagent self-discipline, because the underlying lesson does hold: **subagent self-checks have never once caught every violation** (2026-05-31 through 2026-07-24, every run). The gate stays; what it tests changed.
 - **Connection context strings must be specific and actionable** — verify each answers "why would someone following this link benefit?"
 - **Orphan detection must exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series** (directories with ≥10 children whose filename stem is *exactly* a date — `^\d{4}-\d{2}-\d{2}\.md$` — e.g. `01-Projects/X-Intel/`) as documented in constraints. These categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams) are by design not connected to project content.
 - **The dated-series regex must be anchored, and the run must report the exclusion set.** Print (a) total excluded, (b) the directories detected as series, and (c) **how many notes the *dated-series* rule removed on its own**, separately from the fixed `99-System`/`00-Inbox`/`04-Journal`/`06-Agent-Log` exclusions. A prefix match silently hid 615 notes and 71 orphans on 2026-07-24; an unreported exclusion set makes an over-broad rule invisible. **Alarm on the series component, not the total:** the fixed category exclusions legitimately run ~30-35% of this vault (agent logs alone are large), so a total-exclusion threshold misfires. If the *dated-series* rule alone removes more than ~10% of the vault, or detects more than 2-3 series directories, treat it as a bug and investigate before reporting a score. (Calibration 2026-07-24: anchored rule → 1 series dir, 110 notes, 5.8%. Prefix rule → 8 series dirs, 66.8% of the vault excluded in total.)
-- **Same-directory connections are permitted only via `supersedes` or the project hub carve-out** — verify the carve-out's four conditions (hub target, `informs`/`extends`, source≠hub, source had no cross-dir link) programmatically, not by convention.
+- **A same-directory link never rescues a note from orphan status, whatever the schema says elsewhere.** Orphan detection counts connections *outside* the note's directory, so a sibling link leaves the count unchanged. This is worth stating because the retired hub carve-out claimed the opposite for two months and nobody noticed the note it was written for (`01-Projects/VPS-Infrastructure/Backups-Current-Setup.md`) was still being reported as an orphan in every run. When a rule and a metric disagree, check which one the code implements before trusting either.
 - **Broken-link counts must exclude `{...}` placeholder targets and template files** — illustrative format examples in `_TEMPLATE.md` are not real broken links.
 
 ## References
