@@ -147,6 +147,74 @@ Patterns derived from real editorial passes on AI-drafted long-form work: the mo
 
 ---
 
+## 9. Cut the Preview, Keep the Delivery
+
+**The pattern:** Grading your own material for the reader before presenting it. The sentence exists to tell the reader that what follows is important, quotable, or the real story.
+
+**Before:**
+> Here's the part I expect to get quoted badly.
+>
+> The Comptroller's audit division has started compliance audits on the data centers that have passed their five-year mark...
+
+**After:** *[Teaser paragraph deleted. The section opens on the audit numbers.]*
+
+Same pass, same instinct, five more times:
+
+| Draft | Editor's version |
+|---|---|
+| "The growth curve is the story. From 2014 through 2020, cumulatively, 10 data centers held certifications." | "From 2014 through 2020, cumulatively, 10 data centers held certifications." |
+| "The most useful 90 seconds of the day came from Senator Kolkhorst, speaking to the industry witness directly." | "Senator Kolkhorst, speaking to the industry witness directly, expressed the legislature's frustration." |
+| "Senator Hinojosa's response is the one to internalize: ..." | "Senator Hinojosa's response: ..." |
+| "Reynolds added a second comparison worth writing down." | "Reynolds added a second important comparison." |
+| "That last pair is the one the industry keeps underweighting. She described asking an operator whether..." | "She described asking an operator whether..." |
+| "The audit numbers themselves point the other way. On the nine facilities where..." | "On the other hand, for the nine facilities where..." |
+
+**The fix:** Delete the grade. Where the sentence does nothing but rank the material, replace the ranking with a description of what the source actually did: "expressed the legislature's frustration" carries more than "the most useful 90 seconds of the day," because it reports rather than rates.
+
+**Why:** An expert reader ranks the material without help. Being told which quote to internalize signals that the writer doesn't trust the quote to land, and a teaser paragraph costs the reader a beat before the content arrives. The evidence-verdict form ("the audit numbers themselves point the other way") fails the same way from the other direction: it tells the reader what the evidence proves instead of laying the numbers next to each other with a plain connective.
+
+**The boundary:** The same editor *kept* "Reynolds editorialized exactly once, and it's the line most likely to end up in a headline: ..." Assessment welded to the sentence that delivers the content is reporting. Assessment sitting in its own paragraph ahead of the content is a teaser. Cut the second, keep the first.
+
+**Relationship to Narrator Lines:** [ai-slop-patterns.md](ai-slop-patterns.md) covers narrator lines as structural scaffolding (reader-instruction, importance assertion, colon-label). This pattern is the same instinct aimed at the writer's *own sourcing*: rating a quote, a witness, or a data series before presenting it. It survives the narrator-line sweep because it reads as analysis.
+
+**Tells to grep for:** "is the story", "the most useful", "Here's the part", "the one to internalize", "worth writing down", "the part that matters", "point the other way", "For scale,"
+
+---
+
+## 10. A One-Line Paragraph Has to Carry New Information
+
+**The pattern:** In a piece that uses single-sentence paragraphs for pace, spending one on a line that only amplifies, restates, or exhorts.
+
+| Draft | Editor's version |
+|---|---|
+| "Verified actual investment came in above $9.1 billion.<br><br>That's 3.4 times the statutory minimum." | "Verified actual investment came in above $9.1 billion, 3.4 times the statutory minimum." |
+| "...before anyone compels you, is what separates the operators this committee trusts from the ones it doesn't.<br><br>Do it before you're told to." | *[second line deleted]* |
+| "...and that his goal is 'a fair representation.' August is right now." | *[final sentence deleted]* |
+
+**The fix:** Fold the amplifier into the sentence above it as an appositive, or cut it.
+
+**Test:** Does the standalone line contain a fact, number, or claim the reader does not already have? The same editor kept every one-liner that did: "On Monday the committee asked it." / "Running total, 138 certified." / "Texas is in the minority by exempting electricity."
+
+**Why:** The one-line paragraph is the strongest emphasis available in newsletter and post formatting, and it works on a budget. Spend it on an amplifier and the ones carrying news read as decoration too. AI reaches for the form as a rhythm device, which is the one reason that doesn't earn it.
+
+---
+
+## 11. Name the Referent and the Mechanism
+
+**The pattern:** Referring back to a number, a tier, or a category with a bare pronoun or ordinal in a passage where the reader is already tracking several, and asserting impossibility where the truth is a rule.
+
+| Draft | Editor's version |
+|---|---|
+| "One of the six asked to have its certification reversed voluntarily" | "One of the six non-compliant firms asked to have its certification reversed voluntarily" |
+| "take the 20-year large-facility exemption rather than the 10- or 15-year" | "take the 20-year large-facility exemption rather than the 10- or 15-year smaller facility exemption" |
+| "so an audit can't happen until year five" | "so the law doesn't authorize an audit until year five" |
+
+**The fix:** Repeat the noun. In number-dense passages, "one of the six" is ambiguous the moment two sixes are in play; the three extra words cost nothing and remove a re-read. And when a thing doesn't happen because a statute, contract, or policy says so, name the instrument rather than writing it as a law of nature.
+
+**Why:** Both moves protect the piece under hostile reading. A practitioner audience re-reads the sentence that made them count backwards, and an audience that works with the statute notices when "can't" is doing the work "isn't authorized to" should do. This is the small-scale companion to Pattern 6: crispness is worth less than a sentence that survives a specialist's second pass.
+
+---
+
 ## Closing-Pass Checklist
 
 After applying the universal rules and after the slop-patterns sweep, run this checklist on the final draft:
@@ -159,6 +227,9 @@ After applying the universal rules and after the slop-patterns sweep, run this c
 6. ☐ Every dated or quantified claim verifiable; poetic overstatement demoted to flatter accuracy
 7. ☐ Rebuttal sections in nuance-arguing articles follow punchy answers with the qualifier that makes them accurate
 8. ☐ Closing line is a flat declarative, not "the question isn't X, it's Y"
+9. ☐ No sentence grades the material before delivering it ("the growth curve is the story," "the most useful 90 seconds," "the one to internalize")
+10. ☐ Every one-line paragraph carries a fact the reader doesn't have yet; amplifiers folded in or cut
+11. ☐ Bare ordinals and pronouns in number-dense passages carry their noun; "can't" replaced with the rule that actually prohibits it
 
 Run the checklist explicitly. The model's gravity is to skim it.
 
@@ -166,6 +237,6 @@ Run the checklist explicitly. The model's gravity is to skim it.
 
 ## Where These Came From
 
-These patterns were extracted from a real editorial pass on an AI-drafted long-form policy piece. Each before/after is a verbatim diff between the AI draft and the published version. The author's edits were not stylistic; they were substantive corrections to posture, hedging, and overclaiming that the AI's universal-rule compliance had let through. The patterns generalize because they aren't specific to the topic; they are specific to the way AI prose behaves when the lexical and structural rules are followed but the editorial reflexes aren't internalized.
+Patterns 1–8 were extracted from a real editorial pass on an AI-drafted long-form policy piece. Patterns 9–11 came from a second pass, on an AI-drafted newsletter covering a legislative hearing: 17 edits, of which eight cut or replaced a sentence that graded the material before delivering it, three collapsed or deleted a one-line paragraph that only amplified the line above, and three restored a noun or a legal mechanism the draft had abbreviated away. That distribution is the useful signal; the drafts complied with every lexical and slop rule and still shipped the same three reflexes. Each before/after is a verbatim diff between the AI draft and the published version. The author's edits were not stylistic; they were substantive corrections to posture, hedging, and overclaiming that the AI's universal-rule compliance had let through. The patterns generalize because they aren't specific to the topic; they are specific to the way AI prose behaves when the lexical and structural rules are followed but the editorial reflexes aren't internalized.
 
 Add new patterns here as additional editorial passes surface them. The best patterns are the ones a real editor cuts on first pass; one-time stylistic preferences belong in voice context, not here.
