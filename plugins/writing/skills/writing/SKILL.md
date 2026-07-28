@@ -301,9 +301,9 @@ The "**Bold Label:** sentence that just restates the label" pattern is one of th
 
 ### 18. Pressure-Test Drafts Against Editor Reflexes
 
-The lexical rules catch wrong words. The structural rules catch named AI constructions. Real editors still cut a third category: defensive disclaimers, hedging epilogues, false-neutral conclusions, two-sentence balance beats, clever "the question isn't X, it's Y" closers. These pass the other rules but a careful editor cuts them on first pass.
+The lexical rules catch wrong words. The structural rules catch named AI constructions. Real editors still cut a third category: defensive disclaimers, hedging epilogues, false-neutral conclusions, two-sentence balance beats, clever "the question isn't X, it's Y" closers, and sentences that grade the material before delivering it. These pass the other rules but a careful editor cuts them on first pass.
 
-Before finalizing branded or long-form content, scan for the eight editorial-edit patterns in [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md). Each is documented with a real before/after from an editorial revision pass.
+Before finalizing branded or long-form content, scan for the eleven editorial-edit patterns in [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md). Each is documented with a real before/after from an editorial revision pass.
 
 **Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics: the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip.
 
@@ -418,7 +418,7 @@ Before finalizing any content:
 - [ ] Zero inline-header vertical lists where the bold label just restates the line (rule #17)
 - [ ] Lists ordered by magnitude and recognizability (largest-first; foreign-spelling brand never first unless single most-recognized in category, see rule #19)
 - [ ] Self-audit pass completed (mandatory for X, LinkedIn, web/blog, newsletter, branded content; see Self-Audit Pass section)
-- [ ] Editorial-edit pressure-test passed (no defensive disclaimers, no hedging epilogues at section closes, no false-neutral conclusions, no clever "the question isn't X, it's Y" closer; see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) and rule #18)
+- [ ] Editorial-edit pressure-test passed (no defensive disclaimers, no hedging epilogues at section closes, no false-neutral conclusions, no clever "the question isn't X, it's Y" closer, no sentence grading the material before it arrives, every one-line paragraph carrying new information; see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) and rule #18)
 - [ ] Captured voice idiosyncrasies preserved over generic defaults (rule #15: deliberate quirks in voice context kept, not smoothed)
 - [ ] Final paragraph is in the speaker's voice, not the writer's
 - [ ] Credentials stated fully once, referenced lightly after

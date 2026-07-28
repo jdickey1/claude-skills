@@ -567,6 +567,7 @@ Three forms, all cuts:
 | Reader-instruction | "The mechanics matter here." / "Read this carefully." / "Note that..." / "Stay with me." | Tells the reader how to read instead of writing something worth reading. |
 | Importance assertion | "...because the precision is the whole story." / "This is the part that matters." | Asserts significance the sentence should demonstrate. If it were the whole story, it would land as one. |
 | Colon-label | "What's key:" / "The structure, precisely:" / "What does happen:" / "The tension:" | A section header pretending to be prose. It exists because the surrounding blocks are out of order. |
+| Source-grading | "The growth curve is the story." / "The most useful 90 seconds of the day came from..." / "Here's the part I expect to get quoted badly." | Rates a quote or data series before presenting it. Reads as analysis, so it survives the sweep. Cut the grade or convert it to a description of what the source did. See [editorial-edit-patterns.md](editorial-edit-patterns.md) #9. |
 
 **Test:** delete the line. If the piece still reads, it was scaffolding, and reading *better* is the proof. If it now feels abrupt, the problem is the order of the surrounding blocks, not the missing label. Fix the sequence and the label stops being necessary.
 

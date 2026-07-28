@@ -80,7 +80,7 @@ Eleven yes/no checks for evaluating writing output quality (autoresearch evals, 
 ## EVAL 11: No editorial-edit posture tics
 **Question:** Does the output avoid defensive disclaimers, section-end hedging epilogues, and "the question isn't X, it's Y" closers?
 **Pass:** Zero defensive disclaimer openings ("None of that is...", "That's not to say...", "While reasonable people may..."), zero section-final hedging epilogues ("the principle is contestable...", "time will tell..."), and no "the question isn't X, it's Y" closing line.
-**Fail:** Any of the above patterns present (see [editorial-edit-patterns.md](editorial-edit-patterns.md) for the full taxonomy of eight patterns; this eval covers the binary-checkable subset).
+**Fail:** Any of the above patterns present (see [editorial-edit-patterns.md](editorial-edit-patterns.md) for the full taxonomy of eleven patterns; this eval covers the binary-checkable subset).
 **Greppable:** `grep -iE "none of that is|that's not to say|while reasonable people|the principle is contestable|the question isn'?t.*it'?s"`
 
 ## Guard Assertions (Optimization Safety Rails)
