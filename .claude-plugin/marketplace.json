@@ -1,19 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-skills",
-  "description": "Production-tested skills for SEO, security auditing, writing, adversarial refinement, and web tools",
+  "description": "Production-tested skills for security auditing, writing, adversarial refinement, and web tools",
   "owner": {
     "name": "James Dickey",
     "url": "https://github.com/jdickey1"
   },
   "plugins": [
-    {
-      "name": "seo",
-      "description": "Comprehensive SEO audit, optimization, and automation. Covers technical SEO, on-page optimization, local business SEO, Google Business Profile, AI search readiness, content strategy, link building, and a full DIY automation system.",
-      "source": "./plugins/seo",
-      "category": "productivity",
-      "homepage": "https://github.com/jdickey1/claude-skills"
-    },
     {
       "name": "security-audit",
       "description": "Comprehensive cybersecurity audit framework following OWASP Top 10 and NIST 800-53. Red-team methodology for web application security review.",
@@ -79,7 +72,7 @@
     },
     {
       "name": "setup-audit",
-      "description": "Audit Claude Code setup for dead weight — default-behavior overlap, contradictions, redundancy, one-off fixes, and vagueness across CLAUDE.md files, skills, and memories. Semantic review of whether your rules earn their keep; pair with skill-doctor for mechanical static lint of skill files.",
+      "description": "Audit Claude Code setup for dead weight \u2014 default-behavior overlap, contradictions, redundancy, one-off fixes, and vagueness across CLAUDE.md files, skills, and memories. Semantic review of whether your rules earn their keep; pair with skill-doctor for mechanical static lint of skill files.",
       "source": "./plugins/setup-audit",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
@@ -128,7 +121,7 @@
     },
     {
       "name": "gmail-mcp",
-      "description": "Read-only Gmail MCP server. Search and read messages over the official Gmail API. Four tools: search_emails, read_email, get_thread, list_labels. OAuth credentials live in the OS keychain or a 0600 file — no tokens in your config.",
+      "description": "Read-only Gmail MCP server. Search and read messages over the official Gmail API. Four tools: search_emails, read_email, get_thread, list_labels. OAuth credentials live in the OS keychain or a 0600 file \u2014 no tokens in your config.",
       "source": "./plugins/gmail-mcp",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
@@ -142,14 +135,14 @@
     },
     {
       "name": "google-contacts-mcp",
-      "description": "Google Contacts MCP server. Six tools (search, get, list labels, apply label, remove label, update contact). Grants OAuth scopes contacts.readonly + contacts.other.readonly + contacts (full write); mutations are tool-limited to label CRUD and additive-only field updates. OAuth credentials live in the macOS keychain — no tokens in your config.",
+      "description": "Google Contacts MCP server. Six tools (search, get, list labels, apply label, remove label, update contact). Grants OAuth scopes contacts.readonly + contacts.other.readonly + contacts (full write); mutations are tool-limited to label CRUD and additive-only field updates. OAuth credentials live in the macOS keychain \u2014 no tokens in your config.",
       "source": "./plugins/google-contacts-mcp",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
     },
     {
       "name": "skill-doctor",
-      "description": "Static lint over Claude Code skill files. Catches invalid frontmatter, broken script references, orphan scripts, description collisions (Jaccard ≥ 0.5), and dark skills (no trigger phrases). Mechanical checks only — pair with setup-audit for semantic review of whether your rules earn their keep. Includes an optional routing-eval CLI that tests whether Claude actually picks the right skill for real intents.",
+      "description": "Static lint over Claude Code skill files. Catches invalid frontmatter, broken script references, orphan scripts, description collisions (Jaccard \u2265 0.5), and dark skills (no trigger phrases). Mechanical checks only \u2014 pair with setup-audit for semantic review of whether your rules earn their keep. Includes an optional routing-eval CLI that tests whether Claude actually picks the right skill for real intents.",
       "source": "./plugins/skill-doctor",
       "category": "productivity",
       "homepage": "https://github.com/jdickey1/claude-skills"
