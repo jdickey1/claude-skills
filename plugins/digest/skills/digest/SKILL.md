@@ -1098,6 +1098,7 @@ Save to the vault's `web-analyses/` directory (external content analysis, not PA
 - **Local Files**: `YYYY-MM-DD-file-{filename-slug}.md` (e.g., `2026-03-20-file-q1-infrastructure-report.md`)
 - **X/Twitter**: `YYYY-MM-DD-{username}-{tweet_id}.md` (e.g., `2026-02-23-elonmusk-1234567890.md`)
 - **GitHub Repos**: `YYYY-MM-DD-gh-{owner}-{repo}.md` (e.g., `2026-02-27-gh-jjenglert1-gtm-engineer-starter-kit.md`)
+- **YouTube**: `YYYY-MM-DD-youtube-{channel-slug}-{title-slug}.md` (e.g., `2026-07-31-youtube-rich-rebuilds-lucid-reshell.md`)
 - **Web pages**: `YYYY-MM-DD-{domain}-{path-slug}.md` (e.g., `2026-02-23-techcrunch-com-ai-startup-raises.md`)
 
 **Slug rules:**
