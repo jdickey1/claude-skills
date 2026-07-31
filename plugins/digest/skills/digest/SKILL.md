@@ -1,7 +1,7 @@
 ---
 name: digest
-description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command.
-version: 1.15.1
+description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo, YouTube) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command.
+version: 1.16.0
 effort: high
 ---
 
@@ -57,6 +57,14 @@ When the input is a file path (not a URL), classify as **Local File** and skip U
 Do NOT match GitHub issue, PR, or file URLs (those use general web fetch):
 - `https://github.com/{owner}/{repo}/issues/{id}` → general web
 - `https://github.com/{owner}/{repo}/pull/{id}` → general web
+
+**YouTube URLs** match these patterns:
+- `https://www.youtube.com/watch?v={id}` (and the form without `www.`)
+- `https://youtu.be/{id}`
+- `https://www.youtube.com/live/{id}`
+- `https://www.youtube.com/shorts/{id}`
+
+YouTube URLs skip the 3-tier web fallback entirely — those tiers return player scaffolding, not content.
 
 **All other URLs** are treated as general web content (articles, blog posts, docs, etc.).
 
@@ -246,6 +254,38 @@ The syndication API response tells you the content type:
 - Analyze the complete thread, not just the hook tweet
 - Never dismiss a tweet as "engagement bait" or "missing promised content" without first attempting to fetch replies
 - A low `reply_count` means the thread has no body — it does NOT mean the post is short. Check `note_tweet` before concluding a post is thin
+
+### For YouTube URLs
+
+YouTube publishes the caption track as a static file, so a single request returns both the transcript and the metadata — no media download, no whisper CPU.
+
+```bash
+yt-dlp --no-update --skip-download --no-simulate \
+  --write-subs --write-auto-subs --sub-langs "en.*" --sub-format json3 \
+  -o "/tmp/digest-yt.%(ext)s" \
+  --print "%(title)s|%(uploader)s|%(upload_date)s|%(duration_string)s|%(webpage_url)s" \
+  "$URL"
+```
+
+```bash
+python3 -c "
+import glob,json,sys
+f=sorted(glob.glob('/tmp/digest-yt.en*.json3'), key=lambda p: '.en-orig.' not in p)
+if not f: sys.exit(1)
+d=json.load(open(f[0]))
+segs=[''.join(s.get('utf8','') for s in e.get('segs',[])).strip() for e in d.get('events',[])]
+print(' '.join(t for t in segs if t))
+" > /tmp/digest-yt.txt
+rm -f /tmp/digest-yt.en*.json3
+```
+
+- `--no-simulate` is required. `--print` on its own implies simulate and silently writes no subtitle file.
+- Use `json3`, not `vtt`/`srt`. Auto-captions in VTT use rolling display, so each line repeats two or three times across cues — double the tokens plus a dedupe pass to undo. json3 segments are clean.
+- `--sub-langs "en.*"` may write both `.en-orig.json3` (original auto track) and `.en.json3` (machine translation). The flattener prefers `en-orig`; both files are tiny.
+- Run this on the Mac Mini, not the VPS — YouTube bot-gates datacenter IPs. If gated anyway, retry once with `--cookies-from-browser chrome`.
+- The flattened transcript at `/tmp/digest-yt.txt` becomes the raw content for §5 analysis, treated exactly like article text. Scale marker: a 36-minute talk yields about 7,000 words.
+
+If no `.json3` file is written (captions disabled), fall back to §3b.
 
 ### For All Other URLs (3-Tier Fallback)
 
@@ -443,6 +483,8 @@ If the file is already on the VPS, skip the `scp` step. For files over 60 minute
 
 Video transcription is supported for **any URL** — X/Twitter native video, YouTube, and generic web pages with embedded video.
 
+YouTube URLs try the §3 caption path first; this audio-plus-whisper path is the fallback for captions-disabled videos.
+
 ### Detection
 
 **X/Twitter:** Check the syndication API response for `mediaDetails` entries with `"type": "video"` and a `video_info` object containing `variants`.
@@ -499,6 +541,11 @@ After fetching, extract metadata for the output template:
 **For X/Twitter URLs:**
 - `source_label`: `@{username}` (lowercase)
 - `source_type`: `X Post` (or `X Video` if video content was transcribed)
+
+**For YouTube URLs:**
+- `source_label`: channel name (the `%(uploader)s` field from the `--print` output)
+- `source_type`: `YouTube Video`
+- `title`, `published` (from `%(upload_date)s`, `YYYYMMDD`), and `duration` all come from that same `--print` line — no second fetch
 
 **For GitHub Repo URLs:**
 - `source_label`: `{owner}/{repo}`
