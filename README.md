@@ -1,6 +1,6 @@
 # Claude Code Skills
 
-> **Production-tested skills for Claude Code** — SEO, security auditing, writing, and web tools that actually work.
+> **Production-tested skills for Claude Code** — security auditing, writing, and web tools that actually work.
 
 These skills extend [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with specialized domain knowledge and workflows. They are not wrappers or thin prompts — each one encodes real methodology built from hands-on consulting work.
 
@@ -9,35 +9,6 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 ---
 
 ## What's Included
-
-### seo
-
-**Comprehensive SEO audit, optimization, and automation.** Combines a 4-tier audit framework with a full DIY automation system that replaces the core deliverables of a $1,500/month agency.
-
-**Slash commands:**
-
-| Command | What it does |
-|---------|-------------|
-| `/seo-audit <url>` | Run full 4-tier SEO audit (~180 checklist items) |
-| `/seo-brief <keyword>` | Create content brief with SERP analysis and keyword validation |
-| `/seo-gbp <business>` | Audit and optimize Google Business Profile |
-| `/seo-weekly` | Run weekly recurring SEO maintenance tasks |
-| `/seo-report` | Analyze GSC, keyword, and backlink data |
-| `/seo-automate` | Set up DIY automation scripts (~$75/mo vs ~$1,500/mo agency) |
-| `/teach-seo` | Gather site context, write SEO config to CLAUDE.md |
-
-**What it covers:**
-- **4-tier audit checklist (~180 items):** indexation, Core Web Vitals, on-page optimization, E-E-A-T, schema markup, local SEO (GBP, citations, SABs), AI search readiness (AEO/GEO), content strategy, link building
-- **On-page SEO** with structured subsections: title tags, meta descriptions, headers, URLs, images, internal linking, semantic optimization
-- **E-E-A-T framework** organized by priority: Trust (foundation), Experience (hardest to fake), Expertise, Authoritativeness — with YMYL guidance and entity SEO signals
-- **Schema markup** covering JSON-LD best practices, FAQ/Article/LocalBusiness/Person types, deprecated types (Jan 2026), dual validation workflow
-- **AI search optimization (AEO/GEO)** with platform-specific citation data for Google AI Overviews, ChatGPT, Perplexity, and Copilot — including defensive AI SEO and multimodal content metrics
-- **Content strategy** with topic clusters, content pruning, internal linking architecture, video optimization, and social proof integration
-- **Link building** with prioritized tactics (Digital PR, HARO, guest posting), anchor text distribution, link velocity guidance, and content types that earn links
-- **Local business SEO** — GBP optimization, citations (quality hierarchy), NAP consistency, review management, SAB content strategy, Google spam warnings
-- **Built-in verification protocol** to prevent false findings from content extractors — requires raw HTML confirmation before marking structural findings as confirmed
-- Automation scripts for keyword research, backlink intelligence, Google Search Console monitoring, content briefs, and outreach
-- Keyword validation framework (SERP test, PAA check, competitor check, AI query alignment)
 
 ### security-audit
 
@@ -103,7 +74,6 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 ### 2. Install the plugins you want
 
 ```
-/plugins install seo@claude-skills
 /plugins install security-audit@claude-skills
 /plugins install writing@claude-skills
 /plugins install web-reader@claude-skills
@@ -118,14 +88,10 @@ Or browse with `/plugins` > **Discover** to see all available plugins.
 Skills activate automatically based on context, or use slash commands directly:
 
 ```
-/seo-audit example.com
-/seo-brief "personal injury lawyer austin"
-/seo-gbp "Smith & Associates Law"
 /write-x "new product launch announcement"
 /write-linkedin "lessons from scaling to 10K users"
 /write-headline "blog post about AI in healthcare"
 /write-review [paste content]
-/teach-seo
 /teach-writing
 /digest https://example.com/article
 ```
@@ -136,29 +102,17 @@ Marketplace plugins update automatically when Claude Code syncs. You can also ma
 
 ---
 
-## SEO Automation Setup
-
-The SEO plugin includes 5 Node.js automation scripts that connect to external APIs. To use them:
-
-1. Get API keys from [Keywords Everywhere](https://keywordseverywhere.com/), [DataForSEO](https://dataforseo.com/), [Serper](https://serper.dev/), and [Google Search Console](https://search.google.com/search-console)
-2. Create a `.env` file with your keys (see `seo/Tools/.env.example`)
-3. Ask Claude Code to run the tools — it knows how to use them, or use `/seo-automate` for guided setup
-
-Total cost for all APIs: roughly $75/month for a typical small business.
-
----
-
 ## Requirements
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
-- Playwright plugin (for seo live page inspection)
-- Node.js 18+ (for SEO automation tools)
+- Playwright plugin (for live page inspection)
+- Node.js 18+ (for the automation tools)
 
 ---
 
 ## Contributing
 
-Issues and PRs welcome. If you build skills that complement these (technical SEO, e-commerce SEO, different security frameworks), open a PR.
+Issues and PRs welcome. If you build skills that complement these (different security frameworks, new writing platforms, other research tools), open a PR.
 
 ---
 

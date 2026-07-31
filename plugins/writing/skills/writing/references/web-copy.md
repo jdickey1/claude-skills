@@ -103,7 +103,7 @@ For service/practice area pages:
 
 When the page is meant to rank in AI answer engines (ChatGPT, Perplexity, Google AI Overviews), use this structure instead of the standard blog template. AI models extract answers from the first 30% of content 44% of the time, so the lead paragraph is the page's most valuable real estate.
 
-For the full audit framework and citability scoring, see the seo plugin's AEO reference: `plugins/seo/skills/seo/reference/aeo.md`. The rules below are the writing-side distillation.
+For the full audit framework and citability scoring, see the seo plugin's AEO reference (`plugins/seo/skills/seo/reference/aeo.md`, in the private `claude-skills-private` marketplace). The rules below are the writing-side distillation.
 
 **Lead with the answer:**
 - First paragraph: **30-60 word neutral, factual summary** that directly answers the page's primary question. Write it the way you'd want ChatGPT to quote it back. This is the paragraph AI will lift verbatim.
