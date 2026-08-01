@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo, YouTube) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command.
-version: 1.16.0
+version: 1.16.1
 effort: high
 ---
 
@@ -282,8 +282,10 @@ rm -f /tmp/digest-yt.en*.json3
 - `--no-simulate` is required. `--print` on its own implies simulate and silently writes no subtitle file.
 - Use `json3`, not `vtt`/`srt`. Auto-captions in VTT use rolling display, so each line repeats two or three times across cues — double the tokens plus a dedupe pass to undo. json3 segments are clean.
 - `--sub-langs "en.*"` may write both `.en-orig.json3` (original auto track) and `.en.json3` (machine translation). The flattener prefers `en-orig`; both files are tiny.
-- Run this on the Mac Mini, not the VPS — YouTube bot-gates datacenter IPs. If gated anyway, retry once with `--cookies-from-browser chrome`.
+- Works from the Mac Mini and the VPS alike. Caption tracks are served from a different endpoint than media formats, so the datacenter-IP gating that degrades video downloads does not reach them — verified against the same video from both hosts, identical output. The VPS additionally warns about a missing JavaScript runtime and SABR-only streaming; those concern format URLs, not captions, and the fetch still succeeds. (They do mean §3b's audio path is the one degraded on the VPS.)
+- If a fetch is genuinely gated, the remedy is host-specific: `--cookies-from-browser chrome` on the Mac Mini, or a `--cookies` file exported from a browser elsewhere on the headless VPS, which has no browser profile to read.
 - The flattened transcript at `/tmp/digest-yt.txt` becomes the raw content for §5 analysis, treated exactly like article text. Scale marker: a 36-minute talk yields about 7,000 words.
+- Long videos overflow a single file read. A 96-minute podcast ran ~99,000 characters, past the read cap — split the transcript and read it in parts rather than analyzing what comes back. A truncated read looks complete and silently drops the back half of the video.
 
 If no `.json3` file is written (captions disabled), fall back to §3b.
 
