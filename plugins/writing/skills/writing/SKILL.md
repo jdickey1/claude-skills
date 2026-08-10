@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.8.2
+version: 2.8.3
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -316,6 +316,27 @@ When you list deals, proof-points, or competing examples, the first item anchors
 
 **Applies** to any prose with three or more named items, including comma-separated runs in a sentence. **Doesn't apply** to alphabetical indexes, chronological lists, or rankings where another order is load-bearing (final standings, search results). **Why:** the first item is the anchor; the rest live in its shadow. Magnitude signals size, recognizability signals shape; either beats alphabetical or arrival order.
 
+### 20. Title Before First Name of Elected Officials (CRITICAL)
+
+The first instance of an elected official's name is always preceded by their office title. Surname-only first mentions are wrong, including in headlines, H1/H2 section heads, social posts, captions, and body copy.
+
+**If the person appears in both a headline (or section head) and the body, the title precedes the name in both.** A titled first body mention does not excuse a bare-surname headline. Readers who only skim heads still need the office; the body and the head are separate first-instance surfaces.
+
+| Surface | Wrong | Right |
+|---------|-------|-------|
+| H2 / headline | `## Kolkhorst put the community problem in order` | `## Senator Kolkhorst put the community problem in order` |
+| H2 / headline | `## Huffman pre-announced the bill` | `## Chairwoman Huffman pre-announced the bill` |
+| Body first mention | `Kolkhorst told the industry...` | `Senator Lois Kolkhorst told the industry...` |
+| Later mentions | (after a titled first instance) | `Kolkhorst said...` / `Huffman asked...` is fine |
+
+**Titles to use (examples, match the office they hold):** Senator, Representative / Rep., Chair / Chairwoman / Chairman (when that is their role on the record), Governor, Mayor, Commissioner, Councilmember, Judge (elected judges), Vice Chairman / Vice Chair when that is how they sit on the committee. Prefer the title the person holds in the story's context (e.g. "Chairwoman Joan Huffman" when she is chairing the hearing).
+
+**Also title the first body mention with first name when introducing them** (`Senator Lois Kolkhorst`, `Chairwoman Joan Huffman`). Headlines and H2s may use title + surname only when space is tight (`Senator Kolkhorst`).
+
+**Applies to:** elected officeholders (legislators, executives, elected local officials). **Does not force titles on:** appointed staff, agency civil servants, private witnesses, company executives (those use job/role labels on first mention when useful, under normal attribution practice, not this rule).
+
+**Why:** Bare-surname first hits read as insider shorthand and strip institutional context. The rule is house style for Hyperscale, JD Key, and any policy/political writing under this skill.
+
 ## Hook Patterns (Universal)
 
 The first line of anything has one job: stop the scroll. Patterns that work:
@@ -388,7 +409,7 @@ FINAL:
 
 ## Quality Checks and Guards
 
-For autoresearch evals, manual review, or pre-publish gates, use the **eleven binary quality checks** in [references/quality-checks.md](references/quality-checks.md). The reference defines: voice/channel context overrides, EVAL 1-11 (em dashes, banned buzzwords, contractions, rhythm, evidence, opener, AI slop, corrective reframing, copula avoidance, self-audit, editorial-edit tics), greppable patterns where checkable, and the two guard assertions (word-count vs. quality, format-specific rule preservation).
+For autoresearch evals, manual review, or pre-publish gates, use the **twelve binary quality checks** in [references/quality-checks.md](references/quality-checks.md). The reference defines: voice/channel context overrides, EVAL 1-12 (em dashes, banned buzzwords, contractions, rhythm, evidence, opener, AI slop, corrective reframing, copula avoidance, self-audit, editorial-edit tics, elected-official title-first), greppable patterns where checkable, and the two guard assertions (word-count vs. quality, format-specific rule preservation).
 
 The pre-publish checklist below is the human-facing version of these checks; the quality-checks.md reference is the machine-checkable version.
 
@@ -417,6 +438,7 @@ Before finalizing any content:
 - [ ] Zero copula avoidance ("serves as", "stands as", "boasts", "features"; see rule #16)
 - [ ] Zero inline-header vertical lists where the bold label just restates the line (rule #17)
 - [ ] Lists ordered by magnitude and recognizability (largest-first; foreign-spelling brand never first unless single most-recognized in category, see rule #19)
+- [ ] Elected officials: title before first instance of the name on every surface (headline/H2 and body each need their own titled first hit; see rule #20)
 - [ ] Self-audit pass completed (mandatory for X, LinkedIn, web/blog, newsletter, branded content; see Self-Audit Pass section)
 - [ ] Editorial-edit pressure-test passed (no defensive disclaimers, no hedging epilogues at section closes, no false-neutral conclusions, no clever "the question isn't X, it's Y" closer, no sentence grading the material before it arrives, every one-line paragraph carrying new information; see [editorial-edit-patterns.md](references/editorial-edit-patterns.md) and rule #18)
 - [ ] Captured voice idiosyncrasies preserved over generic defaults (rule #15: deliberate quirks in voice context kept, not smoothed)
@@ -483,6 +505,7 @@ These are the rationalizations the skill must refuse, with the counter to apply:
 | "The vendor cratered, and the language matches the moment." | Spectacle framing reaches for verbs the facts don't earn. State the mechanic: "The vendor missed three deadlines and the contract was terminated." Mechanics over spectacle (ai-slop-patterns.md). |
 | "$5.27B is the actual number from the filing, so I'll use it verbatim." | Fractional-magnitude precision past meaningful digits is an AI tic (ai-slop-patterns.md). Round to "$5.3B" or "~$5B" unless the trailing digits carry argumentative weight (e.g., "$5.27B vs. the $5.30B reported"). |
 | "'That's the spine' / 'Fair hit' lands the point conversationally, so it stays." | Conversational validation and meta-commentary (ai-slop-patterns.md): assistant-voice tics where the writer stamps a verdict on their own line. If the point lands, the stamp is redundant; if it doesn't, the stamp won't save it. Delete it. Same for adverb-only fragments ("Genuinely. Quietly.") and the "one honest caveat / stated plainly" frame, which implies the rest wasn't honest. |
+| "The body already says 'Senator Kolkhorst,' so the H2 can be bare 'Kolkhorst'." | Rule #20: headline/H2 and body are separate first-instance surfaces. Title precedes the name in both when the person appears in both. |
 
 If a rationalization isn't on this list, write it down before acting on it. New rationalizations are the most valuable signal for the next skill iteration.
 
@@ -494,6 +517,7 @@ If a rationalization isn't on this list, write it down before acting on it. New 
 - **Copula avoidance has a single legitimate exception.** Legal and policy boilerplate ("This document serves as notice...") uses these constructions correctly. EVAL 9 should pass at ≤1 instance when context demands it, not strictly zero. Two or more in the same piece is the AI tic returning.
 - **Self-audit must precede the pre-publish checklist, not replace it.** The checklist is lexical (catches em dashes, banned words, copula avoidance). The audit is structural (catches the residual AI shape). Run the audit, revise, then run the checklist on the revised version. A draft that "passes the checklist" without the audit will still feel AI-shaped on mandatory channels.
 - **"No AI tells in this draft" is a fake audit.** If the model returns zero bullets in step 2 of the self-audit on a first draft, the audit was skipped, not passed. Push back: name 2–4 honest tells before revising.
+- **Bare-surname H2s are first instances.** Section heads like `## Kolkhorst put...` break rule #20 even when the next paragraph opens with `Senator Lois Kolkhorst`. Scan H1/H2 and the lede independently before clearing the checklist.
 
 ## Learning
 

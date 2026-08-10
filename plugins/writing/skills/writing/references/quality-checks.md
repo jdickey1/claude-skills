@@ -1,8 +1,8 @@
 # Binary Quality Checks
 
-Eleven yes/no checks for evaluating writing output quality (autoresearch evals, manual review, or pre-publish gates).
+Twelve yes/no checks for evaluating writing output quality (autoresearch evals, manual review, or pre-publish gates).
 
-**Voice context override:** EVAL 3 (contractions) and EVAL 4 (sentence rhythm) yield to captured voice context per SKILL.md rule #15. If the writer's voice signals dictate no contractions (formal register) or uniform short sentences (deliberate cadence), these evals are informational, not pass/fail. Evals 1, 2, 7, 8, 9, and 11 never yield: AI tells are always wrong regardless of voice. EVAL 10 yields to channel context: mandatory only for branded / public-facing channels.
+**Voice context override:** EVAL 3 (contractions) and EVAL 4 (sentence rhythm) yield to captured voice context per SKILL.md rule #15. If the writer's voice signals dictate no contractions (formal register) or uniform short sentences (deliberate cadence), these evals are informational, not pass/fail. Evals 1, 2, 7, 8, 9, 11, and 12 never yield: AI tells / house-style identity rules are always wrong regardless of voice. EVAL 10 yields to channel context: mandatory only for branded / public-facing channels.
 
 ## EVAL 1: No em dashes
 **Question:** Does the output contain zero em dashes (—)?
@@ -82,6 +82,13 @@ Eleven yes/no checks for evaluating writing output quality (autoresearch evals, 
 **Pass:** Zero defensive disclaimer openings ("None of that is...", "That's not to say...", "While reasonable people may..."), zero section-final hedging epilogues ("the principle is contestable...", "time will tell..."), and no "the question isn't X, it's Y" closing line.
 **Fail:** Any of the above patterns present (see [editorial-edit-patterns.md](editorial-edit-patterns.md) for the full taxonomy of eleven patterns; this eval covers the binary-checkable subset).
 **Greppable:** `grep -iE "none of that is|that's not to say|while reasonable people|the principle is contestable|the question isn'?t.*it'?s"`
+
+## EVAL 12: Title before first elected-official name
+**Question:** Does every first instance of an elected official's name (on each surface: headline/H2 and body separately) carry their office title?
+**Pass:** No bare-surname first hit for any elected official in any headline, H1/H2, or body first mention; if the person appears in both head and body, both first hits are titled (SKILL.md rule #20).
+**Fail:** Bare surname as first instance on any surface (e.g. `## Kolkhorst put...` even when the next paragraph says `Senator Lois Kolkhorst`).
+**N/A:** Pieces with no elected officials named.
+**Manual check:** List each elected official in the piece; for each, confirm the first head surface and first body surface both open with title + name. Later surname-only references pass.
 
 ## Guard Assertions (Optimization Safety Rails)
 
