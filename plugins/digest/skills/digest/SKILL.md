@@ -1,7 +1,7 @@
 ---
 name: digest
-description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo, YouTube) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command.
-version: 1.16.1
+description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo, YouTube) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command. If the only input is an image or PDF of business cards, skip the vault digest and export vCards automatically (references/business-cards.md).
+version: 1.17.0
 effort: high
 ---
 
@@ -24,6 +24,18 @@ bad input mid-pipeline produces a confusing partial result rather than a clean e
   `https://`, ends mid-domain, or has visible ellipsis (`...`) is likely a copy-paste
   truncation. Ask for the full URL — truncated URLs return generic error pages that get
   analyzed as if they were the intended content.
+
+## Step 0b: Business-card short-circuit
+
+When the input is one or more **images** or a **PDF**, read enough to see what it is
+before classifying as a normal digest.
+
+If the **primary content is business cards** and the user did not give a different
+task, **stop the digest pipeline**. Follow `references/business-cards.md`: extract every
+card, write vCard 3.0 files to iCloud Downloads, ask only for fields you cannot read.
+Do not save a `web-analyses/` note. Do not present Summary / Key Claims / Recommendations.
+
+A card incidental in the corner of an article, slide, or screenshot is not this path.
 
 ## 1. Overview
 
@@ -839,6 +851,11 @@ Question: For X Articles, was `article.fields=plain_text` requested via xurl bef
 Pass: Raw Content contains the full `article.plain_text` body; any escalation to a lower tier happened only after the API itself showed the field was unavailable
 Fail: Digest analyzed only the article title/`preview_text`, OR the run escalated to twitter-cli/dev-browser on a title-only response without trying `article.fields`
 
+**EVAL 13: Business-card images/PDFs export vCards, not a vault digest**
+Question: When the only input was an image or PDF whose primary content is business cards, were vCards written to iCloud Downloads and the vault digest skipped?
+Pass: One vCard per person (same person merged), files under `business-cards-YYYY-MM-DD/` in iCloud Downloads, no `web-analyses/` file, asked only for unreadable fields
+Fail: A vault digest was written for a card stack, OR the run waited for the user to ask for vCards, OR cards were skipped because the user did not say "export"
+
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
@@ -854,6 +871,7 @@ Fail: Digest analyzed only the article title/`preview_text`, OR the run escalate
 | Treat an X Article as unreachable via xurl | `article.fields=plain_text` returns the complete body | Request `tweet.fields=article&article.fields=plain_text` before any fallback |
 | Over-wikilink with forced matches | Noisy links reduce signal and clutter the graph | Only link exact or near-exact matches on first mention per section |
 | Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
+| Run the full vault digest on a photo or PDF of business cards | Wrong artifact — user wants contacts, not an analysis note | Short-circuit to vCard export (`references/business-cards.md`) |
 
 ## 6. Output Template
 
@@ -1192,6 +1210,7 @@ If multiple URLs or file paths are detected in the current context, process each
 - Unsure whether a project connection is genuine or forced — when in doubt, ask rather than include a weak connection
 - The URL points to content that may be legally sensitive (court filings, sealed documents, DMCA'd content)
 - Video transcription fails and the page content alone is insufficient for meaningful analysis
+- A business-card field (usually handwriting) cannot be read with high confidence — ask for that field only; write the rest of the batch
 
 **Do NOT escalate (handle autonomously):**
 - Reading local files that exist and are in supported formats
@@ -1200,6 +1219,7 @@ If multiple URLs or file paths are detected in the current context, process each
 - Generating project connections for clearly relevant content
 - Dispatching background code review agents for GitHub repos
 - Registering a hyperscale-relevant source in hyperscale_db (Section 7b) — the insert is idempotent; the only escalation case is a qualifying local file with no findable canonical URL
+- Business-card photos/PDFs: merge vs split, include handwriting, include socials, staffer vs principal, save location — defaults live in `references/business-cards.md`
 
 ## Completion Status
 
@@ -1249,3 +1269,4 @@ Track these patterns:
 - Frameworks extraction rate (what % of digests have extractable frameworks vs. skipping the section?)
 - Open Questions usefulness (do users act on the open questions or ignore them?)
 - Hyperscale DB registration rate (how often do both 7b gates fire? any user corrections on gate judgment — registered when it shouldn't have been, or vice versa?)
+- Business-card short-circuit (did a card-only paste still produce a vault digest? any merge/handwriting misses?)

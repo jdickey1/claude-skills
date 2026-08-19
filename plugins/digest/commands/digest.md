@@ -7,4 +7,6 @@ Invoke the digest skill with the provided argument. The argument can be any web 
 
 Read the digest skill at `${CLAUDE_PLUGIN_ROOT}/skills/digest/SKILL.md` and follow its instructions exactly, using `$ARGUMENTS` as the input to process.
 
+If the input is an image or PDF of business cards, the skill short-circuits to vCard export (`references/business-cards.md`) instead of a vault digest.
+
 If no URL or file path is provided in `$ARGUMENTS`, ask the user to provide one.
