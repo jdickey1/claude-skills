@@ -1,0 +1,8 @@
+{
+  "name": "visual-package",
+  "description": "Clone an incumbent visual system for posters, carousels, one-pagers, leave-behinds, and clip packets. Loads a shop overlay skill when one is installed.",
+  "author": {
+    "name": "James Dickey",
+    "url": "https://github.com/jdickey1"
+  }
+}

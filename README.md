@@ -52,6 +52,10 @@ If these save you time, **[give the repo a star](https://github.com/jdickey1/cla
 
 **Universal web content analysis and capture.** Fetches any URL — articles, blog posts, documentation, X/Twitter posts — analyzes the content, saves structured analysis to Obsidian, and recommends actionable uses including content ideas, action items, and project connections. X/Twitter links get specialized 3-tier fetch logic; all other URLs use clean markdown extraction. **Video support:** X/Twitter posts with native video are automatically downloaded and transcribed using faster-whisper (CPU-optimized, capped at 80% CPU usage).
 
+### visual-package
+
+**Clone an incumbent visual system** for posters, carousels, one-pagers, leave-behinds, and clip packets. Generic gate only. If a shop overlay skill named `shop-visuals` is installed, load it; that overlay owns runbooks and stems.
+
 ### skill-creator
 
 **Create, test, harden, and continuously improve Claude Code skills.** A unified workflow that combines eval infrastructure, TDD methodology, and self-improving learning loops.
