@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.8.3
+version: 2.8.4
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -24,6 +24,10 @@ Universal writing standards for all content. Format-specific guidance in referen
 | `/writing:teach-writing` | Write voice/brand context to CLAUDE.md |
 
 These are plugin-namespaced **commands** — invoke them with the `writing:` prefix (the bare `/write-x`, `/teach-writing`, etc. do not resolve). Note the distinction: `writing:writing` (this file) is the *skill*; the rows above are *commands*, which live under the same `writing:` namespace but are separate `/writing:<name>` invocations, not skills.
+
+## Shop overlay
+
+If the skill `house-writing` is installed, load it before drafting. That overlay owns shop-specific voice. Skip if it is not present. Do not put shop paths in this file.
 
 ## Pre-Write Context Check
 
