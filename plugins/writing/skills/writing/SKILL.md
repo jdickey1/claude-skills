@@ -27,7 +27,7 @@ These are plugin-namespaced **commands** — invoke them with the `writing:` pre
 
 ## Shop overlay
 
-If the skill `house-writing` is installed, load it before drafting. That overlay owns shop-specific voice. Skip if it is not present. Do not put shop paths in this file.
+If the skill `house-writing` is installed, load it before drafting. That overlay owns shop-specific voice, including Medium and bylined op-eds. Skip if it is not present. Do not put shop paths in this file.
 
 ## Pre-Write Context Check
 
@@ -35,7 +35,7 @@ Before writing any content, confirm you know:
 
 1. **Who is the audience?** (general public, developers, clients, voters, etc.)
 2. **What voice/brand?** (personal, company, publication; check CLAUDE.md for voice context from `/writing:teach-writing`)
-3. **What format?** (X post, blog, newsletter, etc.; may already be clear from the command used)
+3. **What format?** (X post, blog, Medium, newsletter, op-ed, etc.; may already be clear from the command used)
 
 If voice/brand context exists in CLAUDE.md (via `/writing:teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content. A casual tone for a law firm or formal tone for a podcast social account wastes a draft.
 
