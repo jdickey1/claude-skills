@@ -1,7 +1,7 @@
 ---
 name: digest
 description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo, YouTube) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command. If the only input is an image or PDF of business cards, skip the vault digest and export vCards automatically (references/business-cards.md).
-version: 1.17.0
+version: 1.18.0
 effort: high
 ---
 
@@ -39,7 +39,7 @@ A card incidental in the corner of an article, slide, or screenshot is not this 
 
 ## 1. Overview
 
-Given any URL or local file path, this skill: classifies the input type, fetches/reads content using the appropriate strategy, performs structured analysis, saves a markdown file to Obsidian, and presents a concise summary with top recommendations.
+Given any URL or local file path, this skill: classifies the input type, fetches/reads content using the appropriate strategy, performs structured analysis, saves a markdown file to Obsidian, presents a concise summary with top recommendations, and appends James-only leftovers to the standing operator queue (Section 7c).
 
 ## 2. Input Classification
 
@@ -755,7 +755,7 @@ For each `action-pending` connection target (cap at **5** to bound cost):
 
 **What the pass does NOT do:**
 
-- **It does not auto-edit project docs.** The digest is a knowledge artifact + a proposal. The user retains the decision to apply, defer, or reject each recommendation.
+- **It does not auto-edit project docs.** The digest is a knowledge artifact + a proposal. The user retains the decision to apply, defer, or reject each recommendation. Hits James must do himself (UI, fill, score, ship) are not applied here. Queue those in Section 7c.
 - It does not invent new connection targets. Only the targets already justified in Project Connections are eligible.
 - It does not exceed the 5-target cap. If more than 5 `action-pending` connections exist, prioritize by specificity of the framework match and note in the Adoption Recommendations section that some targets were deferred.
 
@@ -784,7 +784,7 @@ Always include `No-op` and `Partial` results, not just `Hits`. Hiding them hides
 - Don't propose a Hit unless you can cite the target doc's current state. "Could add X" without referencing what's already there is speculation, not adoption analysis.
 - Don't read more than 5 target docs per digest, even if more `action-pending` connections exist. If the digest has 8 actionable connections, the adoption pass is the wrong granularity — note the overflow and stop.
 - Don't suppress No-ops. A clean No-op is the most valuable output for cross-domain pattern transfer; without it, the pass becomes a yes-machine.
-- Don't auto-apply edits to project docs. Even on Hits, the recommendation goes in the digest only.
+- Don't auto-apply edits to project docs. Record Hits in the digest. Queue James-only leftovers in Section 7c.
 
 ## Binary Quality Checks
 
@@ -856,6 +856,11 @@ Question: When the only input was an image or PDF whose primary content is busin
 Pass: One vCard per person (same person merged), files under `business-cards-YYYY-MM-DD/` in iCloud Downloads, no `web-analyses/` file, asked only for unreadable fields
 Fail: A vault digest was written for a card stack, OR the run waited for the user to ask for vCards, OR cards were skipped because the user did not say "export"
 
+**EVAL 14: Operator leftovers landed on the standing queue**
+Question: After the run, were James-only Hits/Action Items (cap 5) passed to `update-operator-queue.sh`, and were Content Ideas / No-ops / agent-editable vault Hits left out?
+Pass: Script ran with only qualifying items, or skipped because none qualified / business-card short-circuit; completion status reports added/open; no agent scheduler was used
+Fail: Recommendations dumped wholesale, OR qualifying James leftovers were only mentioned in chat, OR an agent/Graph/email reminder was created instead of launchd, OR 7c ran per-URL in a batch instead of once
+
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
@@ -872,6 +877,7 @@ Fail: A vault digest was written for a card stack, OR the run waited for the use
 | Over-wikilink with forced matches | Noisy links reduce signal and clutter the graph | Only link exact or near-exact matches on first mention per section |
 | Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
 | Run the full vault digest on a photo or PDF of business cards | Wrong artifact — user wants contacts, not an analysis note | Short-circuit to vCard export (`references/business-cards.md`) |
+| Dump every recommendation into the operator Word list | The list is James's daily to-do, not a digest dump | Queue at most 5 James-only leftovers via Section 7c |
 
 ## 6. Output Template
 
@@ -1166,6 +1172,43 @@ If the SELECT returns a row but the INSERT reported `INSERT 0 0`, the source was
 - `category`: pick the closest existing value — `Datacenter`, `Policy`, `Polling`, `Energy`, `Nuclear`, `Computing`, or `Commentary`. Coin new values sparingly.
 - `notes`: this is what a future session sees first. Lead with the citable numbers, include where the digest and any local PDF live, and flag adversarial framings the source contains that house rules say to rebut rather than repeat (e.g., abatements-erode-tax-base).
 
+## 7c. Operator queue (Word in iCloud + 9am launchd)
+
+After every input in this run is saved (Section 7 / 7b), queue James-only leftovers onto the standing to-do. That rewrites the iCloud Word copy and keeps the 9am launchd reminder loaded while any box is open.
+
+**Skip when any of these hold:**
+- Step 0b business-card short-circuit
+- Zero items pass the gate below
+- This is not the last input in a batch (Section 9: run 7c once after the summary table)
+
+**Gate — queue an item only when ALL are true:**
+1. James has to do it (a UI, fill from his knowledge, score a live page, export, comment, or ship).
+2. This session cannot finish it (not a vault or code edit the agent can apply now).
+3. It has a concrete next step plus a vault path and/or a live URL James can open.
+4. It is not a Content Idea, No-op, or Partial.
+
+Cap **5** new items per run. Prefer Adoption Hits that pass the gate; Action Items may qualify. Do not dump the Recommendations section into the queue.
+
+**Item shape:**
+
+```markdown
+- [ ] {one-line action}
+  - Vault: [[{note}]] (`{relative/path.md}`)
+  - Live: <https://...>
+```
+
+Write those blocks to `/tmp/digest-operator-items.md`. Then run:
+
+```bash
+bash "$HOME/.claude/plugins/marketplaces/claude-skills/plugins/digest/skills/digest/scripts/update-operator-queue.sh" /tmp/digest-operator-items.md
+```
+
+The script appends (deduped by first-line text) to vault `05-Commitments/open/digest-operator-queue.md`, writes `Digest operator checklist.docx` in iCloud Downloads, and bootstraps `com.jdkey.digest-hits-nudge` if any `- [ ]` remains. Vault markdown checkboxes are the source of truth. The Word copy is for reading. Checking a Word box does not stop the nudge.
+
+This is a launchd job. Do not create an agent reminder, Graph/Tasks item, or email.
+
+Read the script's `added N` / `open M` lines for the completion status and the inline presentation.
+
 ## 8. Presentation
 
 After saving, present inline:
@@ -1174,6 +1217,7 @@ After saving, present inline:
 2. Top 2-3 recommendations (mix of content ideas and action items).
 3. Full file path where the analysis was saved.
 4. If registered in hyperscale_db: the sources id (or "already registered as id N").
+5. If 7c ran: the script's `added` / `open` / `word` lines. If skipped, omit.
 
 Keep the inline presentation brief — the full analysis is in the file.
 
@@ -1199,6 +1243,8 @@ If multiple URLs or file paths are detected in the current context, process each
 | @user1 | X Post | {brief rec} | /path/to/file.md | — |
 | techcrunch.com | Article | {brief rec} | /path/to/file.md | id 19 |
 
+Then run Section 7c **once** for the whole batch (not once per URL). One line under the table: `Operator queue: added N (open M). Word: {path}`.
+
 ## Escalation Protocol
 
 **STOP and ask the user before proceeding when:**
@@ -1219,6 +1265,7 @@ If multiple URLs or file paths are detected in the current context, process each
 - Generating project connections for clearly relevant content
 - Dispatching background code review agents for GitHub repos
 - Registering a hyperscale-relevant source in hyperscale_db (Section 7b) — the insert is idempotent; the only escalation case is a qualifying local file with no findable canonical URL
+- Running Section 7c (append to the standing queue, rewrite Word, bootstrap launchd)
 - Business-card photos/PDFs: merge vs split, include handwriting, include socials, staffer vs principal, save location — defaults live in `references/business-cards.md`
 
 ## Completion Status
@@ -1235,6 +1282,7 @@ Connections: {count} project connections proposed
 File saved: {full path}
 Code review: {dispatched/completed/skipped/N/A}
 Hyperscale DB: {registered id N / already registered id N / skipped — not hyperscale-relevant / skipped — no canonical URL}
+Operator queue: {added N, open M / skipped — none qualified / skipped — business-card}
 ═══════════════════════════
 ```
 
@@ -1270,3 +1318,4 @@ Track these patterns:
 - Open Questions usefulness (do users act on the open questions or ignore them?)
 - Hyperscale DB registration rate (how often do both 7b gates fire? any user corrections on gate judgment — registered when it shouldn't have been, or vice versa?)
 - Business-card short-circuit (did a card-only paste still produce a vault digest? any merge/handwriting misses?)
+- Operator queue (how often 7c adds items? any user correction that a Content Idea or agent-editable Hit was queued?)
