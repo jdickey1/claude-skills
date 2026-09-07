@@ -69,7 +69,7 @@ def blocks(text):
 
 def key(block):
     first = block.splitlines()[0]
-    first = re.sub(r'^- \[ \] ', '', first)
+    first = re.sub(r'^- \[[ xX]\] ', '', first)
     first = re.sub(r'\[\[([^\]|]+)(?:\|[^\]]+)?\]\]', r'\1', first)
     first = re.sub(r'<https?://[^>]+>', '', first)
     first = re.sub(r'https?://\S+', '', first)
@@ -116,9 +116,17 @@ open_n=$(grep -cE '^- \[ \]' "$QUEUE" || true)
 echo "open $open_n"
 echo "$(date '+%Y-%m-%d %H:%M:%S %Z') queue-update open=$open_n" >>"$LOG"
 
-if [[ "${open_n:-0}" -gt 0 && -f "$PLIST" ]]; then
-  if ! launchctl print "$LABEL" >/dev/null 2>&1; then
-    launchctl bootstrap "gui/$(id -u)" "$PLIST" 2>/dev/null || launchctl load "$PLIST" 2>/dev/null || true
-    echo "launchd loaded $LABEL"
+if [[ "${open_n:-0}" -gt 0 ]]; then
+  if [[ ! -f "$PLIST" ]]; then
+    echo "launchd plist missing: $PLIST; 9am nudge not loaded" >&2
+  elif launchctl print "$LABEL" >/dev/null 2>&1; then
+    :
+  else
+    launchctl bootstrap "gui/$(id -u)" "$PLIST" || launchctl load "$PLIST" || true
+    if launchctl print "$LABEL" >/dev/null 2>&1; then
+      echo "launchd loaded $LABEL"
+    else
+      echo "launchd bootstrap failed; 9am nudge is not loaded ($LABEL)" >&2
+    fi
   fi
 fi

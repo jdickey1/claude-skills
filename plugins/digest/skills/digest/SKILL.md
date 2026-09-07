@@ -857,8 +857,8 @@ Pass: One vCard per person (same person merged), files under `business-cards-YYY
 Fail: A vault digest was written for a card stack, OR the run waited for the user to ask for vCards, OR cards were skipped because the user did not say "export"
 
 **EVAL 14: Operator leftovers landed on the standing queue**
-Question: After the run, were James-only Hits/Action Items (cap 5) passed to `update-operator-queue.sh`, and were Content Ideas / No-ops / agent-editable vault Hits left out?
-Pass: Script ran with only qualifying items, or skipped because none qualified / business-card short-circuit; completion status reports added/open; no agent scheduler was used
+Question: After the run, were James-only Hits/Action Items (cap 5) passed to `update-operator-queue.sh`, and were Content Ideas / No-ops / Partials / agent-editable vault Hits left out?
+Pass: Script ran with only qualifying items, or skipped because none qualified / business-card short-circuit / mid-batch; completion status reports added/open; no agent scheduler was used
 Fail: Recommendations dumped wholesale, OR qualifying James leftovers were only mentioned in chat, OR an agent/Graph/email reminder was created instead of launchd, OR 7c ran per-URL in a batch instead of once
 
 ## Anti-Patterns
@@ -1174,7 +1174,7 @@ If the SELECT returns a row but the INSERT reported `INSERT 0 0`, the source was
 
 ## 7c. Operator queue (Word in iCloud + 9am launchd)
 
-After every input in this run is saved (Section 7 / 7b), queue James-only leftovers onto the standing to-do. That rewrites the iCloud Word copy and keeps the 9am launchd reminder loaded while any box is open.
+After all inputs in this run are saved (Section 7 / 7b), run 7c **once**. Queue James-only leftovers onto the standing to-do. That rewrites the iCloud Word copy and bootstraps the 9am launchd reminder if any box is open and the plist is present.
 
 **Skip when any of these hold:**
 - Step 0b business-card short-circuit
@@ -1197,13 +1197,13 @@ Cap **5** new items per run. Prefer Adoption Hits that pass the gate; Action Ite
   - Live: <https://...>
 ```
 
-Write those blocks to `/tmp/digest-operator-items.md`. Then run:
+Write those blocks to `/tmp/digest-operator-items.md`. Then run (pass the file as `$1`; do not pipe or heredoc):
 
 ```bash
 bash "$HOME/.claude/plugins/marketplaces/claude-skills/plugins/digest/skills/digest/scripts/update-operator-queue.sh" /tmp/digest-operator-items.md
 ```
 
-The script appends (deduped by first-line text) to vault `05-Commitments/open/digest-operator-queue.md`, writes `Digest operator checklist.docx` in iCloud Downloads, and bootstraps `com.jdkey.digest-hits-nudge` if any `- [ ]` remains. Vault markdown checkboxes are the source of truth. The Word copy is for reading. Checking a Word box does not stop the nudge.
+The script appends (deduped by first-line text against both open and checked boxes) to vault `05-Commitments/open/digest-operator-queue.md`, writes `Digest operator checklist.docx` in iCloud Downloads, and bootstraps `com.jdkey.digest-hits-nudge` if any `- [ ]` remains and the plist exists. A missing `launchd loaded` line means the 9am job was not started. Vault markdown checkboxes are the source of truth. The Word copy is for reading. Checking a Word box does not stop the nudge.
 
 This is a launchd job. Do not create an agent reminder, Graph/Tasks item, or email.
 
@@ -1282,7 +1282,7 @@ Connections: {count} project connections proposed
 File saved: {full path}
 Code review: {dispatched/completed/skipped/N/A}
 Hyperscale DB: {registered id N / already registered id N / skipped — not hyperscale-relevant / skipped — no canonical URL}
-Operator queue: {added N, open M / skipped — none qualified / skipped — business-card}
+Operator queue: {added N, open M / skipped — none qualified / skipped — business-card / skipped — batch, run once at end}
 ═══════════════════════════
 ```
 
