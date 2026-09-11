@@ -635,7 +635,7 @@ Before Sentiment or Recommendations, inspect **each load-bearing claim** (percen
 | hypothesis | Plausible mechanism, untested or under-specified. Directional only. |
 | unsupported | No source, unreproducible headline, or design too thin to use. Do not prioritize. |
 
-**A retained empirical claim (measured observation) needs all of:** source URL; publication date and check date; engine and mode (ChatGPT Search, Perplexity, Google AI Overviews / AI Mode, and so on); sample; geography / language; numerator and denominator; design and limitations. If any field is missing, drop the number from prioritization (hypothesis or unsupported). Do not invent the missing fields.
+**A retained empirical claim (measured observation) needs:** source URL; publication date and check date; measurement context; method or study design; and limitations. Also require engine, product, and mode for AI claims; numerator and denominator for rates or proportions; and sample, geography, and language where material and applicable. Mark non-applicable fields as such; they are not missing evidence. If applicable evidence is unknown, say so and drop the number from prioritization (hypothesis or unsupported). Do not invent the missing fields.
 
 **Engine-scope tactics.** A documented Google disclaimer (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide, 2026-07-10) means: do not present that tactic as a Google Search input; scope it to engines it still applies to. If Google classifies it as spam (inauthentic mentions, scaled content abuse), reverse it for every engine. A well-sourced number does not rehabilitate a spam tactic. Warn and scope; never block the digest.
 
@@ -1296,7 +1296,7 @@ Operator queue: {added N, open M / skipped — none qualified / skipped — busi
 - **Fetch tier fallback must log why the previous tier failed** (e.g., "Tier 1 returned login wall", not just "fell back to Tier 2").
 - **Frontmatter connection targets must be verified to exist** before writing them.
 - **Hyperscale DB registration claims must show the psql SELECT output** (id + name) — "registered" without a returned id is unverified.
-- **Empirical numbers retained in Recommendations must carry provenance** (source URL, publication/check date, engine/mode, sample, geography/language, numerator/denominator, design and limitations) or be dropped. Vendor ownership is a limitation, not an automatic invalidation.
+- **Empirical numbers retained in Recommendations must carry provenance:** source URL, publication/check date, measurement context, method or study design, and limitations. Require engine/product/mode for AI claims, numerator/denominator for rates or proportions, and sample/geography/language where material and applicable. Mark non-applicable fields as such. State any unknown applicable evidence and drop the number from prioritization; never invent it. Vendor ownership is a limitation, not an automatic invalidation.
 
 ## Learning
 

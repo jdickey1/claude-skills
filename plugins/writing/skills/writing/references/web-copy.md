@@ -2,11 +2,11 @@
 
 ## Modern Web Copywriting (2025-2026)
 
-The shift: Away from "keyword stuff to rank" toward "write for humans first, optimize second." 80% of consumers now resolve 40% of searches without clicking (zero-click searches). Winners write copy that converts, not just ranks.
+Write for the reader first. Match the page to a useful decision or action, then check discoverability. Search visibility and conversion are separate outcomes; measure them separately.
 
 ## Headlines That Convert
 
-> **This is the most important section.** 80% of readers never get past the headline. For the full research, formulas, and testing methodology, see [headlines.md](headlines.md).
+Make the headline specific and accurate. For additional writing patterns, see [headlines.md](headlines.md). Verify the original source and applicability of any performance claim before using it.
 
 **Formula**: Numbers + Adjective + Target Keyword + Rationale + Promise
 
@@ -14,18 +14,11 @@ Examples:
 - "5 Proven Tactics Professional Salespeople Use to Close 40% More Deals"
 - "The 14-Day Email Sequence That Generated $150K in Revenue"
 
-Research-backed headline statistics:
-- Numbers in headlines: +30% conversion
-- 8-word headlines: +21% conversion
-- Action-oriented copy: +93% conversion
-- Benefit-driven vs feature-driven: +85% conversion
-- Specific outcomes: +321% conversion
-
-Test 20 alternatives per headline (Ogilvy's rule). The first idea is rarely the best.
+Draft several headline alternatives and test meaningful differences when traffic supports comparison. Do not promise a conversion lift from a word count or formula. Examples above illustrate structure; never present their numbers as real results without evidence.
 
 ## Content Structure for Scanning
 
-Users read only 20-28% of blog text. Structure for skimming:
+Make the page easy to scan:
 
 - **Single H1** per page (main title, include primary keyword)
 - **H2s** divide into clear sections (readers jump to what they need)
@@ -34,7 +27,7 @@ Users read only 20-28% of blog text. Structure for skimming:
 - Bullet points for key information
 - White space is critical for visual hierarchy
 
-Articles with H2 and H3 subheadings see **36% higher performance** in traffic, shares, and backlinks.
+Use headings to describe the section and help readers find what they need. Do not treat heading presence as a quantified traffic or citation lift.
 
 ## SEO Without Sacrificing Readability
 
@@ -52,10 +45,7 @@ Articles with H2 and H3 subheadings see **36% higher performance** in traffic, s
 - Specific clarity (tell them exactly what happens after click)
 - Action verbs: Get, Start, Claim, Learn, Download, Discover
 
-**Impact data:**
-- Single well-placed CTA: +371% click-through
-- Personalized CTAs: +42% over standard
-- Behavior-based dynamic CTAs: +44% boost
+Measure each call to action against its intended completed action. A click is not necessarily a sale or qualified lead.
 
 **Examples:**
 - "Get instant access to our free report"
@@ -66,7 +56,7 @@ Articles with H2 and H3 subheadings see **36% higher performance** in traffic, s
 
 For service/practice area pages:
 
-1. **H1**: [Service] + [Location] (e.g., "Estate Planning Attorney in The Woodlands, TX")
+1. **H1**: Name the service clearly. Follow project/house title rules; some brands require geo-free service titles. Include location only when it helps the reader and the project permits it, with service-area detail elsewhere on the page.
 2. **Opening**: What the reader is dealing with + how you solve it
 3. **Process section**: Step-by-step what working with you looks like (transparency wins)
 4. **Types/Options**: Compare approaches so reader can self-qualify
