@@ -618,34 +618,34 @@ ssh nonrootadmin "find /home/obsidian/automation-vault -name '*.md' -not -path '
 
 If the vault query fails or returns empty, skip wikilinking silently — it's an enhancement, not a requirement.
 
-### 5b. Source Credibility Check (Viral-Marketing Content)
+### 5b. Claim Provenance (Quantitative and Tactical Claims)
 
-Apply this check **before** writing Sentiment or Recommendations when both of these are true:
+Before Sentiment or Recommendations, inspect **each load-bearing claim** (percentages, citation counts, "X is Y% of Z", ranking lifts, engine-specific tactics). Do not wait for a viral-thread gate. Do not score the whole piece LOW/MEDIUM/HIGH from an all-three-flags count.
 
-1. The content is a **viral social thread** (X/LinkedIn/Threads) or a vendor blog that makes **quantitative claims** (specific percentages, citation counts, "X is Y% of Z").
-2. The content references a **"proprietary study," "our data," "we analyzed," or an unnamed private dataset**.
+**Missing source excludes the number from prioritization.** If a figure has no source URL, you may still describe the author's argument; do not use the number in recommendations or as a planning input.
 
-When both triggers are present, run the three-check pattern:
+**Vendor ownership alone does not invalidate a method.** Record that the author owns the measuring tool as a limitation (incentive, closed sample). Still judge the method, sample, and design on their merits.
 
-1. **Traceability** — Is the claimed number traceable to public research (Semrush, Ahrefs, Profound, Peec AI, LLM Pulse, Search Engine Land, industry associations)? If the numbers match an unattributed public study, treat as **repackaged**.
-2. **Closed loop** — Does the author own a tool that produced the data? A vendor selling analytics of the category they're analyzing = **closed-loop marketing data, directional at best**.
-3. **Triangulation** — Can the headline number be reproduced across **≥2 independent trackers or studies**? If not, flag as basket-specific, overstated, or unsupported.
-4. **Google-official contradiction** — Does the *tactic* contradict Google's official Search guidance (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide, 2026-05-15)? If Google explicitly disclaims it as a Google Search input (llms.txt, AI-specific chunking, structured-data overfocus), the recommendation must scope it to non-Google engines. If Google classifies it as spam (inauthentic mentions, scaled content abuse), the recommendation must reverse it, not scope it — disingenuous on every engine. A well-sourced number does not rehabilitate a Google-disclaimed or spam tactic. (This check is about the tactic, independent of how well-sourced the number is.)
+**Classify each claim as one of:**
 
-**Effect on output when the check triggers:**
+| Class | Meaning |
+|-------|---------|
+| documented rule | First-party engine or platform rule. Scope the tactic to that engine. |
+| measured observation | Empirical result with enough provenance to retain (list below). Observational associations do not establish causation; experimental effects remain bounded by the study design and conditions. Neither is a universal production guarantee. |
+| hypothesis | Plausible mechanism, untested or under-specified. Directional only. |
+| unsupported | No source, unreproducible headline, or design too thin to use. Do not prioritize. |
 
-- **Sentiment** must include an explicit line: `Credibility: LOW / MEDIUM / HIGH — <one-sentence reason>`.
-  - LOW: all three stat-checks (1-3) fire (repackaged data from a closed loop with no triangulation).
-  - MEDIUM: two of three fire.
-  - HIGH: zero or one fires.
-- **Recommendations** must **not** propose action on unverified headline numbers. Where the content contains a tactical playbook, adopt the tactics only if they are directionally supported by the verified sources — and call out in each recommendation which specific numbers come from the underlying public research vs. the author's repackaging.
-- **Check 4 (Google-official contradiction) is a separate scope/removal axis, not part of the LOW/MEDIUM/HIGH stat score.** When it fires, the recommendation must explicitly scope the tactic to non-Google engines (Google-disclaimed) or reverse it (Google-spam) regardless of the credibility rating. It warns and scopes — it never blocks the digest.
+**A retained empirical claim (measured observation) needs all of:** source URL; publication date and check date; engine and mode (ChatGPT Search, Perplexity, Google AI Overviews / AI Mode, and so on); sample; geography / language; numerator and denominator; design and limitations. If any field is missing, drop the number from prioritization (hypothesis or unsupported). Do not invent the missing fields.
 
-**LinkedIn-AEO specific:** When the subject matter is LinkedIn AEO / LLM citation patterns / AI search visibility, the canonical verified equivalent lives at `plugins/seo/skills/seo/reference/aeo.md` in the private `claude-skills-private` marketplace → "Verified LinkedIn AEO Playbook." Point the user there for the triangulated version of what the viral thread claims.
+**Engine-scope tactics.** A documented Google disclaimer (https://developers.google.com/search/docs/fundamentals/ai-optimization-guide, 2026-07-10) means: do not present that tactic as a Google Search input; scope it to engines it still applies to. If Google classifies it as spam (inauthentic mentions, scaled content abuse), reverse it for every engine. A well-sourced number does not rehabilitate a spam tactic. Warn and scope; never block the digest.
 
-**Sync contract (semantic, not byte-identical).** This guardrail is one of **three surfaces**: this §5b, the `/seo:seo-aeo` command's "Source Credibility Check", and `seo` skill `reference/aeo.md`'s "Credibility Guardrail for Viral AEO Claims". Keep the **four checks and the warn-and-scope/never-block severity posture** aligned across all three when editing any of them. Do **not** force them byte-identical — §5b intentionally keeps its two-trigger gate and this "Effect on output" block, which the other two surfaces do not have. What stays in sync is the check logic and severity behavior, not the prose.
+**Effect on output:**
+- **Sentiment** may note claim classes in one line when the piece is promotional or vendor-authored. Do not collapse the piece to a single credibility grade from a flag count.
+- **Recommendations** must not act on unsupported or unsourced numbers. Adopt a tactic only when it is a documented rule or a measured observation with the provenance list above, scoped to that evidence's engine and conditions.
 
-**Example trigger:** A thread stating "LinkedIn beats YouTube + Wikipedia for AI citations" from a vendor selling an AEO monitoring tool, citing "our data" with no public methodology. All three checks fire → Credibility: LOW. Recommendation adopts the article-length, platform-split, and educational-tone tactics (verified via Semrush/Profound) but does **not** cite the headline "beats YouTube + Wikipedia" number.
+This section is the public principle. If a private AEO playbook is installed, you may use it as an optional triangulation procedure. Public digest runs stay valid without it.
+
+**Example:** A thread stating "LinkedIn beats YouTube + Wikipedia for AI citations" from a vendor selling an AEO monitoring tool, citing "our data" with no methodology, sample, engine, or denominator. Classify the headline number **unsupported**. Do not prioritize it. Treat other tactics in the same piece as **hypothesis** until a sourced study supplies the provenance list.
 
 ### 5c. Structured Analysis
 
@@ -878,6 +878,8 @@ Fail: Recommendations dumped wholesale, OR qualifying James leftovers were only 
 | Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
 | Run the full vault digest on a photo or PDF of business cards | Wrong artifact — user wants contacts, not an analysis note | Short-circuit to vCard export (`references/business-cards.md`) |
 | Dump every recommendation into the operator Word list | The list is James's daily to-do, not a digest dump | Queue at most 5 James-only leftovers via Section 7c |
+| Prioritize unsourced percentages from vendor threads | Headline numbers without provenance become planning inputs | Classify each claim (documented rule / measured observation / hypothesis / unsupported); exclude unsourced numbers from recommendations |
+| Score a whole piece LOW because three flags fired | All-three-flags grades hide mixed claim quality and treat vendor ownership as disqualifying | Judge claims, not the author; vendor-owned methods can still be valid |
 
 ## 6. Output Template
 
@@ -1294,6 +1296,7 @@ Operator queue: {added N, open M / skipped — none qualified / skipped — busi
 - **Fetch tier fallback must log why the previous tier failed** (e.g., "Tier 1 returned login wall", not just "fell back to Tier 2").
 - **Frontmatter connection targets must be verified to exist** before writing them.
 - **Hyperscale DB registration claims must show the psql SELECT output** (id + name) — "registered" without a returned id is unverified.
+- **Empirical numbers retained in Recommendations must carry provenance** (source URL, publication/check date, engine/mode, sample, geography/language, numerator/denominator, design and limitations) or be dropped. Vendor ownership is a limitation, not an automatic invalidation.
 
 ## Learning
 
