@@ -16,7 +16,29 @@ score = (connected_notes / total_non_excluded_notes) * 30
 
 A note counts as "connected" if it has at least one connection (existing or newly proposed) to a note **outside its own directory**. A same-directory link never counts, whatever its quality — the project hub carve-out that used to be named here was retired on 2026-07-25 (see SKILL.md Constraints) and this line contradicted both the skill and the implemented metric until 2026-09-11.
 
-`total_non_excluded_notes` uses **the same exclusion set as orphan counting** (below): drop `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series. Do NOT use a "non-inbox only" denominator — that pulls 300+ agent-log/system notes into the denominator and understates coverage by ~13 points versus the orphan-exclusion logic. Coverage and orphans must measure the same population. (2026-05-31: non-inbox denom read 76.4%; the consistent non-excluded denom read 89.5% and matches prior audits.)
+`total_non_excluded_notes` uses the **base exclusion set**: drop `99-System/**`, `00-Inbox/`,
+`04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series. Do NOT use a
+"non-inbox only" denominator — that pulls 300+ agent-log/system notes into the denominator and
+understates coverage by ~13 points. (2026-05-31: non-inbox denom read 76.4%; the base non-excluded
+denom read 89.5% and matches prior audits.)
+
+**Coverage and the orphan dimension deliberately use different sets, and this is not the bug it looks
+like.** Coverage uses the base set above. The orphan dimension starts from the same base set and
+*additionally* discounts digest leaves and finished-experiment leaves. An earlier version of this line
+claimed both dimensions "must measure the same population," which — read literally after the 07-25
+digest exclusion — says digests should leave the coverage denominator too. **Do not do that.** It was
+measured on 2026-09-11: of the 826 digest and experiment notes in the denominator, **709 (86%) do
+carry a cross-directory link**. They are not structural non-participants in coverage; they are
+ordinary connected notes, and dropping them shrinks the denominator to a self-selected 1073 and
+inflates coverage from 93.3% to 99.0% while measuring less.
+
+The two rules answer different questions. Coverage asks *how much of the linkable vault is wired in*,
+and digests are linkable — most are wired in. The orphan dimension asks *which unwired notes are a
+problem*, and a digest that ends up unwired is an acceptable leaf, not a failure. The "same
+population" warning was written in 2026-05-31 against a denominator that swept in agent logs and
+system files; it was never meant to force the orphan dimension's forgiveness list onto coverage.
+Keep the base set for coverage; keep the base set plus leaf discounts for orphans; state both in the
+report.
 
 ### Action-Pending Clearance (25 points)
 
@@ -46,20 +68,47 @@ Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/
 **Finished-experiment output trees were added on 2026-09-11.** A directory tree holding the
 generated output of one completed experiment — A/B cells, per-model runs, archived before/after
 snapshots — is a structural leaf in exactly the way a dated daily series is. The notes are artifacts
-of a run, not documents anyone will link into the project graph. Detect one as a subtree under a
-project whose leaf files are generated variants of a single dated experiment (e.g.
-`01-Projects/Hyperscale/x-article-lede-test-2026-08-13/cells/`,
-`01-Projects/Hyperscale/social-week-compare-2026-08-06/{old,new,pairs}`), and exclude its leaves.
+of a run, not documents anyone will link into the project graph. **Detection — all three conditions must hold.** This rule gets the same testable shape as the
+dated-series rule below, because the looser "looks like a generated experiment" phrasing it replaced
+had no predicate two runs could agree on, and this skill has already been burned once by a match that
+was a judgment call (the prefix-regex bug, 615 notes):
+
+1. An ancestor directory's own name ends in a date stamp matching `-\d{4}-\d{2}-\d{2}$`
+   (e.g. `x-article-lede-test-2026-08-13`, `social-week-compare-2026-08-06`). The date is on the
+   **directory**, not the files — this is what separates a finished experiment's output from a folder
+   of ordinary dated documents such as `Hyperscale/drafts/` or `JD-Key/`.
+2. The excluded notes are **leaves at least one level below** that dated directory (`.../cells/...`,
+   `.../old/...`). Documents sitting directly in the dated directory are the experiment's own
+   write-up and are **never** excluded.
+3. The dated directory holds **≥10 notes below its own top level**, mirroring the ≥10 threshold the
+   dated-series rule uses. A dated directory with a handful of children is somebody's working folder,
+   not an experiment dump.
+
+If a directory fails any one of the three, count its notes normally. When uncertain, do not exclude:
+an honest orphan is recoverable, a silently excluded note is not.
+
+**Two conditions were tried and dropped on 2026-09-11; do not reintroduce them.** A per-leaf-directory
+"≥5 files sharing a generated filename stem" test and a "nothing modified in 30 days" freshness test
+together matched only 12 of the 43 leaves they were written to catch. The stem heuristic failed on
+`social-week-compare-2026-08-06/old`, whose files vary across three tokens (`article`/`li`/`x`) rather
+than one. The freshness test failed on `x-article-lede-test-2026-08-13` because it was **29 days old** —
+a rule whose output flips tomorrow is unusable in a trend metric. Validated on the live vault, the
+three-condition form above matches exactly the 2 intended trees and 43 leaves (1.6%), while correctly
+leaving all **50** other date-stamped directories in the vault — the entire `06-Agent-Log/tlo-pipeline/`
+family — counted normally.
 
 This was recommended and declined on 2026-08-22, 2026-09-02 and 2026-09-05 before being adopted.
 For four consecutive runs 43 such cells floored this dimension at 0.00, so it could not distinguish
 a vault with 11 real orphans from one with 60 — the same failure mode digests caused before 07-25.
 On 2026-09-11 the rule moved the vault from 54.4 to 68.9 with no change to the underlying links.
 **Report the excluded tree count separately**, the way the dated-series count is reported, so an
-over-broad match stays visible. Do not extend this to a project's ordinary dated documents — only to
+over-broad match stays visible: print the directories matched, the leaf count each contributed, and
+the experiment-tree total as its own line. **Alarm if the experiment-tree rule alone removes more
+than ~5% of the vault, or matches more than 3 trees** — investigate before reporting a score.
+(Calibration 2026-09-11: 2 trees, 43 leaves, 1.6% of the vault.) Do not extend this to a project's ordinary dated documents — only to
 the output directory of a single, finished experiment.
 
-**Digests were added to the exclusion set on 2026-07-25.** The skill has documented them as structural leaves since 2026-07-24 — a full discovery pass over 63 of them yielded 6 genuine connections — but the formula kept counting them, so the dimension read 0.00 whether the vault had 12 real orphans or 120. Report **both** numbers: the raw orphan count for trend continuity, and `real_orphan_count` (raw minus digests) as the scored figure. If the two are far apart, say so in the report rather than letting the headline number carry a distortion it does not explain.
+**Digests were added to the exclusion set on 2026-07-25.** The skill has documented them as structural leaves since 2026-07-24 — a full discovery pass over 63 of them yielded 6 genuine connections — but the formula kept counting them, so the dimension read 0.00 whether the vault had 12 real orphans or 120. Report **both** numbers: the raw orphan count for trend continuity, and `real_orphan_count` (raw minus digest leaves minus finished-experiment leaves) as the scored figure. If the two are far apart, say so in the report rather than letting the headline number carry a distortion it does not explain.
 
 **Dated-series detection — anchored match, not a prefix.** A series is a directory with ≥10 children matching `^\d{4}-\d{2}-\d{2}\.md$`: the date must be the entire filename stem (e.g. `01-Projects/X-Intel/2026-07-19.md`). Do **not** use `^\d{4}-\d{2}-\d{2}.*\.md$` — that matches any date-*prefixed* document and on 2026-07-24 excluded 615 notes (all of `web-analyses/`, `05-Commitments/`, `Hyperscale/drafts/`, `JD-Key/`), hiding 71 real orphans and overstating coverage by 4.6 points.
 
