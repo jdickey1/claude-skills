@@ -4,23 +4,59 @@ Complete SQL query library for analyzing Google Search Console bulk export data 
 
 ---
 
-## CTR Benchmarks
+## Parameters and complete-period gate
 
-Used by queries #6 and #13. Industry averages by position:
+Replace identifier placeholders with the confirmed project/dataset; identifiers cannot be query parameters. Bind `@end_date` (DATE, verified complete Pacific date), `@days` (INT64, positive; normally 28, 7 for alerts, 90 for gap research), `@baseline_days` (INT64, 60 for #20), and `@history_start` (DATE, for #16/#21). Set `@url_pattern` (STRING, SQL LIKE pattern) for #12. Thresholds in remaining SQL are explicit defaults; edit them deliberately when needed.
 
-| Position | Expected CTR |
-|----------|-------------|
-| 1 | 28.5% |
-| 2 | 15.7% |
-| 3 | 11.0% |
-| 4 | 8.0% |
-| 5 | 7.2% |
-| 6 | 5.1% |
-| 7 | 4.0% |
-| 8 | 3.2% |
-| 9 | 2.8% |
-| 10 | 2.5% |
-| 11+ | MAX(0.5%, 2.5% - (pos-10)*0.2%) |
+All daily windows contain exactly N inclusive dates: end_date minus (N - 1) through end_date. Never choose the latest row alone as proof of completeness. For comparisons validate both periods; for #9 validate all three full months; for #16 validate the entire requested history including comparison months; for #21 validate the training range. Date buckets remain America/Los_Angeles even when the report timestamp uses another timezone.
+
+Run this gate first with `@coverage_start` and `@coverage_end` (DATE) spanning every date used by the analysis. Bind `@require_site` and `@require_url` (BOOL) for the tables read by the selected analysis; use both only when it reads both. Bind `@site_namespace` and `@url_namespace` (STRING, nullable for an unused table) to the actual native ExportLog namespace values observed for each required table, not guessed labels. Inspect ``SELECT DISTINCT namespace FROM `{PROJECT}.{DATASET}.ExportLog` `` first. `ExportLog` contains successful exports only; it has no status or row-count field. Check its native schema with #3.
+
+```sql
+ASSERT @coverage_start IS NOT NULL AND @coverage_end IS NOT NULL
+  AND @coverage_start <= @coverage_end AS 'Invalid coverage dates';
+ASSERT @require_site IS NOT NULL AND @require_url IS NOT NULL
+  AND (@require_site OR @require_url) AS 'Select required export tables';
+ASSERT (NOT @require_site OR @site_namespace IS NOT NULL)
+  AND (NOT @require_url OR @url_namespace IS NOT NULL)
+  AND (NOT (@require_site AND @require_url) OR @site_namespace != @url_namespace)
+  AS 'Verify required native namespace mappings';
+WITH expected AS (
+  SELECT day, table_name, namespace
+  FROM UNNEST(GENERATE_DATE_ARRAY(@coverage_start, @coverage_end)) AS day
+  CROSS JOIN UNNEST([
+    STRUCT('searchdata_site_impression' AS table_name, @site_namespace AS namespace, @require_site AS required),
+    STRUCT('searchdata_url_impression' AS table_name, @url_namespace AS namespace, @require_url AS required)
+  ])
+  WHERE required
+), logs AS (
+  SELECT DISTINCT data_date, namespace
+  FROM `{PROJECT}.{DATASET}.ExportLog`
+  WHERE agenda = 'SEARCHDATA'
+    AND data_date BETWEEN @coverage_start AND @coverage_end
+), partitions AS (
+  SELECT DISTINCT table_name, SAFE.PARSE_DATE('%Y%m%d', partition_id) AS day
+  FROM `{PROJECT}.{DATASET}.INFORMATION_SCHEMA.PARTITIONS`
+  WHERE table_name IN ('searchdata_site_impression', 'searchdata_url_impression')
+    AND total_rows > 0
+)
+SELECT e.day, e.table_name,
+  l.data_date IS NOT NULL AS export_logged,
+  p.day IS NOT NULL AS partition_present
+FROM expected e
+LEFT JOIN logs l ON l.data_date = e.day AND l.namespace = e.namespace
+LEFT JOIN partitions p ON p.day = e.day AND p.table_name = e.table_name
+WHERE l.data_date IS NULL OR p.day IS NULL
+ORDER BY e.day, e.table_name
+```
+
+Require non-null ordered coverage dates and positive day counts before execution. Zero returned rows passes the gate; otherwise report the missing dates as a **data-quality finding** and stop dependent comparisons. Do not replace missing partitions with zero traffic. For a truly empty property day, absence of a physical partition still fails this conservative gate until independently verified. After the gate passes, an absent URL within those complete site-wide periods can be assigned zero clicks, while position and CTR without impressions remain unavailable. Record namespace mapping, coverage results, end date and latest export versions/publication times in the report. Recheck coverage when rerunning after export revisions.
+
+Source: [native table schema](https://support.google.com/webmasters/answer/12917991) and [aggregation guidelines](https://support.google.com/webmasters/answer/12917174).
+
+## Comparable click-through-rate cohorts
+
+Queries #6/#13 use optional same-site peer cohorts matched by position bucket, device, country and observed brand status. Bind a reviewed `@brand_regex` (STRING), `@min_peer_pages` (INT64, default 5) and `@min_peer_impressions` (INT64, default 1000). Exclude anonymized/empty queries because brand status is unknown. These illustrative sample floors are configurable, not statistical significance tests. Exclude the target URL from its own benchmark. If no reviewed brand definition or sufficient comparable peers exist, report **benchmark unavailable** and do not invent a global curve. Check intent and search appearance before interpreting gaps; position buckets alone cannot make peers equivalent. Extra clicks assume the observed peer CTR transfers and are scenarios only.
 
 ## Intent Classification Patterns
 
@@ -39,11 +75,12 @@ Two analyses combine multiple queries:
 
 ### Content Recommendations
 Run Quick Wins (#5) + Content Gaps (#7) + Cannibalization (#10), then merge and rank into three action categories:
-- **Update**: Striking distance keywords to optimize existing content for
-- **Create**: Content gaps where no page targets the query
-- **Consolidate**: Cannibalized queries where pages should be merged
 
-Sort all by estimated opportunity (extra clicks).
+- **Update**: Striking distance keywords to optimize existing content for
+- **Create**: Gaps supported by audience needs and a review of existing coverage
+- **Investigate**: Multiple URLs; consolidate only after verifying overlapping intent and likely harm
+
+Rank by evidence and business relevance. Extra-click calculations are optional scenarios, not forecasts or guarantees.
 
 ### Full Performance Report
 Run Snapshot (#8) + Alerts (#14) + Quick Wins (#5) + Traffic Drops (#11) + Content Decay (#9) + Content Recommendations in sequence. Output as formatted markdown.
@@ -57,14 +94,15 @@ Run Snapshot (#8) + Alerts (#14) + Quick Wins (#5) + Traffic Drops (#11) + Conte
 ```sql
 -- Only SELECT allowed. Auto-add LIMIT if missing.
 -- Blocked: INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, TRUNCATE, MERGE, GRANT, REVOKE
--- 10GB byte billing safety cap
+-- Dry-run first, then set --maximum_bytes_billed to the agreed byte cap.
 ```
 
 ### Query 2: Cost Estimate (Dry Run)
 
 ```bash
 bq query --use_legacy_sql=false --dry_run 'YOUR_SQL_HERE'
-# Formula: (bytes_processed / 1TB) * $6.25 = estimated cost (on-demand pricing)
+# Estimate from dry-run bytes and current region/billing-plan pricing; include storage and ML usage.
+# Apply --maximum_bytes_billed=<approved_byte_cap> on execution; LIMIT does not cap scan cost.
 ```
 
 ### Query 3: List Tables with Schema
@@ -98,11 +136,11 @@ SELECT * FROM `{PROJECT}.{DATASET}.{TABLE}` LIMIT 10
 
 ## Core SEO Analysis
 
-These queries could use the GSC API, but BigQuery is faster, unsampled, and has no row limits.
+The Search Console application programming interface (API) supports these analyses within its row, privacy, aggregation and history limits. Bulk export supports retained daily data and SQL analysis without the API row cap; privacy restrictions still apply.
 
 ### Query 5: Quick Wins (Striking Distance Keywords)
 
-Keywords at positions 4-15 with high impressions. Sorted by traffic opportunity.
+Keywords at positions 4-15 with high impressions. Sorted by impressions; no fixed CTR uplift is assumed.
 
 **Parameters:** days (default 28), min_impressions (default 100), max_position (default 15)
 
@@ -112,72 +150,67 @@ SELECT
   SUM(clicks) AS clicks,
   SUM(impressions) AS impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-  ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)), 1) AS avg_position,
-  ROUND(SUM(impressions) * (0.11 - SAFE_DIVIDE(SUM(clicks), SUM(impressions))), 0) AS opportunity
-FROM `{DATASET}.searchdata_site_impression`
+  ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1, 1) AS avg_position,
+  CAST(NULL AS FLOAT64) AS extra_clicks_scenario
+FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
 WHERE
-  data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
+  data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
   AND is_anonymized_query = false
   AND search_type = 'WEB'
 GROUP BY query
 HAVING
   avg_position BETWEEN 4 AND 15
   AND impressions >= 100
-ORDER BY opportunity DESC
+ORDER BY impressions DESC
 LIMIT 50
 ```
 
-### Query 6: CTR Opportunities (Below Benchmark)
+### Query 6: CTR Opportunities (Comparable Cohorts)
 
-Pages with high impressions but CTR below expected benchmark for their position.
-
-**Parameters:** days (default 28), min_impressions (default 500)
+Apply the cohort contract above; output is per URL/device/country/brand cohort. `total_cohorts` and `unavailable_cohorts` describe the entire result before the 50-row ranking limit. Report both counts even when unavailable rows fall outside the displayed sample; an empty result means zero cohorts. Do not infer complete benchmark coverage from the displayed rows.
 
 ```sql
 WITH page_metrics AS (
-  SELECT
-    url,
-    SUM(clicks) AS clicks,
-    SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS actual_ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE
-    data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
-    AND search_type = 'WEB'
-  GROUP BY url
-  HAVING impressions >= 500 AND avg_position <= 20
-),
-benchmarks AS (
-  SELECT *,
-    CASE
-      WHEN avg_position <= 1 THEN 28.5
-      WHEN avg_position <= 2 THEN 15.7
-      WHEN avg_position <= 3 THEN 11.0
-      WHEN avg_position <= 4 THEN 8.0
-      WHEN avg_position <= 5 THEN 7.2
-      WHEN avg_position <= 6 THEN 5.1
-      WHEN avg_position <= 7 THEN 4.0
-      WHEN avg_position <= 8 THEN 3.2
-      WHEN avg_position <= 9 THEN 2.8
-      WHEN avg_position <= 10 THEN 2.5
-      ELSE GREATEST(0.5, 2.5 - (avg_position - 10) * 0.2)
-    END AS benchmark_ctr_pct
-  FROM page_metrics
+  SELECT url, device, country,
+    REGEXP_CONTAINS(query, @brand_regex) AS is_brand,
+    SUM(clicks) AS clicks, SUM(impressions) AS impressions,
+    SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
+    AND search_type = 'WEB' AND NOT is_anonymized_query AND NULLIF(query, '') IS NOT NULL
+  GROUP BY url, device, country, is_brand
+), buckets AS (
+  SELECT *, CAST(FLOOR(avg_position) AS INT64) AS position_bucket FROM page_metrics
+), cohort_totals AS (
+  SELECT device, country, is_brand, position_bucket,
+    COUNT(*) AS cohort_pages, SUM(clicks) AS cohort_clicks,
+    SUM(impressions) AS cohort_impressions
+  FROM buckets
+  GROUP BY device, country, is_brand, position_bucket
+), peers AS (
+  SELECT a.*,
+    CASE WHEN c.cohort_pages - 1 >= @min_peer_pages
+      AND c.cohort_impressions - a.impressions >= @min_peer_impressions
+      THEN SAFE_DIVIDE(c.cohort_clicks - a.clicks, c.cohort_impressions - a.impressions)
+      END AS benchmark_ctr
+  FROM buckets a
+  LEFT JOIN cohort_totals c USING (device, country, is_brand, position_bucket)
 )
-SELECT
-  url, clicks, impressions, actual_ctr_pct, avg_position, benchmark_ctr_pct,
-  ROUND(benchmark_ctr_pct - actual_ctr_pct, 2) AS ctr_gap_pct,
-  ROUND(impressions * (benchmark_ctr_pct - actual_ctr_pct) / 100, 0) AS potential_extra_clicks
-FROM benchmarks
-WHERE benchmark_ctr_pct - actual_ctr_pct > 1.0
-ORDER BY potential_extra_clicks DESC
+SELECT *, COUNT(*) OVER () AS total_cohorts,
+  COUNT(IF(benchmark_ctr IS NULL, 1, NULL)) OVER () AS unavailable_cohorts,
+  SAFE_DIVIDE(clicks, impressions) AS actual_ctr,
+  GREATEST(0, impressions * benchmark_ctr - clicks) AS extra_clicks_scenario,
+  CASE WHEN benchmark_ctr IS NULL THEN 'benchmark unavailable'
+    WHEN SAFE_DIVIDE(clicks, impressions) < benchmark_ctr THEN 'below comparable peers'
+    ELSE 'at or above comparable peers' END AS verdict
+FROM peers
+ORDER BY extra_clicks_scenario DESC
 LIMIT 50
 ```
 
 ### Query 7: Content Gaps
 
-Queries where you get impressions but rank beyond position 20. No page properly targets these.
+Queries with impressions beyond position 20 are research candidates. Check existing coverage, search intent and audience evidence before calling a content gap or proposing new content.
 
 **Parameters:** days (default 90), min_impressions (default 50), min_position (default 20)
 
@@ -187,11 +220,11 @@ SELECT
   SUM(clicks) AS clicks,
   SUM(impressions) AS impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-  ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)), 1) AS avg_position,
-  ROUND(SUM(impressions) * 0.072, 0) AS estimated_clicks_at_pos5
-FROM `{DATASET}.searchdata_site_impression`
+  ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1, 1) AS avg_position,
+  CAST(NULL AS FLOAT64) AS extra_clicks_scenario
+FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
 WHERE
-  data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 90 DAY)
+  data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
   AND is_anonymized_query = false
   AND search_type = 'WEB'
 GROUP BY query
@@ -211,26 +244,26 @@ WITH current_queries AS (
   SELECT
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
     ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)), 1) AS avg_position,
-    COUNT(DISTINCT query) AS unique_queries
-  FROM `{DATASET}.searchdata_site_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND search_type = 'WEB'
+    ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1, 1) AS avg_position,
+    COUNT(DISTINCT IF(NOT is_anonymized_query, NULLIF(query, ''), NULL)) AS unique_queries
+  FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date AND search_type = 'WEB'
 ),
 prior_queries AS (
   SELECT
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
     ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)), 1) AS avg_position,
-    COUNT(DISTINCT query) AS unique_queries
-  FROM `{DATASET}.searchdata_site_impression`
-  WHERE data_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 56 DAY)
-    AND DATE_SUB(CURRENT_DATE(), INTERVAL 29 DAY)
+    ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1, 1) AS avg_position,
+    COUNT(DISTINCT IF(NOT is_anonymized_query, NULLIF(query, ''), NULL)) AS unique_queries
+  FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (2 * @days - 1) DAY)
+    AND DATE_SUB(@end_date, INTERVAL @days DAY)
     AND search_type = 'WEB'
 ),
 current_pages AS (
   SELECT COUNT(DISTINCT url) AS unique_pages
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND search_type = 'WEB'
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date AND search_type = 'WEB'
 )
 SELECT
   c.clicks AS current_clicks, p.clicks AS prior_clicks,
@@ -243,40 +276,43 @@ SELECT
 FROM current_queries c CROSS JOIN prior_queries p CROSS JOIN current_pages cp
 ```
 
-### Query 9: Content Decay (3-Month Consecutive Decline)
+### Query 9: Content Decay (Latest Three Complete Months)
 
-Pages with traffic declining for three straight months. One bad month is noise; three is a problem.
+Three monthly totals with two consecutive decreases. This does not mean three month-over-month drops (which would require four months). Only the latest intended sequence is evaluated, one row per URL. The last month is the month containing end_date only when end_date is its last day; otherwise use the preceding month. Validate coverage from the first day of the earliest month through the last day of the last month before running. Compare #16 and business/event calendars for seasonality; label seasonality unavailable if history is insufficient. A trend is a review candidate, not proof the content caused it.
 
 ```sql
-WITH monthly AS (
-  SELECT
-    url, DATE_TRUNC(data_date, MONTH) AS month, SUM(clicks) AS clicks
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 4 MONTH) AND search_type = 'WEB'
+WITH bounds AS (
+  SELECT IF(@end_date = LAST_DAY(@end_date), DATE_TRUNC(@end_date, MONTH),
+    DATE_SUB(DATE_TRUNC(@end_date, MONTH), INTERVAL 1 MONTH)) AS last_month
+), monthly AS (
+  SELECT url, DATE_TRUNC(data_date, MONTH) AS month, SUM(clicks) AS clicks
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`, bounds
+  WHERE data_date BETWEEN DATE_SUB(last_month, INTERVAL 2 MONTH) AND LAST_DAY(last_month)
+    AND search_type = 'WEB'
   GROUP BY url, month
-),
-ranked AS (
-  SELECT url, month, clicks,
-    LAG(clicks, 1) OVER (PARTITION BY url ORDER BY month) AS prev_clicks,
-    LAG(clicks, 2) OVER (PARTITION BY url ORDER BY month) AS prev2_clicks
-  FROM monthly
+), complete AS (
+  SELECT u.url, m AS month, COALESCE(t.clicks, 0) AS clicks
+  FROM (SELECT DISTINCT url FROM monthly) u CROSS JOIN bounds
+  CROSS JOIN UNNEST(GENERATE_DATE_ARRAY(DATE_SUB(last_month, INTERVAL 2 MONTH), last_month, INTERVAL 1 MONTH)) m
+  LEFT JOIN monthly t ON t.url = u.url AND t.month = m
+), totals AS (
+  SELECT url,
+    MAX(IF(month = DATE_SUB(last_month, INTERVAL 2 MONTH), clicks, NULL)) AS clicks_3_months_ago,
+    MAX(IF(month = DATE_SUB(last_month, INTERVAL 1 MONTH), clicks, NULL)) AS clicks_2_months_ago,
+    MAX(IF(month = last_month, clicks, NULL)) AS clicks_last_month
+  FROM complete CROSS JOIN bounds GROUP BY url
 )
-SELECT
-  url,
-  prev2_clicks AS clicks_3_months_ago,
-  prev_clicks AS clicks_2_months_ago,
-  clicks AS clicks_last_month,
-  ROUND(SAFE_DIVIDE(clicks - prev2_clicks, prev2_clicks) * 100, 1) AS total_decline_pct
-FROM ranked
-WHERE prev2_clicks IS NOT NULL AND prev_clicks IS NOT NULL
-  AND clicks < prev_clicks AND prev_clicks < prev2_clicks AND prev2_clicks >= 10
-ORDER BY (prev2_clicks - clicks) DESC
+SELECT *, SAFE_DIVIDE(clicks_last_month - clicks_3_months_ago, clicks_3_months_ago) * 100 AS total_decline_pct
+FROM totals
+WHERE clicks_3_months_ago >= 10 AND clicks_3_months_ago > clicks_2_months_ago
+  AND clicks_2_months_ago > clicks_last_month
+ORDER BY clicks_3_months_ago - clicks_last_month DESC
 LIMIT 50
 ```
 
 ### Query 10: Keyword Cannibalization
 
-Multiple pages competing for the same query.
+Multiple URLs for a query are an investigation signal. Check intent, time, device, geography, canonicalization and whether the pages serve distinct needs. Do not automatically merge or consolidate.
 
 **Parameters:** days (default 28), min_impressions (default 50)
 
@@ -285,9 +321,9 @@ WITH query_urls AS (
   SELECT
     query, url,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
+    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
     AND is_anonymized_query = false AND search_type = 'WEB'
   GROUP BY query, url
 ),
@@ -305,7 +341,7 @@ LIMIT 200
 
 ### Query 11: Traffic Drops with Diagnosis
 
-Pages that lost traffic with automated diagnosis: ranking loss, CTR collapse, or demand decline.
+Pages that lost traffic with diagnostic hypotheses. The relative CTR decline cutoff (50%) and other diagnostic cutoffs are editable screening defaults, not universal performance rules. Check mix shifts, seasonality and technical evidence before assigning causes. Prior-only URLs have zero current clicks only after the complete-period gate passes.
 
 **Parameters:** days (default 28)
 
@@ -314,38 +350,39 @@ WITH current_period AS (
   SELECT url,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
     ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND search_type = 'WEB'
+    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date AND search_type = 'WEB'
   GROUP BY url
 ),
 prior_period AS (
   SELECT url,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
     ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 56 DAY)
-    AND DATE_SUB(CURRENT_DATE(), INTERVAL 29 DAY)
+    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (2 * @days - 1) DAY)
+    AND DATE_SUB(@end_date, INTERVAL @days DAY)
     AND search_type = 'WEB'
   GROUP BY url
 )
 SELECT
-  c.url, p.clicks AS prev_clicks, c.clicks AS curr_clicks,
-  c.clicks - p.clicks AS click_change,
-  ROUND(SAFE_DIVIDE(c.clicks - p.clicks, p.clicks) * 100, 1) AS click_change_pct,
+  p.url, p.clicks AS prev_clicks, COALESCE(c.clicks, 0) AS curr_clicks,
+  COALESCE(c.clicks, 0) - p.clicks AS click_change,
+  ROUND(SAFE_DIVIDE(COALESCE(c.clicks, 0) - p.clicks, p.clicks) * 100, 1) AS click_change_pct,
   p.avg_position AS prev_position, c.avg_position AS curr_position,
   p.ctr_pct AS prev_ctr, c.ctr_pct AS curr_ctr,
   CASE
-    WHEN c.avg_position - p.avg_position > 3 THEN 'ranking_loss'
-    WHEN p.ctr_pct - c.ctr_pct > 2 AND c.avg_position - p.avg_position <= 1 THEN 'ctr_collapse'
-    WHEN p.impressions - c.impressions > p.impressions * 0.3 AND c.avg_position - p.avg_position <= 1 THEN 'demand_decline'
+    WHEN c.url IS NULL THEN 'no_current_observations_in_complete_period'
+    WHEN c.avg_position - p.avg_position > 3 THEN 'possible_ranking_loss'
+    WHEN SAFE_DIVIDE(p.ctr_pct - c.ctr_pct, p.ctr_pct) >= 0.5 AND c.avg_position - p.avg_position <= 1 THEN 'possible_ctr_change'
+    WHEN p.impressions - c.impressions > p.impressions * 0.3 AND c.avg_position - p.avg_position <= 1 THEN 'possible_demand_or_visibility_change'
     ELSE 'mixed'
   END AS diagnosis
-FROM current_period c
-INNER JOIN prior_period p ON c.url = p.url
-WHERE c.clicks < p.clicks AND p.clicks >= 5
-ORDER BY (p.clicks - c.clicks) DESC
+FROM prior_period p
+LEFT JOIN current_period c ON c.url = p.url
+WHERE COALESCE(c.clicks, 0) < p.clicks AND p.clicks >= 5
+ORDER BY (p.clicks - COALESCE(c.clicks, 0)) DESC
 LIMIT 50
 ```
 
@@ -361,20 +398,20 @@ SELECT
   COUNT(DISTINCT url) AS page_count,
   SUM(clicks) AS total_clicks, SUM(impressions) AS total_impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS avg_ctr_pct,
-  ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-FROM `{DATASET}.searchdata_url_impression`
-WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
-  AND url LIKE '%{URL_PATTERN}%' AND search_type = 'WEB'
+  ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
+FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
+  AND url LIKE @url_pattern AND search_type = 'WEB'
 ```
 
 ```sql
 -- Top pages in cluster
 SELECT url, SUM(clicks) AS clicks, SUM(impressions) AS impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-  ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-FROM `{DATASET}.searchdata_url_impression`
-WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
-  AND url LIKE '%{URL_PATTERN}%' AND search_type = 'WEB'
+  ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
+FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
+  AND url LIKE @url_pattern AND search_type = 'WEB'
 GROUP BY url ORDER BY clicks DESC LIMIT 10
 ```
 
@@ -382,77 +419,41 @@ GROUP BY url ORDER BY clicks DESC LIMIT 10
 -- Top queries for cluster
 SELECT query, SUM(clicks) AS clicks, SUM(impressions) AS impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct
-FROM `{DATASET}.searchdata_url_impression`
-WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
-  AND url LIKE '%{URL_PATTERN}%' AND is_anonymized_query = false AND search_type = 'WEB'
+FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
+  AND url LIKE @url_pattern AND is_anonymized_query = false AND search_type = 'WEB'
 GROUP BY query ORDER BY clicks DESC LIMIT 10
 ```
 
-### Query 13: CTR vs Benchmark with Verdicts
+### Query 13: CTR vs Comparable Peers with Verdicts
 
-**Parameters:** days (default 28), min_impressions (default 200)
-
-```sql
-WITH page_metrics AS (
-  SELECT url,
-    SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS actual_ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND search_type = 'WEB'
-  GROUP BY url
-  HAVING impressions >= 200 AND avg_position <= 20
-),
-with_benchmark AS (
-  SELECT *,
-    CASE
-      WHEN avg_position <= 1 THEN 28.5  WHEN avg_position <= 2 THEN 15.7
-      WHEN avg_position <= 3 THEN 11.0  WHEN avg_position <= 4 THEN 8.0
-      WHEN avg_position <= 5 THEN 7.2   WHEN avg_position <= 6 THEN 5.1
-      WHEN avg_position <= 7 THEN 4.0   WHEN avg_position <= 8 THEN 3.2
-      WHEN avg_position <= 9 THEN 2.8   WHEN avg_position <= 10 THEN 2.5
-      ELSE GREATEST(0.5, 2.5 - (avg_position - 10) * 0.2)
-    END AS benchmark_ctr_pct
-  FROM page_metrics
-)
-SELECT url, clicks, impressions, actual_ctr_pct, avg_position, benchmark_ctr_pct,
-  ROUND(actual_ctr_pct - benchmark_ctr_pct, 2) AS gap_pct,
-  CASE
-    WHEN actual_ctr_pct - benchmark_ctr_pct >= 2.0 THEN 'Above benchmark'
-    WHEN actual_ctr_pct - benchmark_ctr_pct >= -2.0 THEN 'At benchmark'
-    WHEN actual_ctr_pct - benchmark_ctr_pct >= -5.0 THEN 'Below benchmark'
-    ELSE 'Significantly below benchmark'
-  END AS verdict
-FROM with_benchmark
-ORDER BY gap_pct ASC
-LIMIT 50
-```
+Run the executable SQL in Query #6 with the same parameters. Report `total_cohorts` and `unavailable_cohorts` from Query #6, retain any unavailable rows in the displayed sample, and do not sum scenarios across incompatible cohorts. The verdict is descriptive, not a significance test.
 
 ### Query 14: SEO Alerts
 
 Position drops, CTR drops, click drops, and disappeared pages. Severity-rated.
 
-**Parameters:** days (default 7), position_drop_threshold (default 20), ctr_drop_pct (default 50), click_drop_pct (default 30)
+**Parameters:** @days (default 7). Explicit default thresholds: position warning >20 places, critical >40; relative CTR decline warning >=50%, critical >=75%; click decline warning >=30%, critical >=60% with at least 5 prior clicks. CTR 10% to 5% warns, to 2.5% is critical, to 0% is critical. Zero prior CTR yields NULL, not an alert. Critical conditions always take precedence. Apply sample-size review before acting. Query-level disappearances may reflect privacy changes and are not proof of deindexing.
 
 ```sql
 WITH current_period AS (
   SELECT query, url,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+    SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100 AS ctr_pct,
+    SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
     AND search_type = 'WEB' AND is_anonymized_query = false
   GROUP BY query, url
 ),
 prior_period AS (
   SELECT query, url,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY)
-    AND DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+    SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100 AS ctr_pct,
+    SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (2 * @days - 1) DAY)
+    AND DATE_SUB(@end_date, INTERVAL @days DAY)
     AND search_type = 'WEB' AND is_anonymized_query = false
   GROUP BY query, url
 )
@@ -461,19 +462,19 @@ SELECT c.query, c.url,
   p.avg_position AS prev_position, c.avg_position AS curr_position,
   ROUND(c.avg_position - p.avg_position, 1) AS position_change,
   CASE
-    WHEN c.avg_position - p.avg_position > 40 THEN 'critical'
-    WHEN c.avg_position - p.avg_position > 20 THEN 'warning'
-    WHEN p.ctr_pct > 0 AND (p.ctr_pct - c.ctr_pct) / p.ctr_pct * 100 > 100 THEN 'critical'
-    WHEN p.ctr_pct > 0 AND (p.ctr_pct - c.ctr_pct) / p.ctr_pct * 100 > 50 THEN 'warning'
-    WHEN p.clicks >= 5 AND (p.clicks - c.clicks) / p.clicks * 100 > 60 THEN 'critical'
-    WHEN p.clicks >= 5 AND (p.clicks - c.clicks) / p.clicks * 100 > 30 THEN 'warning'
+    WHEN c.avg_position - p.avg_position > 40
+      OR SAFE_DIVIDE(p.ctr_pct - c.ctr_pct, p.ctr_pct) * 100 >= 75
+      OR (p.clicks >= 5 AND SAFE_DIVIDE(p.clicks - c.clicks, p.clicks) * 100 >= 60) THEN 'critical'
+    WHEN c.avg_position - p.avg_position > 20
+      OR SAFE_DIVIDE(p.ctr_pct - c.ctr_pct, p.ctr_pct) * 100 >= 50
+      OR (p.clicks >= 5 AND SAFE_DIVIDE(p.clicks - c.clicks, p.clicks) * 100 >= 30) THEN 'warning'
     ELSE NULL
   END AS severity
 FROM current_period c
 INNER JOIN prior_period p ON c.query = p.query AND c.url = p.url
 WHERE c.avg_position - p.avg_position > 20
-  OR (p.ctr_pct > 0 AND (p.ctr_pct - c.ctr_pct) / p.ctr_pct * 100 > 50)
-  OR (p.clicks >= 5 AND (p.clicks - c.clicks) / p.clicks * 100 > 30)
+  OR (SAFE_DIVIDE(p.ctr_pct - c.ctr_pct, p.ctr_pct) * 100 >= 50)
+  OR (p.clicks >= 5 AND SAFE_DIVIDE(p.clicks - c.clicks, p.clicks) * 100 >= 30)
 ORDER BY CASE WHEN severity = 'critical' THEN 0 ELSE 1 END, (p.clicks - c.clicks) DESC
 LIMIT 100
 ```
@@ -482,17 +483,17 @@ LIMIT 100
 -- Disappeared pages (in prior period but not current)
 WITH current_period AS (
   SELECT DISTINCT query, url
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
     AND search_type = 'WEB' AND is_anonymized_query = false
 ),
 prior_period AS (
   SELECT query, url,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 14 DAY)
-    AND DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+    SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (2 * @days - 1) DAY)
+    AND DATE_SUB(@end_date, INTERVAL @days DAY)
     AND search_type = 'WEB' AND is_anonymized_query = false
   GROUP BY query, url HAVING clicks >= 5
 )
@@ -507,13 +508,13 @@ LIMIT 50
 
 ---
 
-## BigQuery-Exclusive Queries
+## Extended Analyses
 
-These use data or capabilities only available through BigQuery bulk export. Impossible via GSC API.
+The API supports year-over-year, device and page comparisons within available history and row/privacy/aggregation limits. It has no three-dimension limit. Bulk export is useful for retained history and repeatable SQL.
 
 ### Query 15: Anonymous Traffic Analysis
 
-The GSC API hides ~46% of clicks as "anonymous queries." BigQuery has them via `is_anonymized_query`.
+Bulk export includes anonymized-row metrics through `is_anonymized_query`; it never recovers the hidden query text. Measure the share for this property and period. There is no universal anonymous percentage. Site and URL aggregation totals can differ.
 
 **Parameters:** days (default 28)
 
@@ -524,8 +525,8 @@ SELECT
   SUM(clicks) AS clicks, SUM(impressions) AS impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
   COUNT(DISTINCT url) AS unique_urls
-FROM `{DATASET}.searchdata_url_impression`
-WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND search_type = 'WEB'
+FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date AND search_type = 'WEB'
 GROUP BY 1
 ORDER BY clicks DESC
 ```
@@ -537,8 +538,8 @@ SELECT url,
   SUM(IF(NOT is_anonymized_query, clicks, 0)) AS known_clicks,
   SUM(clicks) AS total_clicks,
   ROUND(SAFE_DIVIDE(SUM(IF(is_anonymized_query, clicks, 0)), SUM(clicks)) * 100, 1) AS anonymous_share_pct
-FROM `{DATASET}.searchdata_url_impression`
-WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY) AND search_type = 'WEB'
+FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date AND search_type = 'WEB'
 GROUP BY url
 HAVING total_clicks > 10
 ORDER BY anonymous_clicks DESC
@@ -547,7 +548,7 @@ LIMIT 50
 
 ### Query 16: Year-over-Year Seasonal Analysis
 
-Requires 12+ months of data. The GSC API's 16-month rolling window makes reliable YoY comparison impossible.
+Compare complete calendar months with the same month exactly one year earlier. Use retained history where available; the API can compare overlapping years within its available history. Validate coverage of both years first.
 
 ```sql
 WITH monthly AS (
@@ -557,19 +558,16 @@ WITH monthly AS (
     FORMAT_DATE('%b', data_date) AS month_name,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
     ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS ctr_pct,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE search_type = 'WEB'
+    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_TRUNC(@history_start, MONTH) AND @end_date AND search_type = 'WEB'
+    AND LAST_DAY(data_date) <= @end_date AND DATE_TRUNC(data_date, MONTH) >= @history_start
   GROUP BY 1, 2, 3
 ),
 with_yoy AS (
-  SELECT m.*,
-    LAG(clicks) OVER (PARTITION BY month ORDER BY year) AS prev_year_clicks,
-    ROUND(SAFE_DIVIDE(
-      clicks - LAG(clicks) OVER (PARTITION BY month ORDER BY year),
-      LAG(clicks) OVER (PARTITION BY month ORDER BY year)
-    ) * 100, 1) AS yoy_change_pct
-  FROM monthly m
+  SELECT m.*, p.clicks AS prev_year_clicks,
+    SAFE_DIVIDE(m.clicks - p.clicks, p.clicks) * 100 AS yoy_change_pct
+  FROM monthly m LEFT JOIN monthly p ON p.year = m.year - 1 AND p.month = m.month
 )
 SELECT * FROM with_yoy
 ORDER BY year DESC, month DESC
@@ -577,7 +575,7 @@ ORDER BY year DESC, month DESC
 
 ### Query 17: Device Split (Mobile vs Desktop Cannibalization)
 
-Finds queries where mobile and desktop rank different pages. Invisible in the GSC UI and impossible via API's 3-dimension limit.
+Finds queries where mobile and desktop rank different pages. The API also supports these dimensions, subject to its documented data limits. Different URLs alone do not establish harmful competition.
 
 **Parameters:** days (default 28), min_clicks (default 5)
 
@@ -585,10 +583,10 @@ Finds queries where mobile and desktop rank different pages. Invisible in the GS
 WITH device_pages AS (
   SELECT query, device, url,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)), 1) AS avg_position,
+    ROUND(SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1, 1) AS avg_position,
     ROW_NUMBER() OVER (PARTITION BY query, device ORDER BY SUM(clicks) DESC) AS rn
-  FROM `{DATASET}.searchdata_url_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
     AND is_anonymized_query = false AND search_type = 'WEB'
     AND device IN ('MOBILE', 'DESKTOP')
   GROUP BY query, device, url
@@ -624,9 +622,9 @@ SELECT
   COUNT(DISTINCT query) AS unique_queries,
   SUM(clicks) AS total_clicks, SUM(impressions) AS total_impressions,
   ROUND(SAFE_DIVIDE(SUM(clicks), SUM(impressions)) * 100, 2) AS avg_ctr_pct,
-  ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)), 1) AS avg_position
-FROM `{DATASET}.searchdata_site_impression`
-WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
+  ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1, 1) AS avg_position
+FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
+WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
   AND is_anonymized_query = false AND search_type = 'WEB'
 GROUP BY 1
 ORDER BY total_clicks DESC
@@ -641,8 +639,8 @@ Most common meaningful terms across your entire query set, ranked by clicks.
 ```sql
 WITH query_data AS (
   SELECT query, SUM(clicks) AS clicks, SUM(impressions) AS impressions
-  FROM `{DATASET}.searchdata_site_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
+  FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
     AND is_anonymized_query = false AND search_type = 'WEB'
   GROUP BY query
 ),
@@ -673,18 +671,18 @@ Queries that appeared recently but were not present in the baseline period.
 WITH recent_queries AS (
   SELECT query,
     SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-    ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)), 1) AS avg_position
-  FROM `{DATASET}.searchdata_site_impression`
-  WHERE data_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+    ROUND(SAFE_DIVIDE(SUM(sum_top_position), SUM(impressions)) + 1, 1) AS avg_position
+  FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days - 1) DAY) AND @end_date
     AND is_anonymized_query = false AND search_type = 'WEB'
   GROUP BY query
   HAVING impressions >= 10
 ),
 baseline_queries AS (
   SELECT DISTINCT query
-  FROM `{DATASET}.searchdata_site_impression`
-  WHERE data_date BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 67 DAY)
-    AND DATE_SUB(CURRENT_DATE(), INTERVAL 8 DAY)
+  FROM `{PROJECT}.{DATASET}.searchdata_site_impression`
+  WHERE data_date BETWEEN DATE_SUB(@end_date, INTERVAL (@days + @baseline_days - 1) DAY)
+    AND DATE_SUB(@end_date, INTERVAL @days DAY)
     AND is_anonymized_query = false AND search_type = 'WEB'
 )
 SELECT r.query, r.clicks, r.impressions, r.avg_position
@@ -699,11 +697,11 @@ LIMIT 50
 
 ## BigQuery ML Queries
 
-These use BigQuery ML for machine learning. Service account needs "BigQuery Data Editor" role. Models are created in the user's dataset.
+These use BigQuery ML for machine learning. Running them requires job permissions and permission to create models in the intended dataset. Confirm authorization before replacing an existing model. Models are created in the user's dataset.
 
 ### Query 21: Traffic Forecast (ARIMA_PLUS)
 
-Creates an ARIMA time-series model and forecasts daily clicks. Requires 6+ months of historical data for good results.
+Creates an autoregressive integrated moving average (ARIMA) time-series model and forecasts daily clicks. Prefer at least six months of verified complete history and evaluate on held-out periods; history length alone does not ensure accuracy. After the coverage gate passes, the date scaffold preserves true zero-click days. Missing exports must never be interpolated or zero-filled as training data.
 
 **Parameters:** horizon (default 30, max 365), confidence_level (default 0.95)
 
@@ -718,12 +716,16 @@ OPTIONS(
   data_frequency = 'DAILY',
   decompose_time_series = TRUE
 ) AS
-SELECT data_date AS date, SUM(clicks) AS total_clicks
-FROM `{DATASET}.searchdata_url_impression`
-WHERE search_type = 'WEB'
-GROUP BY 1
-HAVING total_clicks > 0
-ORDER BY 1
+WITH daily AS (
+  SELECT data_date, SUM(clicks) AS total_clicks
+  FROM `{PROJECT}.{DATASET}.searchdata_url_impression`
+  WHERE data_date BETWEEN @history_start AND @end_date AND search_type = 'WEB'
+  GROUP BY data_date
+)
+SELECT day AS date, COALESCE(d.total_clicks, 0) AS total_clicks
+FROM UNNEST(GENERATE_DATE_ARRAY(@history_start, @end_date)) day
+LEFT JOIN daily d ON d.data_date = day
+ORDER BY date
 ```
 
 ```sql
