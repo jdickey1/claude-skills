@@ -14,7 +14,7 @@ Each dimension is scored as a percentage of its weight, then summed:
 score = (connected_notes / total_non_excluded_notes) * 30
 ```
 
-A note counts as "connected" if it has at least one connection (existing or newly proposed) to a note outside its own directory, or a project hub carve-out link to its own directory's hub doc.
+A note counts as "connected" if it has at least one connection (existing or newly proposed) to a note **outside its own directory**. A same-directory link never counts, whatever its quality — the project hub carve-out that used to be named here was retired on 2026-07-25 (see SKILL.md Constraints) and this line contradicted both the skill and the implemented metric until 2026-09-11.
 
 `total_non_excluded_notes` uses **the same exclusion set as orphan counting** (below): drop `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, and recurring auto-generated dated series. Do NOT use a "non-inbox only" denominator — that pulls 300+ agent-log/system notes into the denominator and understates coverage by ~13 points versus the orphan-exclusion logic. Coverage and orphans must measure the same population. (2026-05-31: non-inbox denom read 76.4%; the consistent non-excluded denom read 89.5% and matches prior audits.)
 
@@ -41,7 +41,23 @@ does not.
 score = max(0, 20 - (real_orphan_count * 0.5))
 ```
 
-Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, **recurring auto-generated dated series**, and **`web-analyses/` / `x-analyses/` digests** are excluded from orphan counting — these categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams, and web/X digests) are not intended to carry cross-project connections.
+Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/`, `06-Agent-Log/`, **recurring auto-generated dated series**, **`web-analyses/` / `x-analyses/` digests**, and **finished-experiment output trees** are excluded from orphan counting — these categories (system files, inbox staging, journal entries, agent logs, ephemeral daily streams, and web/X digests) are not intended to carry cross-project connections.
+
+**Finished-experiment output trees were added on 2026-09-11.** A directory tree holding the
+generated output of one completed experiment — A/B cells, per-model runs, archived before/after
+snapshots — is a structural leaf in exactly the way a dated daily series is. The notes are artifacts
+of a run, not documents anyone will link into the project graph. Detect one as a subtree under a
+project whose leaf files are generated variants of a single dated experiment (e.g.
+`01-Projects/Hyperscale/x-article-lede-test-2026-08-13/cells/`,
+`01-Projects/Hyperscale/social-week-compare-2026-08-06/{old,new,pairs}`), and exclude its leaves.
+
+This was recommended and declined on 2026-08-22, 2026-09-02 and 2026-09-05 before being adopted.
+For four consecutive runs 43 such cells floored this dimension at 0.00, so it could not distinguish
+a vault with 11 real orphans from one with 60 — the same failure mode digests caused before 07-25.
+On 2026-09-11 the rule moved the vault from 54.4 to 68.9 with no change to the underlying links.
+**Report the excluded tree count separately**, the way the dated-series count is reported, so an
+over-broad match stays visible. Do not extend this to a project's ordinary dated documents — only to
+the output directory of a single, finished experiment.
 
 **Digests were added to the exclusion set on 2026-07-25.** The skill has documented them as structural leaves since 2026-07-24 — a full discovery pass over 63 of them yielded 6 genuine connections — but the formula kept counting them, so the dimension read 0.00 whether the vault had 12 real orphans or 120. Report **both** numbers: the raw orphan count for trend continuity, and `real_orphan_count` (raw minus digests) as the scored figure. If the two are far apart, say so in the report rather than letting the headline number carry a distortion it does not explain.
 
@@ -49,7 +65,7 @@ Each orphan costs 0.5 points. Notes in `99-System/**`, `00-Inbox/`, `04-Journal/
 
 **Always report the exclusion set.** State total excluded, the directories detected as series, and — separately — how many notes the *dated-series* rule removed on its own. Alarm on that series figure, not the total: fixed category exclusions (`99-System`, `00-Inbox`, `04-Journal`, `06-Agent-Log`) legitimately account for ~30-35% of this vault, so a total-exclusion threshold misfires every run. Investigate if the series rule alone removes >10% of notes or detects more than 2-3 series directories. (2026-07-24 calibration: anchored → 1 dir / 110 notes / 5.8%; prefix → 8 dirs / 66.8% total excluded.)
 
-An orphan is a note with zero connections (existing + proposed) to notes outside its own directory — except that a note connected to its own directory's hub doc via the **project hub carve-out** (see SKILL.md Constraints) counts as connected, not orphaned.
+An orphan is a note with zero connections (existing + proposed) to notes outside its own directory. There is no same-directory exception: the **project hub carve-out** this line used to name was retired on 2026-07-25 because it never worked — the note it was written for stayed an orphan in every run while carrying its prescribed hub link. Coverage and orphan detection both count cross-directory links only.
 
 ### Link Integrity (15 points)
 
