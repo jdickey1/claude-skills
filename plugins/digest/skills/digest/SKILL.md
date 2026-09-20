@@ -1,6 +1,6 @@
 ---
 name: digest
-description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo, YouTube) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command. If the only input is an image or PDF of business cards, skip the vault digest and export vCards automatically (references/business-cards.md).
+description: Use when the user pastes a URL (web page, article, blog post, X/Twitter link, GitHub repo, YouTube) or a local file path (PDF, Word doc, text, markdown, CSV, JSON, image, audio, video), says "digest this", "analyze this link", "read this page", "save this article", or "check out this repo", or when any URL or file path appears in conversation context. Also triggers on the /digest:digest command. If the only input is an image or PDF of business cards, skip the vault digest and export vCards automatically (references/business-cards.md). If the primary content is a recipe, exercise, or other health/body keep-file, skip the vault digest and write a Health keep-note (Step 0c).
 version: 1.18.0
 effort: high
 ---
@@ -17,6 +17,10 @@ bad input mid-pipeline produces a confusing partial result rather than a clean e
 - **Confirm an input was provided.** If the user said "digest this" with no URL or file
   path attached, ask explicitly — don't infer from conversation history, which may reference
   multiple earlier links.
+- **Batch overlay.** If five or more URLs or file paths are in this message and a
+  `digest-batch` skill is installed, stop sequential full-digest here and follow
+  digest-batch. That overlay still uses this skill per URL. Section 7c still runs
+  once at the end of the batch.
 - **For file paths: verify the file exists** before classifying input type. Run a quick
   existence check (`ls -la <path>`). A missing file caught here avoids a confusing failure
   buried inside the fetch or analysis step.
@@ -36,6 +40,24 @@ card, write vCard 3.0 files to iCloud Downloads, ask only for fields you cannot 
 Do not save a `web-analyses/` note. Do not present Summary / Key Claims / Recommendations.
 
 A card incidental in the corner of an article, slide, or screenshot is not this path.
+
+## Step 0c: Health keep-file (recipes, exercises, body)
+
+When the **primary content is a recipe, an exercise or workout, or other health/body keep-file** (what to cook, how to move, stretch, sleep, recover) and the user did not give a different task, **stop the digest pipeline** (same stop as 0b). Fetch enough to retain the method. Write the keep-note. Do not write `web-analyses/`. Do not run Summary / Key Claims / Recommendations, adoption, 7, 7b, or 7c. Present only the keep-note path.
+
+Save a short keep-note:
+
+| Content | Path |
+|---|---|
+| Recipe or roundup | `02-Areas/Health/recipes/{slug}.md` |
+| Exercise or workout | `02-Areas/Health/exercises/{slug}.md` |
+| Other body/health | `02-Areas/Health/{slug}.md` |
+
+`{slug}` is descriptive, lowercase, no date (vault 02-Areas naming). Check for an existing note on the same dish or movement and update it instead of duplicating.
+
+Keep-note body: title, source URL, the list or steps James would need to cook or do it again. Skip project connections. Connect to `02-Areas/Health/health.md` with `extends` and a context that names what this note adds to the shelf.
+
+A recipe buried inside an SEO or GTM article is not this path. Use the normal digest.
 
 ## 1. Overview
 
@@ -802,7 +824,7 @@ Fail: Raw content is empty, contains "JavaScript is not available", or is a logi
 
 **EVAL 3: Actionable recommendations**
 Question: Do all recommendations reference specific projects and describe concrete next steps?
-Pass: Every recommendation names a project and explains the integration/action
+Pass: Every recommendation names a project and explains the integration/action. Skip when Step 0c (keep-note has no recommendations).
 Fail: Any recommendation is generic ("could be useful for marketing")
 
 **EVAL 4: Project connections are genuine**
@@ -817,7 +839,7 @@ Fail: No code review for a non-trivial repo, or findings not incorporated
 
 **EVAL 6: Frontmatter connections valid**
 Question: Do all YAML frontmatter connections point to real files with valid types?
-Pass: All targets are specific .md file paths; all types are action-pending/informs/source-for
+Pass: All targets are specific .md file paths; all types are action-pending/informs/source-for. Applies to `web-analyses/` digests. Skip Step 0c keep-notes (they use `extends` targeting `02-Areas/Health/health.md`; `extends` is not a legal type on digest frontmatter).
 Fail: Any target is a directory, any type is invalid, or any context is generic
 
 **EVAL 7: Thread replies fetched for X/Twitter posts**
@@ -858,15 +880,20 @@ Fail: A vault digest was written for a card stack, OR the run waited for the use
 
 **EVAL 14: Operator leftovers landed on the standing queue**
 Question: After the run, were James-only Hits/Action Items (cap 5) passed to `update-operator-queue.sh`, and were Content Ideas / No-ops / Partials / agent-editable vault Hits left out?
-Pass: Script ran with only qualifying items, or skipped because none qualified / business-card short-circuit / mid-batch; completion status reports added/open; no agent scheduler was used
+Pass: Script ran with only qualifying items, or skipped because none qualified / business-card short-circuit / health keep-file / mid-batch; completion status reports added/open; no agent scheduler was used
 Fail: Recommendations dumped wholesale, OR qualifying James leftovers were only mentioned in chat, OR an agent/Graph/email reminder was created instead of launchd, OR 7c ran per-URL in a batch instead of once
+
+**EVAL 15: Recipes and exercises land in Health, not web-analyses**
+Question: When the primary content was a recipe, exercise, or other health/body keep-file, was a short keep-note written under `02-Areas/Health/` and the `web-analyses/` digest skipped?
+Pass: Keep-note at recipes/, exercises/, or Health root; source URL present; no Key Claims / project connections / operator-queue leftovers from that input
+Fail: A `web-analyses/` analysis note was written for a recipe roundup or workout, OR the run asked whether to save it
 
 ## Anti-Patterns
 
 | Banned Pattern | Why | Instead Do |
 |----------------|-----|-----------|
 | Invent security findings without code evidence | False security claims erode trust | Only flag issues found in actual source code |
-| Write connections to files outside 01-Projects/ | Violates vault structure conventions | Target must be a specific .md in 01-Projects/ |
+| Write connections to files outside 01-Projects/ | Violates vault structure conventions for `web-analyses/` digests | Target must be a specific .md in 01-Projects/; Step 0c keep-notes may `extends` `02-Areas/Health/health.md` |
 | Recommend adoption without considering maintenance burden | Uncritical adoption leads to tech debt | Always include "Adoption Risks" for repos |
 | Use generic connection context ("Related to this project") | Unactionable connections add noise | Context must be a specific, actionable sentence |
 | Same-directory connections | Digest files are all in web-analyses/ | Never link to other web-analyses/ files |
@@ -877,6 +904,7 @@ Fail: Recommendations dumped wholesale, OR qualifying James leftovers were only 
 | Over-wikilink with forced matches | Noisy links reduce signal and clutter the graph | Only link exact or near-exact matches on first mention per section |
 | Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
 | Run the full vault digest on a photo or PDF of business cards | Wrong artifact — user wants contacts, not an analysis note | Short-circuit to vCard export (`references/business-cards.md`) |
+| Dump a recipe or workout into `web-analyses/` | Those are keep-files James cooks or does again, not project analysis | Short-circuit to `02-Areas/Health/recipes/`, `exercises/`, or `02-Areas/Health/{slug}.md` (Step 0c) |
 | Dump every recommendation into the operator Word list | The list is James's daily to-do, not a digest dump | Queue at most 5 James-only leftovers via Section 7c |
 | Prioritize unsourced percentages from vendor threads | Headline numbers without provenance become planning inputs | Classify each claim (documented rule / measured observation / hypothesis / unsupported); exclude unsourced numbers from recommendations |
 | Score a whole piece LOW because three flags fired | All-three-flags grades hide mixed claim quality and treat vendor ownership as disqualifying | Judge claims, not the author; vendor-owned methods can still be valid |
@@ -1113,6 +1141,8 @@ Choose a concise `{category}` tag based on the content topic (e.g., `ai-policy`,
 
 ## 7. Save Instructions
 
+Skip when Step 0b or Step 0c — those paths already wrote their artifact.
+
 Save to the vault's `web-analyses/` directory (external content analysis, not PARA-categorized):
 
 ```
@@ -1138,6 +1168,8 @@ Save to the vault's `web-analyses/` directory (external content analysis, not PA
 - Before writing, check if the file already exists. If it does, inform the user and ask whether to overwrite
 
 ## 7b. Hyperscale DB Source Registration (conditional)
+
+Skip when Step 0b or Step 0c — those paths already exited. Do not register a health keep-file in hyperscale_db.
 
 Citable data-center reference material should land in the `hyperscale_db` `sources` table automatically, so Hyperscale News content work can find it later without anyone remembering to register it by hand. Run this step after saving the digest.
 
@@ -1183,6 +1215,8 @@ After all inputs in this run are saved (Section 7 / 7b), run 7c **once**. Queue 
 - Zero items pass the gate below
 - This is not the last input in a batch (Section 9: run 7c once after the summary table)
 
+**Step 0c (per-item, not run-level):** omit leftovers from Step 0c inputs; still queue qualifying items from any normal digest in this run. A mixed recipe+SEO paste still runs 7c for the SEO digest leftovers.
+
 **Gate — queue an item only when ALL are true:**
 1. James has to do it (a UI, fill from his knowledge, score a live page, export, comment, or ship).
 2. This session cannot finish it (not a vault or code edit the agent can apply now).
@@ -1213,7 +1247,9 @@ Read the script's `added N` / `open M` lines for the completion status and the i
 
 ## 8. Presentation
 
-After saving, present inline:
+When Step 0c, present only the keep-note path (no recommendations, no hyperscale id).
+
+For normal digests, after saving, present inline:
 
 1. One-line summary of the content.
 2. Top 2-3 recommendations (mix of content ideas and action items).
@@ -1238,7 +1274,9 @@ Keep the inline presentation brief — the full analysis is in the file.
 
 ## 9. Multiple Inputs
 
-If multiple URLs or file paths are detected in the current context, process each one sequentially. After all are processed, present a summary table:
+If five or more URLs or file paths are in the same message and a `digest-batch` skill is installed, stop sequential full-digest here and follow digest-batch. That overlay still uses this skill per URL. Section 7c still runs once at the end of the batch.
+
+Otherwise, if multiple URLs or file paths are detected in the current context, process each one sequentially. After all are processed, present a summary table:
 
 | Source | Type | Top Recommendation | File Saved | hyperscale_db |
 |--------|------|--------------------|------------|---------------|
@@ -1284,7 +1322,7 @@ Connections: {count} project connections proposed
 File saved: {full path}
 Code review: {dispatched/completed/skipped/N/A}
 Hyperscale DB: {registered id N / already registered id N / skipped — not hyperscale-relevant / skipped — no canonical URL}
-Operator queue: {added N, open M / skipped — none qualified / skipped — business-card / skipped — batch, run once at end}
+Operator queue: {added N, open M / skipped — none qualified / skipped — business-card / skipped — health keep-file / skipped — batch, run once at end}
 ═══════════════════════════
 ```
 
