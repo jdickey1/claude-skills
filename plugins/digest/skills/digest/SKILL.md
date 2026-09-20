@@ -37,6 +37,24 @@ Do not save a `web-analyses/` note. Do not present Summary / Key Claims / Recomm
 
 A card incidental in the corner of an article, slide, or screenshot is not this path.
 
+## Step 0c: Health keep-file (recipes, exercises, body)
+
+When the **primary content is a recipe, an exercise or workout, or other health/body keep-file** (what to cook, how to move, stretch, sleep, recover) and the user did not give a different task, **stop the analysis pipeline**. Fetch enough to retain the method. Do not write `web-analyses/`. Do not run Summary / Key Claims / Recommendations, adoption, 7b, or 7c.
+
+Save a short keep-note:
+
+| Content | Path |
+|---|---|
+| Recipe or roundup | `02-Areas/Health/recipes/{slug}.md` |
+| Exercise or workout | `02-Areas/Health/exercises/{slug}.md` |
+| Other body/health | `02-Areas/Health/{slug}.md` |
+
+`{slug}` is descriptive, lowercase, no date (vault 02-Areas naming). Check for an existing note on the same dish or movement and update it instead of duplicating.
+
+Keep-note body: title, source URL, the list or steps James would need to cook or do it again. Skip project connections. Connect to `02-Areas/Health/health.md` with `extends` and a context that names what this note adds to the shelf.
+
+A recipe buried inside an SEO or GTM article is not this path. Use the normal digest.
+
 ## 1. Overview
 
 Given any URL or local file path, this skill: classifies the input type, fetches/reads content using the appropriate strategy, performs structured analysis, saves a markdown file to Obsidian, presents a concise summary with top recommendations, and appends James-only leftovers to the standing operator queue (Section 7c).
@@ -851,6 +869,11 @@ Question: For X Articles, was `article.fields=plain_text` requested via xurl bef
 Pass: Raw Content contains the full `article.plain_text` body; any escalation to a lower tier happened only after the API itself showed the field was unavailable
 Fail: Digest analyzed only the article title/`preview_text`, OR the run escalated to twitter-cli/dev-browser on a title-only response without trying `article.fields`
 
+**EVAL 13b: Recipes and exercises land in Health, not web-analyses**
+Question: When the primary content was a recipe, exercise, or other health/body keep-file, was a short keep-note written under `02-Areas/Health/` and the `web-analyses/` digest skipped?
+Pass: Keep-note at recipes/ or exercises/ (or Health root), source URL present, no Key Claims/project connections/operator queue
+Fail: A `web-analyses/` analysis note was written for a recipe roundup or workout, OR the run asked whether to save it
+
 **EVAL 13: Business-card images/PDFs export vCards, not a vault digest**
 Question: When the only input was an image or PDF whose primary content is business cards, were vCards written to iCloud Downloads and the vault digest skipped?
 Pass: One vCard per person (same person merged), files under `business-cards-YYYY-MM-DD/` in iCloud Downloads, no `web-analyses/` file, asked only for unreadable fields
@@ -877,6 +900,7 @@ Fail: Recommendations dumped wholesale, OR qualifying James leftovers were only 
 | Over-wikilink with forced matches | Noisy links reduce signal and clutter the graph | Only link exact or near-exact matches on first mention per section |
 | Skip vault query entirely | Misses the compounding value of connecting new content to existing knowledge | Always attempt the vault note query; skip silently only on failure |
 | Run the full vault digest on a photo or PDF of business cards | Wrong artifact — user wants contacts, not an analysis note | Short-circuit to vCard export (`references/business-cards.md`) |
+| Dump a recipe or workout into `web-analyses/` | Those are keep-files James cooks or does again, not project analysis | Short-circuit to `02-Areas/Health/recipes/` or `exercises/` (Step 0c) |
 | Dump every recommendation into the operator Word list | The list is James's daily to-do, not a digest dump | Queue at most 5 James-only leftovers via Section 7c |
 | Prioritize unsourced percentages from vendor threads | Headline numbers without provenance become planning inputs | Classify each claim (documented rule / measured observation / hypothesis / unsupported); exclude unsourced numbers from recommendations |
 | Score a whole piece LOW because three flags fired | All-three-flags grades hide mixed claim quality and treat vendor ownership as disqualifying | Judge claims, not the author; vendor-owned methods can still be valid |
@@ -1180,6 +1204,7 @@ After all inputs in this run are saved (Section 7 / 7b), run 7c **once**. Queue 
 
 **Skip when any of these hold:**
 - Step 0b business-card short-circuit
+- Step 0c health keep-file
 - Zero items pass the gate below
 - This is not the last input in a batch (Section 9: run 7c once after the summary table)
 
@@ -1238,7 +1263,9 @@ Keep the inline presentation brief — the full analysis is in the file.
 
 ## 9. Multiple Inputs
 
-If multiple URLs or file paths are detected in the current context, process each one sequentially. After all are processed, present a summary table:
+If five or more URLs or file paths are in the same message and a `digest-batch` skill is installed, stop sequential full-digest here and follow digest-batch. That overlay still uses this skill per URL. Section 7c still runs once at the end of the batch.
+
+Otherwise, if multiple URLs or file paths are detected in the current context, process each one sequentially. After all are processed, present a summary table:
 
 | Source | Type | Top Recommendation | File Saved | hyperscale_db |
 |--------|------|--------------------|------------|---------------|
