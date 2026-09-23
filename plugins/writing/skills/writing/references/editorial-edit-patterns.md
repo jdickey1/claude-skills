@@ -215,6 +215,22 @@ Same pass, same instinct, five more times:
 
 ---
 
+## 12. Don't Merge Distinct Instruments into One Clock
+
+**The pattern:** Two dated authorities do different jobs. The draft staples them into one noun ("the audit," "the nine-item survey," "the study bond") so the sentence sounds like one decision. The reader then acts on the wrong document.
+
+**Before:** "The governor's October 12 clock now gates environmental permits, water filings, and the per-megawatt deposit."
+
+**After:** "The grid operator's questions are due October 12. A September 21 letter tells the environmental agency to pause new permits until that review is finished, and to report on October 19. The deposit required before a study is a separate rule, and it is financial security, not a study fee."
+
+**The fix:** One instrument per clause. Name who issued it, the date, and what it requires. If a source's count predates the posted question list, date that source. After the list is posted, use the list. Nine sections are not nine questions. A fee the order removed is not the security the order kept.
+
+**Why:** Compression is how a briefing sounds decisive while sending a specialist to the wrong form. Pattern 6 catches a poetic overstatement of one fact. Pattern 11 catches a missing noun. This one catches a merge: two true facts combined into a third fact that neither document says.
+
+**Self-check:** List every date and docket in the piece. If two of them share a verb ("gates," "freezes," "requires"), split the sentence.
+
+---
+
 ## Closing-Pass Checklist
 
 After applying the universal rules and after the slop-patterns sweep, run this checklist on the final draft:
@@ -239,21 +255,5 @@ Run the checklist explicitly. The model's gravity is to skim it.
 ## Where These Came From
 
 Patterns 1–8 were extracted from a real editorial pass on an AI-drafted long-form policy piece. Patterns 9–11 came from a second pass, on an AI-drafted newsletter covering a legislative hearing: 17 edits, of which eight cut or replaced a sentence that graded the material before delivering it, three collapsed or deleted a one-line paragraph that only amplified the line above, and three restored a noun or a legal mechanism the draft had abbreviated away. That distribution is the useful signal; the drafts complied with every lexical and slop rule and still shipped the same three reflexes. Each before/after is a verbatim diff between the AI draft and the published version. The author's edits were not stylistic; they were substantive corrections to posture, hedging, and overclaiming that the AI's universal-rule compliance had let through. The patterns generalize because they aren't specific to the topic; they are specific to the way AI prose behaves when the lexical and structural rules are followed but the editorial reflexes aren't internalized.
-
-## 12. Don't Merge Distinct Instruments into One Clock
-
-**The pattern:** Two dated authorities do different jobs. The draft staples them into one noun ("the audit," "the nine-item survey," "the study bond") so the sentence sounds like one decision. The reader then acts on the wrong document.
-
-**Before:** "The governor's October 12 clock now gates environmental permits, water filings, and the per-megawatt deposit."
-
-**After:** "The grid operator's questions are due October 12. A September 21 letter tells the environmental agency to pause new permits until that review is finished, and to report on October 19. The deposit required before a study is a separate rule, and it is financial security, not a study fee."
-
-**The fix:** One instrument per clause. Name who issued it, the date, and what it requires. If a source's count predates the posted question list, date that source. After the list is posted, use the list. Nine sections are not nine questions. A fee the order removed is not the security the order kept.
-
-**Why:** Compression is how a briefing sounds decisive while sending a specialist to the wrong form. Pattern 6 catches a poetic overstatement of one fact. Pattern 11 catches a missing noun. This one catches a merge: two true facts combined into a third fact that neither document says.
-
-**Self-check:** List every date and docket in the piece. If two of them share a verb ("gates," "freezes," "requires"), split the sentence.
-
----
 
 Add new patterns here as additional editorial passes surface them. The best patterns are the ones a real editor cuts on first pass; one-time stylistic preferences belong in voice context, not here. Pattern 12 came from a scored set of ten daily briefings (2026-09-11 through 2026-09-23): the issues that failed a specialist reader were the ones that collapsed separate orders into one clock, including a nine-section question list called a nine-item instrument and a financial-security posting called a study bond after the order had removed the interconnection fee.
