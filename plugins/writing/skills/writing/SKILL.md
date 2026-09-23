@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.8.4
+version: 2.8.5
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -135,7 +135,7 @@ David Ogilvy: "On the average, five times as many people read the headline as re
 
 - Always write 5+ headline candidates before selecting one
 - Use numbers (+36% engagement), brackets (+40% CTR), specificity (+321% conversion)
-- Test headline length for channel: 6 words general, 8 words landing pages, 2-4 words email
+- Test headline length for the channel. Cold email, a news briefing, a landing page, and a search title do not share one word count. The studies and the split are in [references/headlines.md](references/headlines.md). Front-load the number and the name so they survive mobile truncation.
 - Negative superlatives ("worst," "never") outperform positive by 30%
 
 **Full research and formulas**: See [references/headlines.md](references/headlines.md)
@@ -307,7 +307,7 @@ The "**Bold Label:** sentence that just restates the label" pattern is one of th
 
 The lexical rules catch wrong words. The structural rules catch named AI constructions. Real editors still cut a third category: defensive disclaimers, hedging epilogues, false-neutral conclusions, two-sentence balance beats, clever "the question isn't X, it's Y" closers, and sentences that grade the material before delivering it. These pass the other rules but a careful editor cuts them on first pass.
 
-Before finalizing branded or long-form content, scan for the eleven editorial-edit patterns in [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md). Each is documented with a real before/after from an editorial revision pass.
+Before finalizing branded or long-form content, scan for the twelve editorial-edit patterns in [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md). Each is documented with a real before/after from an editorial revision pass.
 
 **Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics: the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip.
 
@@ -357,6 +357,7 @@ End strong too. The last line triggers shares and reposts. Don't bury your best 
 Read the appropriate reference before writing:
 
 - **Headlines & titles (START HERE)**: See [references/headlines.md](references/headlines.md)
+- **Newsletters and news briefings**: See [references/newsletters.md](references/newsletters.md)
 - **X/Twitter posts**: See [references/x-posts.md](references/x-posts.md) (algorithm & strategy) and [references/x-writing-craft.md](references/x-writing-craft.md) (quality & voice)
 - **AI slop patterns (anti-patterns)**: See [references/ai-slop-patterns.md](references/ai-slop-patterns.md)
 - **Editorial edit patterns (revision-pass posture catches)**: See [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md)
@@ -422,6 +423,7 @@ The pre-publish checklist below is the human-facing version of these checks; the
 Before finalizing any content:
 
 - [ ] Headline tested: 5+ candidates written, best one selected (see [headlines.md](references/headlines.md))
+- [ ] Newsletter or briefing: subject, headline, and preview name the same fact; later sections add a new fact; distinct instruments stay in separate clauses (see [newsletters.md](references/newsletters.md))
 - [ ] Zero em dashes
 - [ ] Zero banned AI buzzwords
 - [ ] 3+ contractions per paragraph
@@ -510,6 +512,8 @@ These are the rationalizations the skill must refuse, with the counter to apply:
 | "$5.27B is the actual number from the filing, so I'll use it verbatim." | Fractional-magnitude precision past meaningful digits is an AI tic (ai-slop-patterns.md). Round to "$5.3B" or "~$5B" unless the trailing digits carry argumentative weight (e.g., "$5.27B vs. the $5.30B reported"). |
 | "'That's the spine' / 'Fair hit' lands the point conversationally, so it stays." | Conversational validation and meta-commentary (ai-slop-patterns.md): assistant-voice tics where the writer stamps a verdict on their own line. If the point lands, the stamp is redundant; if it doesn't, the stamp won't save it. Delete it. Same for adverb-only fragments ("Genuinely. Quietly.") and the "one honest caveat / stated plainly" frame, which implies the rest wasn't honest. |
 | "The body already says 'Senator Kolkhorst,' so the H2 can be bare 'Kolkhorst'." | Rule #20: headline/H2 and body are separate first-instance surfaces. Title precedes the name in both when the person appears in both. |
+| "2-4 words is the email rule, so I'll cut the briefing subject until the date falls off." | That length result is cold outbound opens (Belkins). A briefing subject has to name the fact, with the number and the actor in the first words. See [headlines.md](references/headlines.md). |
+| "Calling three related orders 'the audit' is clearer for the reader." | Related is not the same instrument. One dated authority per clause. See editorial pattern 12 and [newsletters.md](references/newsletters.md). |
 
 If a rationalization isn't on this list, write it down before acting on it. New rationalizations are the most valuable signal for the next skill iteration.
 

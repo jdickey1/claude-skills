@@ -24,7 +24,7 @@ Modern data confirms this: **80% of people read headlines, only 20% read body co
 | 8 words | +21% conversion | Landing pages (Guardian study) |
 | 12-14 words | High engagement | Facebook, long-form |
 | 55-70 chars | Best organic CTR | Google titles (truncates at ~63) |
-| 2-4 words | Highest open rate | Email subject lines |
+| 2-4 words | Highest opens in cold outbound email only | Cold sales email. Too short for a news briefing. See Email Subject Lines below. |
 
 ### Emotional Impact
 
@@ -42,7 +42,7 @@ Modern data confirms this: **80% of people read headlines, only 20% read body co
 | Brackets in title | +40% |
 | Questions in title | +14.1% |
 | Emotional statements | +7%+ |
-| Emoji (email) | +73% open rate improvement |
+| Emoji (email) | Not a default. Older consumer studies claimed a large lift. A 2026 B2B split was about +4% in SaaS and -2% in manufacturing. Leave it off a news briefing. |
 
 ## Headline Formulas That Work
 
@@ -93,8 +93,22 @@ Lead with a concrete, verifiable outcome.
 - 47% of people decide to open based solely on subject line
 - 69% report as spam based on subject line alone
 - Most people decide in less than one second
-- Best length: 2-4 words consistently outperform longer
 - Custom preheader text: +13.7% open rate improvement
+- Mobile clients cut the subject at about 30-50 characters. Put the number and the name in the first words even when the full line is longer.
+
+**Length is not one number.** Studies that get cited as "2-4 words wins" are measuring cold outbound opens, not newsletters.
+
+| Mail | What the data shows |
+|------|---------------------|
+| Cold B2B outbound | Belkins, 5.5 million emails in 2024: 2-4 words opened at 46%. Opens fell after 7 words (35% at 9 words, 34% at 10). One-word lines opened at 38% because they lacked context. Gong's cold-email set also favored very short lines for opens. |
+| Length vs. read rate | Return Path, 9 million subject lines: correlation about −0.03. Length alone did not predict reading. |
+| B2B marketing, not cold | Adestra, on the order of a billion marketing messages: 6-10 word lines opened, and lines past about 130 characters got more clicks. Optifai, 2026, 939 B2B SaaS companies: 6-10 words at the highest open rate; 1-3 words too vague (18%); 16+ words lowest (15%). |
+| Newsroom / desktop readers | BuzzStream: 9-13 words, and lines over 71 characters, opened best. Those readers are on desktop. |
+| A news briefing | Axios: under 60 characters, concrete, the reader learns something from the line alone. A 2-4 word subject that drops the date, the amount, or the actor fails even if a cold-email study would score it higher. |
+
+Specificity outranks length. The test order in this file still applies: specificity, then benefit, then whether a number helps, then tone, then length. Do not shorten a briefing subject until the fact falls off. Do not apply the Belkins 2-4 word result to a newsletter.
+
+Emoji is not a default. The older "+73% opens" figure is consumer-mail folklore. Optifai's 2026 split was about +4% in SaaS and −2% in manufacturing. Leave emoji off a news briefing.
 
 ### Blog Post / SEO Titles
 
@@ -147,7 +161,7 @@ Lead with a concrete, verifiable outcome.
 2. **Feature-focused**: Readers buy benefits, not features
 3. **Too clever**: Clarity beats cleverness every time. If the reader has to think about what you mean, you've lost them.
 4. **Missing the benefit**: Answer "why should I care?" in the headline itself
-5. **Wrong length for channel**: 8 words on email, 6 on social, 55 chars for Google
+5. **Wrong length for the mail**: a 2-4 word cold-email subject on a news briefing, or a 15-word subject that hides the fact past the mobile cut. See the channel split above.
 6. **No testing**: The first headline idea is almost never the best one
 
 ## Quick Decision: What Headline Approach to Use
@@ -156,7 +170,8 @@ Lead with a concrete, verifiable outcome.
 |---------|----------|
 | Search/SEO | Concrete, benefit-driven, 40-60 chars, include keyword |
 | Social/discovery | Curiosity gap, emotional trigger, 6-8 words |
-| Email | Urgency + specificity + benefit, 2-4 words ideal |
-| Newsletter | Value stack or contrarian, 8-14 words |
+| Email, cold outbound | 2-4 words, specific enough to look like a real note |
+| Email, newsletter or briefing | The same fact as the headline, front-loaded. See [newsletters.md](newsletters.md). |
+| Newsletter headline | Clarity over clever. 8-14 words is a ceiling, not a target. |
 | Landing page | Specific result + number, 8 words |
 | Ad copy | AIDA hook, test 20+ variants |
