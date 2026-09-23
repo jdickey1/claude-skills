@@ -19,7 +19,7 @@ Generate headline candidates for the provided topic (`$ARGUMENTS`). If no topic 
 
 - **80% of readers never get past the headline** — this is the most important part of any content
 - **Use numbers** (+36% engagement), **brackets** (+40% CTR), **specificity** (+321% conversion)
-- **Test headline length for channel:** 6 words general, 8 words landing pages, 2-4 words email
+- **Test headline length for the channel.** 6 words general, 8 words for landing pages. 2-4 words is cold outbound email only. A newsletter or briefing subject names the fact and front-loads the number and the actor. The split is in headlines.md.
 - **Negative superlatives** ("worst," "never") outperform positive by 30%
 - **Front-load the keyword** if SEO matters
 - **No AI buzzwords** in headlines

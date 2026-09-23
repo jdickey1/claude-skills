@@ -149,7 +149,7 @@ One piece of source content can become:
 | X thread | 7-10 tweets | One point per tweet, hook first |
 | LinkedIn post | 150-250 words | Professional, analytical |
 | Blog post | 800-2000 words | Thorough, structured, SEO-aware |
-| Email newsletter | 250-500 words | Direct, scannable, CTA-focused |
+| Email, one offer | 250-500 words | One CTA. A news briefing is a different job: see [newsletters.md](newsletters.md). |
 | Executive summary | 3 paragraphs | Dense, no fluff, decision-ready |
 | Pull quotes | 1-2 sentences each | Quotable, shareable |
 
