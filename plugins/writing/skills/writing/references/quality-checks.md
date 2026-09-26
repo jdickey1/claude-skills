@@ -28,13 +28,13 @@ Twelve yes/no checks for evaluating writing output quality (autoresearch evals, 
 
 ## EVAL 5: Specific evidence
 **Question:** Does every claim include specific numbers, names, or examples within 1-2 sentences?
-**Pass:** No abstract assertions without supporting specifics.
-**Fail:** Any unsupported claim detected.
+**Pass:** No abstract assertions without supporting specifics. On an article, web page, or operator brief, the proof is a number, date, rate, name, or consequence the reader can use (SKILL.md rule #8 and rule #21).
+**Fail:** Any unsupported claim. A document identifier next to the claim does not pass when the reader does not have to file or retrieve that document to act.
 
 ## EVAL 6: Strong opener
 **Question:** Does the first sentence reference a specific time, place, number, or provoke curiosity?
-**Pass:** Opening isn't generic.
-**Fail:** Generic opening (e.g., "In today's world..." or "Communication is key...").
+**Pass:** Opening isn't generic. On an article, web page, or operator brief, those specifics are the decision, number, clock, or consequence the reader acts on (SKILL.md rule #21).
+**Fail:** Generic opening (e.g., "In today's world..." or "Communication is key..."). Also fail an article, web page, or operator brief whose opening specifics are the statute, the docket, and the section, or a proposal-versus-adopted history the reader is not choosing between.
 
 ## EVAL 7: No AI slop patterns
 **Question:** Does the output avoid all of the following structural AI slop patterns?

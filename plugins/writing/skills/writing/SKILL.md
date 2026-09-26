@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.8.5
+version: 2.8.6
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -36,6 +36,7 @@ Before writing any content, confirm you know:
 1. **Who is the audience?** (general public, developers, clients, voters, etc.)
 2. **What voice/brand?** (personal, company, publication; check CLAUDE.md for voice context from `/writing:teach-writing`)
 3. **What format?** (X post, blog, Medium, newsletter, op-ed, etc.; may already be clear from the command used)
+4. **What decision does the reader act on?** For an article, a web page, or an operator brief, write that sentence before the draft. It is the opening (rule #21).
 
 If voice/brand context exists in CLAUDE.md (via `/writing:teach-writing`), use it. If not and the audience is ambiguous, ask before writing. Don't guess at voice for branded content. A casual tone for a law firm or formal tone for a podcast social account wastes a draft.
 
@@ -127,7 +128,7 @@ Specific numbers, names, places, and examples beat abstract claims every time.
 
 ### 8. Evidence After Claims
 
-Every assertion should be followed within 1-2 sentences by proof: a number, an example, a story, or a comparison. Unsupported claims read as filler.
+Every assertion should be followed within 1-2 sentences by proof the reader can use: a number, a date, a rate, a name, or a consequence. A document identifier is not that proof unless the reader has to file or retrieve that document to act (rule #21). Unsupported claims read as filler.
 
 ### 9. Headlines Are 80% of the Work (CRITICAL)
 
@@ -193,6 +194,8 @@ State key credentials, numbers, and authority markers with full specificity *onc
 
 - First mention: "one of only 16 fully recommended Newman Guide colleges in America"
 - Later: "as a Newman Guide university" (the reader already knows what that means)
+
+Speaker credentials only. The statute, the docket, and the section are not credentials. Where those go is rule #21.
 
 ### 13. AI Slop Patterns (CRITICAL)
 
@@ -309,7 +312,7 @@ The lexical rules catch wrong words. The structural rules catch named AI constru
 
 Before finalizing branded or long-form content, scan for the twelve editorial-edit patterns in [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md). Each is documented with a real before/after from an editorial revision pass.
 
-**Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics: the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip.
+**Why:** Rule #13 catches AI's *writing* tics. This rule catches AI's *editing* tics: the moves even careful AI prose makes because the model lacks an editor's reflexes. A human editor cuts these on first pass; doing it before delivery saves the round-trip. Opening on the statute, the docket, or the proposal history is not one of these tics. That is rule #21, and it is wrong in the first draft.
 
 ### 19. Order Lists by Magnitude and Recognizability
 
@@ -340,6 +343,29 @@ The first instance of an elected official's name is always preceded by their off
 **Applies to:** elected officeholders (legislators, executives, elected local officials). **Does not force titles on:** appointed staff, agency civil servants, private witnesses, company executives (those use job/role labels on first mention when useful, under normal attribution practice, not this rule).
 
 **Why:** Bare-surname first hits read as insider shorthand and strip institutional context. The rule is house style for Hyperscale, JD Key, and any policy/political writing under this skill.
+
+### 21. Open a Decision Piece on the Decision (CRITICAL)
+
+When the reader is using the piece to act (an article, a rule explainer, a web page, an operator brief), the first draft opens on that decision. The research is finished before the sentence. The opening does not prove the research.
+
+The first paragraph states the gate, the number, the clock, or the consequence. A reader can use it without the rest of the piece.
+
+Keep in the body every rate, form, clock, and trap that changes the decision, including the detail a careful reader needs in order to check the claim. Leave out of the body, unless the reader is choosing among those texts:
+
+- Instrument genealogy: which statute told which agency to write which rule in which docket.
+- Proposal history: what an earlier draft said, and how the adopted text differs, when the reader will sign the adopted text.
+- A lecture about a fact this audience already uses at work.
+
+Document identifiers (statute, docket, section, register cite, filing number) go in a source note. Put one in the prose only when the reader needs that string to act: they file in that proceeding, they retrieve that document, or two live instruments would otherwise be confused.
+
+Length follows the reader's task. Do not reprint an instrument to show that you read it.
+
+Write this shape first. Do not draft the genealogy and plan to cut it later.
+
+- Wrong: "It is the sequence the statute told the commission to write, under the code section, in the project docket."
+- Right: "A load at this size stays out of the study until the customer has executed and funded the agreement. The rule takes effect on the date."
+
+Social posts still use the hook patterns below. A shop overlay can require a different lede on a named channel. A reported story can open on the quote or the number that carries the cost. Those pieces are not this rule.
 
 ## Hook Patterns (Universal)
 
@@ -389,7 +415,7 @@ Before finalizing branded or public-facing content, run a second-pass self-audit
 **The pass (run in this order, don't skip a step):**
 
 1. **Hold the draft.** Have the leading draft (or selected variation) ready.
-2. **Self-critique.** Ask explicitly: *"What makes this still obviously AI-generated?"* Answer in 2–4 honest bullets. Look for: structural patterns the lexical rules don't catch, evenly-paced rhythm, "clean but soulless" cadence, copula avoidance that slipped through, inline-header lists, qualifier sandwiches, throat-clearers, dramatic fragments, AI vocabulary not on the banned list but still off.
+2. **Self-critique.** Ask explicitly: *"What makes this still obviously AI-generated?"* Answer in 2–4 honest bullets. Look for: structural patterns the lexical rules don't catch, evenly-paced rhythm, "clean but soulless" cadence, copula avoidance that slipped through, inline-header lists, qualifier sandwiches, throat-clearers, dramatic fragments, AI vocabulary not on the banned list but still off, and (on an article, web page, or operator brief) an opening that cites the statute, the docket, or the proposal history before the decision (rule #21).
 3. **Revise.** Produce a final version that addresses each tell from step 2. The revision should rewrite affected sentences, not search-and-replace single words. It also shouldn't swap one template for another: replacing "Moreover" with "Picture this:", or academic voice with fake-startup-blog voice, just relocates the tell. After revising, re-scan the new version against the same tell list to confirm the fix didn't introduce a fresh one.
 4. **Deliver.** Present the FINAL version. If you produced multiple draft variations, the audit applies to whichever variation gets selected.
 
@@ -410,7 +436,7 @@ FINAL:
 
 **Don't fake the audit.** "I see no AI tells in this draft" is not a valid step-2 answer on a first draft. Honest bullets always exist. The point is to expose them, not to declare victory.
 
-**Why this exists:** Lexical rules (banned buzzwords, em dashes, contractions) catch words. Structural rules (rules #10, #13, #16, #17) catch named constructions. The self-audit catches the residual *shape* of AI prose, patterns we haven't yet named, and cuts them before content goes public. Anything Hyperscale, JD Key, or any other brand publishes hits readers who pattern-match on AI output instantly; the audit is the last guard against that signal.
+**Why this exists:** Lexical rules (banned buzzwords, em dashes, contractions) catch words. Structural rules (rules #10, #13, #16, #17, #21) catch named constructions. The self-audit catches the residual *shape* of AI prose, patterns we haven't yet named, and cuts them before content goes public. Anything Hyperscale, JD Key, or any other brand publishes hits readers who pattern-match on AI output instantly; the audit is the last guard against that signal.
 
 ## Quality Checks and Guards
 
@@ -429,8 +455,9 @@ Before finalizing any content:
 - [ ] 3+ contractions per paragraph
 - [ ] Varied sentence lengths (short + long + fragment)
 - [ ] First line hooks or provokes
+- [ ] Article, web page, or operator brief: the opening is the decision the reader acts on; document IDs and proposal history sit in a source note unless the reader needs that string to act (rule #21)
 - [ ] Last line is quotable or actionable
-- [ ] Every claim backed by evidence within 1-2 sentences
+- [ ] Every claim backed by evidence within 1-2 sentences (rule #8)
 - [ ] Specific numbers/names/examples (not abstractions)
 - [ ] Active voice dominant
 - [ ] Read aloud: does it sound human?
@@ -514,6 +541,7 @@ These are the rationalizations the skill must refuse, with the counter to apply:
 | "The body already says 'Senator Kolkhorst,' so the H2 can be bare 'Kolkhorst'." | Rule #20: headline/H2 and body are separate first-instance surfaces. Title precedes the name in both when the person appears in both. |
 | "2-4 words is the email rule, so I'll cut the briefing subject until the date falls off." | That length result is cold outbound opens (Belkins). A briefing subject has to name the fact, with the number and the actor in the first words. See [headlines.md](references/headlines.md). |
 | "Calling three related orders 'the audit' is clearer for the reader." | Related is not the same instrument. One dated authority per clause. See editorial pattern 12 and [newsletters.md](references/newsletters.md). |
+| "They asked for research, so the opening has to show the docket, the statute, and how the proposal changed." | The research stays in the file and the source note. The first paragraph is the decision the reader acts on (rule #21). Rates, forms, clocks, and traps stay in the body. |
 
 If a rationalization isn't on this list, write it down before acting on it. New rationalizations are the most valuable signal for the next skill iteration.
 
