@@ -96,9 +96,9 @@ When the page is meant to be extractable by AI answer engines (ChatGPT, Perplexi
 This section is enough to write the page. If a dedicated SEO/AEO audit skill is installed, use it for evidence and verification; do not require it.
 
 **Lead with the answer:**
-- First paragraph: a short, neutral, factual summary that directly answers the page's primary question. Write it so a reader could use it without the rest of the page. Do not promise that an engine will lift it verbatim.
-- No hook, no anecdote, no "in this article we'll cover" — those come after the answer block.
-- Be as definite as the evidence allows. Name the entity, state the fact, cite the source. Do not write "X is the best for Y" unless that ranking is sourced. Confidence is not a substitute for evidence.
+- First paragraph: the decision, number, clock, or consequence the reader acts on (writing skill rule #21). Write it so a reader could use it without the rest of the page. Do not promise that an engine will lift it verbatim.
+- No hook, no anecdote, no "in this article we'll cover." Those come after the answer, and only if the piece still needs them.
+- Be as definite as the evidence allows. Name the entity and state the fact. The document identifier goes in a source note unless the reader needs that string to act (rule #21). Do not write "X is the best for Y" unless that ranking is sourced. Confidence is not a substitute for evidence.
 
 **Question-formatted H2s:**
 - Phrase major headings as real user questions when the reader is looking for an answer. That helps humans scan and can help an extractor match a query to a section. It is not a universal citation lift and is not a Google AI Overviews ranking lever.
@@ -122,7 +122,7 @@ This section is enough to write the page. If a dedicated SEO/AEO audit skill is 
 ```
 # [Question or definitive claim as headline]
 
-[Short direct answer. Neutral, factual, usable without the rest of the page. Define the term, state the answer, name the entity.]
+[Short direct answer: the gate, number, clock, or consequence. Usable without the rest of the page.]
 
 ## What is [X]?
 [Self-contained answer. Definition + scope + who it applies to.]
