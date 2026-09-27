@@ -54,7 +54,7 @@ Twelve yes/no checks for evaluating writing output quality (autoresearch evals, 
 - Significance inflation
 - Spectacle framing around failure ("The deal cratered. Vendors walked.")
 - Fractional-magnitude precision ("$5.27B" where "$5B" suffices)
-- Self-announcing post (payoff title, opening that lists the sections, close that restates the thesis)
+- Self-announcing post (how-to or complete-guide title, opening that lists the sections, close that only repeats the thesis; a number in the title is not this pattern)
 
 **Pass:** Zero instances detected (see [ai-slop-patterns.md](ai-slop-patterns.md) for full taxonomy).
 **Fail:** Any pattern above detected.
