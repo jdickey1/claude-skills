@@ -35,6 +35,7 @@ Comprehensive catalog of AI-generated writing patterns to actively avoid. Source
 | 27 | [Hedge vs. Quantifier](#hedge-vs-quantifier) | Cutting "many" is not cutting a hedge |
 | 28 | [Narrator Lines (Mid-Body Throat-Clearing)](#narrator-lines-mid-body-throat-clearing) | "The mechanics matter here." / "What's key:" |
 | 29 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
+| 30 | [Self-Announcing Post](#self-announcing-post) | How-to or complete-guide title, announced sections, close that only repeats the thesis |
 
 ## Throat-Clearers
 
@@ -586,3 +587,24 @@ Count how many of these patterns appear in a draft:
 | 6-10 | Moderate | Using AI to "polish" |
 | 11-20 | Severe | Prompting "write a post about X" |
 | 21+ | Terminal | You ARE the AI |
+
+## Self-Announcing Post
+
+The commercial explainer shape, taken as one pattern. Three parts travel together:
+
+1. The title promises a how-to or a complete-guide payoff ("How to X", "The complete guide to Z"). A number in a headline is not this pattern.
+2. The first paragraph lists the sections before the first section starts.
+3. The close repeats that thesis ("In short..."). A close that adds a new fact is not this pattern.
+
+A paraphrase that keeps this shape is still the pattern. Changing the words does not change the structure. Measured on AI mirrors of pre-ChatGPT company posts (SlopShape, arXiv:2609.15369v2, Sitefire, updated 2026-09-17). The AI class is mirrors, not a live crawl. That paper's detection scores and its traffic claim are not house numbers.
+
+A medium-pointing opener is [Time-Deixis](#time-deixis-self-reference-to-the-medium). A later newsletter section that repeats the lead is already a failure. This entry names the trio so a rewrite cannot keep the section list and the recap.
+
+**Fix:** Keep a specific title. Open on the first fact. Let each section arrive when it arrives. End on a new fact, or stop.
+
+- Wrong title: "How to cut a data-center water bill."
+- Wrong opening: "This post covers the permit, the return flow, and the contract."
+- Wrong close: "In short, the water bill is a permit problem."
+- Right: the title and the opening are "The permit prices the return line." No section list. No recap.
+
+**Test:** Delete the opening section list and the closing restatement. If the piece still delivers the point, those lines were the shape. If it does not, the middle never had the point.
