@@ -35,6 +35,7 @@ Comprehensive catalog of AI-generated writing patterns to actively avoid. Source
 | 27 | [Hedge vs. Quantifier](#hedge-vs-quantifier) | Cutting "many" is not cutting a hedge |
 | 28 | [Narrator Lines (Mid-Body Throat-Clearing)](#narrator-lines-mid-body-throat-clearing) | "The mechanics matter here." / "What's key:" |
 | 29 | [Self-Assessment](#self-assessment) | The 4+ pattern rule for full rewrite |
+| 30 | [Self-Announcing Post](#self-announcing-post) | Payoff title, announced outline, thesis restated at the close |
 
 ## Throat-Clearers
 
@@ -574,6 +575,25 @@ Three forms, all cuts:
 The colon-label is the most diagnostic of the three. Reaching for one is a reliable signal that two adjacent blocks want to swap.
 
 **Fix:** cut the narrator line and let the content next to it carry its own weight. If it can't, the content is the problem, and no amount of signposting rescues it.
+
+## Self-Announcing Post
+
+The commercial explainer shape, taken as one pattern. Three parts travel together:
+
+1. The title promises the payoff ("How to X", "N ways to Y", "The complete guide to Z").
+2. The first paragraph announces the sections and the thesis before the first section starts.
+3. The close restates the thesis ("In short...", "The bottom line is...").
+
+A paraphrase that keeps this shape is still the pattern. Changing the words does not change the structure. Measured on AI mirrors of pre-ChatGPT company posts (SlopShape, arXiv:2609.15369v2, Sitefire, updated 2026-09-17). The AI class is mirrors, not a live crawl. That paper's detection scores and its traffic claim are not house numbers.
+
+Pieces of this shape are already banned on their own. See [Time-Deixis](#time-deixis-self-reference-to-the-medium) ("In this article we'll discuss..."), [Fake Philosophical Closers](#fake-philosophical-closers), and newsletter sections that restate the lead. This entry names the trio so a rewrite cannot keep the outline and the recap.
+
+**Fix:** Open on the first fact. Let each section arrive when it arrives. End on a new fact, or stop.
+
+- Wrong: "How to cut a data-center water bill. This post covers the permit, the return flow, and the contract. ... In short, the water bill is a permit problem."
+- Right: "The permit prices the return line."
+
+**Test:** Delete the opening announcement and the closing restatement. If the piece still delivers the point, those lines were the shape. If it does not, the middle never had the point.
 
 ## Self-Assessment
 
