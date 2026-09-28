@@ -1,0 +1,29 @@
+{
+  "skill_name": "writing (x-explainer-threads)",
+  "evals": [
+    {
+      "id": 1,
+      "name": "explicit-explainer",
+      "prompt": "/writing:write-x Write an X thread explaining Pecan County Order 2026-14 (text in evals/x-explainer/ordinance-2026-14.md) section by section, answering the objections people are raising.",
+      "expected_output": "Myth-list hook naming the version, section-numbered walk in order, quoted objections answered at their section, verify-it-yourself close with the source link, share-ask self-reply."
+    },
+    {
+      "id": 2,
+      "name": "indirect-set-record-straight",
+      "prompt": "/writing:write-x People on X are losing it over Pecan County's new data center order (evals/x-explainer/ordinance-2026-14.md). Help me post something that sets the record straight.",
+      "expected_output": "Recognizes this as a governing-text explainer and routes to the explainer format rather than a 5-7 tweet narrative."
+    }
+  ],
+  "notes": "Fictional ordinance input. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir>. Baseline 2026-09-27 (grader after PR #52 review): old skill 3/9 (explicit) and 1/9 (indirect); new skill 9/9 and 9/9. The explicit prompt scored 8/9 before the adjacent-grouping fix.",
+  "assertions": [
+    "hook-is-myth-list",
+    "hook-names-version",
+    "walk-opens-with-section-numbers",
+    "walk-in-text-order",
+    "parts-numbered-n-of-N",
+    "close-links-primary-source",
+    "objections-quoted-in-walk",
+    "share-ask-self-reply",
+    "no-em-dashes"
+  ]
+}

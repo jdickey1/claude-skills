@@ -12,6 +12,7 @@ Write an X/Twitter post about the provided topic (`$ARGUMENTS`). If no topic is 
 1. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/x-posts.md` for X algorithm and posting strategy
 2. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/x-writing-craft.md` for quality tests, voice, and engagement templates
 3. Read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/headlines.md` for hook formulas
+   - If the post explains a bill, statute, agency rule, or ordinance section by section, also read `${CLAUDE_PLUGIN_ROOT}/skills/writing/references/x-explainer-threads.md` and follow its skeleton and checklist instead of the 5-7 tweet thread rules
 4. Write 3+ draft variations with different hook patterns
 5. **Run the mandatory self-audit pass** on the leading variation (writing skill: "Self-Audit Pass" section). Output 2–4 honest "still-AI" bullets, then revise to a FINAL version. X is a mandatory channel; do not skip this step.
 6. Apply the pre-publish checklist from the writing skill against the FINAL version
