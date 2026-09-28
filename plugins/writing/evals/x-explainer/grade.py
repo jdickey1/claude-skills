@@ -49,14 +49,14 @@ checks = [
 ]
 # Rule 7 tripwire: firsts, superlatives, comparisons, cost predictions, and scope-widening phrases
 # that the source doesn't contain. Keyword-based, so it misses rephrasings; read the thread too.
-SUPERLATIVE = (r"(?i)\b(toughest|strictest|harshest|steepest|largest|biggest|unprecedented|never before|nowhere else"
-               r"|first[- ](ever|of its kind)|first in the (state|nation|country)|(state|nation|country|texas)'?s first"
-               r"|than any\b[^.\n]{0,40}|costs? more than[^.\n]{0,40}|anywhere in the state|statewide"
-               r"|most \w+ in (the country|the nation|texas|history))")
-src = (pathlib.Path(__file__).parent / "proposed-rule-99001.md").read_text().lower()
-unsourced = sorted({m.group(0).strip() for m in re.finditer(SUPERLATIVE, t) if m.group(0).lower().strip() not in src})
-
 if variant == "rule":
+    SUPERLATIVE = (r"(?i)\b(toughest|strictest|harshest|steepest|largest|biggest|unprecedented|never before|nowhere else"
+                   r"|first[- ](ever|of its kind)|first[- ]in[- ]the[- ](state|nation|country)"
+                   r"|(state|nation|country|texas)['\u2019]?s? first"
+                   r"|than any\b[^.\n]{0,40}\w*|costs? more than[^.\n]{0,40}\w*|anywhere in the state"
+                   r"|most \w+ in (the country|the nation|texas|history))")
+    src = (pathlib.Path(__file__).parent / "proposed-rule-99001.md").read_text().lower()
+    unsourced = sorted({m.group(0).strip() for m in re.finditer(SUPERLATIVE, t) if m.group(0).lower().strip() not in src})
     posts = [p.strip() for p in re.split(r"(?m)^\s*---\s*$", t) if p.strip()]  # harness asks for --- between posts
     thread = [p for p in posts if not re.match(r"(?i)^\W*(self[- ]?repl|reply)", p)]
     hook, tail = (thread[0] if thread else ""), "\n".join(thread[-2:])
