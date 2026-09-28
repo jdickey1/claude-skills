@@ -1,7 +1,7 @@
 ---
 name: interconnection-audit
 description: Use when auditing vault connections, checking vault health, finding orphan notes, discovering missing cross-note links, or improving interconnection between Obsidian vault notes. Also use after a batch of new content (20+ notes) or on a monthly cadence.
-version: 1.5.0
+version: 1.5.1
 effort: high
 ---
 
@@ -35,7 +35,9 @@ The `context` field is the critical LLM signal — one sentence explaining why t
 
 **Connection types:** `informs`, `extends`, `blocks`, `contradicts`, `source-for`, `action-pending`, `supersedes`
 
-Read `references/connection-schema.md` for full type definitions, reverse link pairs, and lifecycle rules.
+`source-for` on B targeting A means B has A as a source or useful reference, and A informs B. It does not prove A produced B. A reference published later than B is a later reference, not provenance. Edges that already use `source-for` in the older forward sense (B produced A) are legacy and ambiguous. Review the context sentence. Do not mass-migrate them from the type alone.
+
+Read `references/connection-schema.md` for full type definitions, reverse link pairs, cycle rules, and lifecycle rules.
 
 ## Step 0: Validate Before Proceeding
 
@@ -43,9 +45,7 @@ Verify the vault is accessible and worth auditing before dispatching any subagen
 The audit scans hundreds of files across 4 parallel agents — discovering a problem
 after that work completes wastes significant compute and user time.
 
-- **Confirm the vault path is reachable via SSH.** Run a quick `ls` against the vault root
-  on `nonrootadmin` before proceeding. A failed SSH connection or missing directory is
-  faster to catch now than after 30 seconds of inventory planning.
+- **Confirm the vault path is reachable before proceeding.** When the vault is on this machine, including the default `~/Projects/obsidian/automation-vault-local/`, preflight with a local `ls` of the vault root. Do not open SSH for that check. SSH to `nonrootadmin` only when the path you were given is the remote vault and no local copy is available. A missing directory is faster to catch now than after inventory planning.
 - **Check note count before committing to a full audit.** A vault with fewer than 10 `.md`
   files has no meaningful connection graph to map. If the count is below 10, report the
   count and ask the user whether they want to continue — don't run 4 phases against a
@@ -120,7 +120,7 @@ obsidian-cli print "<note-name>" --vault automation-vault-local --mentions
 ```
 
 This appends a "Linked Mentions" section showing every note that references this note via `[[wikilinks]]`, with the surrounding context line. For each mention found:
-- If the linking note is in a **different directory** and no connection already exists → propose an `informs` or `source-for` connection (pick based on directionality)
+- If no connection already exists and the mention passes the content test, propose `informs` or `source-for` by direction. `source-for` sits on the citing note and targets the note it uses as a source or useful reference. `informs` sits on that source and targets the citing note. The edge does not prove the target produced the citing note. A note published later than the citing note is a later reference, not provenance. Same-directory mentions are allowed. Location is not a veto.
 - Use the mention's context line to draft the connection's `context` field
 - Tag the proposal with signal `wikilink-backlink`
 
@@ -132,13 +132,14 @@ This appends a "Linked Mentions" section showing every note that references this
 
 After all subagents return (and Phase 2.5 enrichment, if available):
 
-1. **Deduplicate** — merge identical proposals, consolidate expected reverse pairs
-2. **Check reverse links** — per the reverse link pairs table, flag missing reverses
-3. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` — these categories are not intended to carry project connections). **Also exclude finished-experiment output trees** — leaves under a directory whose own name ends in `-\d{4}-\d{2}-\d{2}` (e.g. `01-Projects/Hyperscale/x-article-lede-test-2026-08-13/cells/`), where that dated directory holds **≥10 notes below its own top level** (mirroring the dated-series ≥10 threshold) and the note sits **at least one level below** it — documents directly in the dated directory are the experiment's write-up and are never excluded. All three conditions must hold; when uncertain, do not exclude. Do not add a filename-stem or recent-modification test: both were tried on 2026-09-11 and together caught only 12 of the 43 intended leaves, the freshness test failing on a 29-day-old experiment. Validated live, the three-condition form matches exactly 2 trees / 43 leaves / 1.6% and leaves all 50 other date-stamped directories counted normally. These are run artifacts, not documents anyone links; 43 of them floored the orphan dimension at 0.00 for four consecutive runs before the rule was adopted 2026-09-11. Report the matched trees and their leaf counts separately, and alarm if the rule alone removes >5% of the vault or matches >3 trees. **Also exclude recurring auto-generated dated series** — directories holding a daily/periodic stream of `YYYY-MM-DD.md` notes (e.g. `01-Projects/X-Intel/`). Treat these like journal/agent-log: ephemeral by design, not a connectivity failure. Detect a series as a directory where ≥10 children match **`^\d{4}-\d{2}-\d{2}\.md$`** — the date must be the *entire* filename stem; exclude those dated children from the orphan count (the directory's non-dated docs still count). (2026-05-31: 27 of 116 orphans were X-Intel dailies — structural, not missing links.)
+1. **Deduplicate** — merge identical proposals. An expected reverse pair becomes one proposal that names both directions. The reverse half is written only when it passes the content test, is useful, and the user approves that reverse.
+2. **Check cycles** — use the cycle rule in `references/connection-schema.md`. Information and navigation cycles are allowed, including `informs`, `source-for`, and documentary `extends`. There is no global DAG requirement and no transitive-reachability veto. Before checking, normalize each `superseded-by` edge to `supersedes` in the opposite direction and deduplicate logical relations, so a valid `supersedes` plus its reverse is one relation and not a contradiction. Reject only contradictory precedence or supersession, and genuine circular blocking dependencies. Judge blocking cycles on `blocks` edges alone.
+3. **Check reverse links** — per the reverse link pairs table, list missing reverses as diagnostic suggestions. A suggestion must pass the content test and be useful to a reader of the note that would carry it. Do not manufacture a pair to raise the reverse-link score. The score uses the existing formula and pair exclusions. It is not a quota, and a missing reverse does not need insertion. Apply only approved reverses. Do not mass-migrate existing `source-for` edges. Forward-style history is legacy and ambiguous. Review the context. Leave the type unchanged unless that review supports a specific edit the user approves.
+4. **Identify orphans** — notes with zero connections outside their directory (exclude `99-System/**`, `00-Inbox/`, `04-Journal/`, and `06-Agent-Log/` — these categories are not intended to carry project connections). **Also exclude finished-experiment output trees** — leaves under a directory whose own name ends in `-\d{4}-\d{2}-\d{2}` (e.g. `01-Projects/Hyperscale/x-article-lede-test-2026-08-13/cells/`), where that dated directory holds **≥10 notes below its own top level** (mirroring the dated-series ≥10 threshold) and the note sits **at least one level below** it — documents directly in the dated directory are the experiment's write-up and are never excluded. All three conditions must hold; when uncertain, do not exclude. Do not add a filename-stem or recent-modification test: both were tried on 2026-09-11 and together caught only 12 of the 43 intended leaves, the freshness test failing on a 29-day-old experiment. Validated live, the three-condition form matches exactly 2 trees / 43 leaves / 1.6% and leaves all 50 other date-stamped directories counted normally. These are run artifacts, not documents anyone links; 43 of them floored the orphan dimension at 0.00 for four consecutive runs before the rule was adopted 2026-09-11. Report the matched trees and their leaf counts separately, and alarm if the rule alone removes >5% of the vault or matches >3 trees. **Also exclude recurring auto-generated dated series** — directories holding a daily/periodic stream of `YYYY-MM-DD.md` notes (e.g. `01-Projects/X-Intel/`). Treat these like journal/agent-log: ephemeral by design, not a connectivity failure. Detect a series as a directory where ≥10 children match **`^\d{4}-\d{2}-\d{2}\.md$`** — the date must be the *entire* filename stem; exclude those dated children from the orphan count (the directory's non-dated docs still count). (2026-05-31: 27 of 116 orphans were X-Intel dailies — structural, not missing links.)
 
    > **Anchor the regex — do not use a date *prefix* match.** The earlier form `^\d{4}-\d{2}-\d{2}.*\.md$` matches any filename that merely *starts* with a date, which silently swept 615 notes out of measurement on this vault: all 315 `web-analyses/`, all of `03-Resources/web-analyses/`, `05-Commitments/open|completed/`, `01-Projects/Hyperscale/drafts/`, and `01-Projects/JD-Key/`. Those are dated *documents*, not an auto-generated daily series. It hid **71 real orphans** and made coverage read 97.9% when the true figure was 93.3%. It also contradicted this skill's own Phase 2 partition table, which assigns `web-analyses/` a dedicated full-read discovery agent — the audit was reading those notes and then excluding them from every metric. Only a pure `YYYY-MM-DD.md` stem (the X-Intel case this rule was written for) qualifies. (2026-07-24: found and corrected; expect a one-time downward trend break in orphan count the first run after this change.)
-4. **Detect stale connections** — broken targets or `action-pending` items older than 60 days. When counting **broken** targets, ignore (a) literal placeholder targets containing `{...}` and (b) any connection inside a `_TEMPLATE.md` / template file — these are illustrative format examples, not real links. (2026-05-31: `_TEMPLATE.md`'s `01-Projects/{ProjectName}/{main-design-doc}.md` was mis-counted as a broken link.)
-5. **Score vault health** — calculate overall score out of 100 using five dimensions:
+5. **Detect stale connections** — broken targets or `action-pending` items older than 60 days. When counting **broken** targets, ignore (a) literal placeholder targets containing `{...}` and (b) any connection inside a `_TEMPLATE.md` / template file — these are illustrative format examples, not real links. (2026-05-31: `_TEMPLATE.md`'s `01-Projects/{ProjectName}/{main-design-doc}.md` was mis-counted as a broken link.)
+6. **Score vault health** — calculate overall score out of 100 using five dimensions:
    - Connection coverage (30pts)
    - Action-pending clearance (25pts)
    - Orphan notes (20pts)
@@ -166,7 +167,7 @@ For each approved connection:
 5. If no frontmatter → add frontmatter with `connections:` only
 6. Write file — **only modify frontmatter, never touch content below the closing `---`**
 
-Apply reverse links to target notes using the same process.
+Apply only the reverse links included in the user-approved scope, using the same process. An approved forward link does not implicitly authorize its reverse. Ordinary link application changes frontmatter only; separately authorized factual corrections require their own evidence and verification.
 
 Report: notes updated, connections written, any errors.
 
@@ -253,14 +254,14 @@ Question: Does the health score (0-100) match the actual vault state within ±15
 Pass: Score reflects reality — low score means genuinely poor connectivity
 Fail: Score is wildly optimistic or pessimistic vs. actual vault state
 
-**EVAL 5: No circular chains**
-Question: Are there no circular connection chains (A→B→C→A)?
-Pass: All connections form a directed acyclic graph
-Fail: Any circular reference detected
+**EVAL 5: No contradictory authority or circular blocking dependencies**
+Question: After normalizing supersession inverses, do the links assert incompatible authority or circular blocking prerequisites?
+Pass: Information/navigation cycles are allowed; the normalized supersession graph and the separate blocks-only graph have no directed cycles.
+Fail: A normalized supersession cycle (including mutual replacement), contradictory precedence claims in context, or a blocks-only cycle. A valid supersedes/superseded-by pair represents one authority relation, not a cycle. See the schema for normalization and examples.
 
 ## Gotchas
 - **Subagent context overflow on large vaults** — Passing the full vault registry to all Phase 2 subagents can exceed context on 500+ note vaults, causing truncated results. Chunk the registry by category and send each subagent only its partition.
-- **Circular reverse link chains** — A→B from agent 1, B→C from agent 3, C→A from agent 4 creates a cycle that pairwise deduplication won't catch. After deduplication, check for transitive cycles before proposing connections.
+- **Typed cycle checks** — A mixed information loop is not a dependency failure. Normalize supersession inverses and inspect the separate supersession and blocks-only graphs. Do not reject a useful edge merely because some path leads back to its source.
 
 ## Learning
 
@@ -285,7 +286,7 @@ When reviewing learning events, apply these thresholds:
 
 **STOP and ask the user before proceeding when:**
 - More than 50 connections are proposed in a single audit — confirm batch size before applying
-- A proposed connection contradicts an existing one (conflicting relationship types)
+- A proposed connection makes an incompatible factual, precedence or dependency claim against an existing one; different type labels alone are not proof of conflict
 - Health score drops below 40 — may indicate a structural vault problem, not just missing links
 - Stale connections detected that reference deleted or moved files — confirm cleanup scope
 - The audit discovers notes that appear to be duplicates — flag for user consolidation decision
