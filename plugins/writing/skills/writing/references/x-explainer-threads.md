@@ -137,7 +137,7 @@ Run this after the writing skill's universal self-audit and checklist.
 - [ ] Real actors are named: agency and docket, county and judge, witness and title, or bill and version.
 - [ ] At least one true point from the other side is conceded plainly.
 - [ ] One point per post, each with a sourced everyday-scale comparison where a number appears.
-- [ ] Trace pass done: list every factual sentence that is not in the record. Each one is cited, cut, or one of rule 7's three allowed kinds (arithmetic with inputs, expected filer positions, stance in a self-reply).
+- [ ] Fact-check report is attached after the self-replies, or the report says the fact-check was not run.
 - [ ] No verdict is followed by a restated label (rule #10). Verdicts vary.
 - [ ] The close gives an action, the record, or an open question. The stance self-reply is drafted.
 
