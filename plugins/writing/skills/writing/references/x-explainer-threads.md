@@ -93,7 +93,7 @@ N/N
 This is the one post where a link belongs. It goes last, after the reader has already given the thread their time.
 
 **After posting: stay in the replies.**
-- Self-reply with the ask: "Help others learn about it. Like and share the first post in this thread." Also tag the sponsor and allied orgs here, not in the hook.
+- Self-reply with the ask: "Help others learn about it. Like and share the first post in this thread." Tag the sponsor and allied orgs in this reply. The hook stays free of tags.
 - Answer pushback with the **words the thread already defined** ("guardrail"). Readers have already accepted those terms.
 - Invite correction with a stake: "Point out any mistake I made in the N posts above. Follow the link to the text. I'll wait." Only write this if every claim really is pinned to a section.
 
