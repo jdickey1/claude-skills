@@ -208,7 +208,7 @@ def grade_raw(raw, variant):
         thread = [p for p in posts if not re.match(r"(?i)^\W*(self[- ]?repl|reply)", p)]
         hook, tail = (thread[0] if thread else ""), "\n".join(thread[-2:])
         checks = [
-            ("hook-leads-with-hard-number", re.search(r"\$\s?\d|\d+\s?%", hook.split("\n\n")[0]) is not None, "$ or % in hook's first paragraph"),
+            ("hook-leads-with-hard-number", re.search(r"\$\s?\d|\d+\s?%", hook[:280]) is not None, "$ or % in the hook's first 280 characters (above the fold; one-sentence-per-line hooks put it on line 3)"),
             ("hook-not-invented-myth-list", not quotes_outside_record(hook), "hook quotes are in the excerpt"),
             ("hook-no-link", not re.search(r"https?://|\.example|\.gov", hook), "no URL in hook"),
             ("thread-6-to-8-posts", 6 <= len(thread) <= 8, f"{len(thread)} thread posts"),
@@ -547,6 +547,14 @@ evidence: stance
     )
     if failed(grade_raw(walked, "rule")) != ["not-a-section-walk"]:
         fail(f"section lines: {failed(grade_raw(walked, 'rule'))}")
+
+    # Hook number: above the fold counts, even on line 3; a number buried past 280 characters does not.
+    split = "Datacenters have 60 days to sign.\n\nMiss it and the utility cancels.\n\nAt 300 MW, the floor is $15 million: \U0001f9f5"
+    buried = "Datacenters have a deadline.\n\n" + ("Background line. " * 20) + "\n\nThe floor is $15 million: \U0001f9f5"
+    for hk, want in ((split, True), (buried, False)):
+        got = bool(re.search(r"\$\s?\d|\d+\s?%", hk[:280]))
+        if got != want:
+            fail(f"hook fold check: {got} for {hk[:40]!r}")
 
     print("self-check ok")
 

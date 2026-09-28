@@ -75,6 +75,12 @@ A strong closer works ONCE. Never reuse a closing line across posts. The audienc
 
 Posts that fit in the viewport without "Show more" get higher completion rates and dwell time. Write to 280 chars or less. If a detail is interesting but not essential for the hook to land, cut it.
 
+When a post runs long, shorten the notation before you cut a fact. These are X-only; spell everything out again on LinkedIn, the web, and in newsletters.
+
+- Dates as m/d or m/d/yy ("10/12", "1/1/28", "4/9/27"), times as "5pm CT"
+- "&" for "and"; "$50k" for "$50,000"; "25MW+" for "25 megawatts or more"
+- Drop articles and helper verbs when the meaning survives ("Request is canceled & @ERCOT_ISO notified")
+
 ## Post Template
 
 ```
