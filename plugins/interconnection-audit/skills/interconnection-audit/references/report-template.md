@@ -130,15 +130,19 @@ A broken connection has a `target` path pointing to a file that no longer exists
 score = ((expected_reverses - missing_reverses) / max(expected_reverses, 1)) * 10
 ```
 
-Only counts pairs from the reverse link table that require a reverse (`informs`↔`source-for`, `contradicts`↔`contradicts`, `supersedes`↔`superseded-by`).
+Counts the expected pairs in the reverse-link table (`informs`↔`source-for`, `contradicts`↔`contradicts`, `supersedes`↔`superseded-by`); types without an expected reverse remain excluded. Keep this formula unchanged. The result is a diagnostic, not an insertion quota: a missing reverse may have no useful context. Suggest only content-supported reverses and write only approved directions. `source-for` on B targeting A means B has A as a source or useful reference, not that B produced A. Later publications must be labeled later references, not provenance; review legacy forward-style contexts individually rather than mass-migrating them.
 
 ## Deduplication Rules
 
 After collecting proposals from all subagents:
 
 - **Same source → target, same type:** Keep one. Merge context lines if they add distinct information.
-- **Same source → target, different types:** Keep both as separate proposals for user review (they may represent different facets of the relationship).
-- **A → B and B → A as expected reverse pair:** Consolidate into a single proposal noting both directions will be written.
+- **Same source → target, different types:** Inspect contexts. Drop a redundant new label when an existing edge already serves the same purpose; retain genuinely distinct facets for review. Type differences alone do not establish contradiction.
+- **A → B and B → A as expected reverse pair:** Consolidate for review, listing each useful direction and its context explicitly. Write only the directions approved by the user.
+
+## Typed Cycle Review
+
+Use the connection schema's cycle policy. Information/navigation cycles are permitted; do not report every transitive return path as a defect. Normalize `superseded-by` to the corresponding opposite `supersedes` direction and deduplicate logical relations before checking authority cycles. A valid supersedes/inverse pair is one logical relation; mutual supersedes is conflicting authority. Check cycles in the separate blocks-only graph for circular dependencies, and inspect contexts for contradictory precedence. Report harmful paths with their types and claims; do not impose a global graph DAG requirement.
 
 ## Stale Connection Detection
 
@@ -162,7 +166,7 @@ After collecting proposals from all subagents:
 | Orphan notes | {n} | <20 |
 | Action-pending items | {n} ({pct}% of connections) | <10% |
 | Stale connections | {n} | 0 |
-| Missing reverse links | {n} | 0 |
+| Missing reverse links (diagnostic) | {n} | Review usefulness |
 | **Overall Score** | **{n}/100** | **>80** |
 
 ## Proposed Connections
@@ -179,8 +183,8 @@ After collecting proposals from all subagents:
   → `{target}` | type: supersedes
   → context: "{context}"
 
-### Missing Reverse Links
-{for each missing reverse:}
+### Useful Missing Reverse Candidates
+{for each content-supported missing reverse; not every diagnostic gap:}
 - `{source}`
   → `{target}` | type: {reverse_type}
   → context: "{context}"
@@ -190,6 +194,9 @@ After collecting proposals from all subagents:
 - `{source}`
   → `{target}` | type: {type}
   → context: "{context}"
+
+## Authority and Blocking Conflicts
+{list conflicting normalized supersession paths, blocks-only cycles or incompatible precedence claims; informational cycles are not defects}
 
 ## Orphan Notes
 {for each orphan:}
@@ -211,5 +218,5 @@ After collecting proposals from all subagents:
 ## Previous Audit Detection
 
 Look for the most recent `interconnection-audit-*.md` file in `{vault_root}/project-status/`. If found:
-- Add a `supersedes` connection in the new report's frontmatter pointing to it
+- Propose a `supersedes` connection to the prior dated audit only when it covers the same scope; include any useful inverse explicitly in the approval scope before writing
 - Calculate trend data (score delta, items cleared since last audit)

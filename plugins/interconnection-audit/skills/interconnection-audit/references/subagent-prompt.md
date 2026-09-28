@@ -62,12 +62,18 @@ Check these signals in priority order for each note:
 - Every connection MUST have a one-sentence `context` explaining why it matters
 - Only propose connections where the context line would help an LLM decide whether to follow the link
 - No "vaguely related" connections — when in doubt, skip it
-- **Reverse link pairs** (propose both directions when applicable):
+- **Direction:** A `informs` B means A supplies context to B. B `source-for` A means B has A as a source or useful reference, not that B produced A. Neither proves production provenance. If A was published after B, explicitly label it a later reference and never imply it produced the earlier note. Review legacy forward-style `source-for` contexts individually; do not mass-migrate them.
+- **Reverse link pairs** (suggest each direction only when useful and content-supported; apply only approved directions):
   - `informs` ↔ `source-for`
   - `contradicts` ↔ `contradicts` (symmetric)
   - `supersedes` ↔ `superseded-by`
   - `extends` and `blocks` do not have automatic reverses
   - `action-pending` does not have a reverse
+  - A missing reverse is a diagnostic, not a quota. Do not add a redundant type to an existing useful direct edge.
+
+### Typed cycle checks
+
+Permit information/navigation loops, including approved `informs`/`source-for` pairs and documentary `extends`. A transitive return path alone is not a rejection reason. Follow the schema: normalize `superseded-by` to the opposite `supersedes` direction and deduplicate logical relations, then check that authority graph for cycles. The valid supersedes/inverse pair is one relation; mutually superseding notes conflict. Separately flag cycles using only `blocks` edges, including mutual blocking. Inspect contexts for contradictory precedence claims; do not impose a global DAG requirement. Return the exact conflicting path for review rather than changing existing edges.
 
 ### Supersession Rules
 
