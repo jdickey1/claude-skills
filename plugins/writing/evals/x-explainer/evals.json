@@ -23,7 +23,7 @@
       "grader_mode": "rule"
     }
   ],
-  "notes": "Fictional fixtures. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. Baselines 2026-09-28, current grader. Evals 1-2 (walk): writing 2.8.7 scored 3/9 and 1/9; 2.9.0 and 2.10.0 score 9/9 and 9/9. Eval 3 (rule): 2.9.0 scored 6/9 (forced a myth-list statute walk with objections invented from nothing); 2.10.0 scored 8/9, then 9/9 after the scenario-question guidance (iteration 4).",
+  "notes": "Fictional fixtures. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. Scores with the grader as of PR #54, run 2026-09-28. Evals 1-2 (walk): writing 2.8.7 = 3/9 and 1/9. 2.9.0 = 9/9 and 9/9 (eval 1 scored 8/9 in its pre-release draft, before the adjacent-grouping fix). 2.10.0 = 9/9 and 9/9. The 2.10.0 eval-2 score depends on the PR #54 loosening of hook-names-version (accepts 'adopted 4-1') and share-ask-self-reply (accepts 'the first one is the post worth sharing'); it was 7/9 on the earlier regexes. Eval 3 (rule): 2.9.0 = 3/9 (myth-list hook with 7 invented objections, a 9-post lettered-section walk, no other filers named). 2.10.0 = 8/9, then 9/9 after the scenario-question guidance. Run-to-version map in the local workspace: 2.8.7 = iteration-1 old_skill; 2.9.0 = iteration-2 eval-1, iteration-1 eval-2 with_skill, iteration-3 eval-3 old_skill; 2.10.0 = iteration-3 with_skill, iteration-4 eval-3.",
   "assertions": [
     "hook-is-myth-list",
     "hook-names-version",
@@ -39,11 +39,11 @@
     "hook-leads-with-hard-number",
     "hook-not-invented-myth-list",
     "hook-no-link",
-    "thread-6-to-9-posts",
+    "thread-6-to-8-posts",
     "not-a-section-walk",
     "scenario-question-post",
     "close-has-docket-and-deadline",
-    "concedes-or-names-all-sides",
+    "names-other-filers",
     "no-em-dashes"
   ],
   "output_format": "Harness asks agents for drafts first, then '## FINAL' with posts separated by lines of ---, self-replies starting 'Self-reply', checklists under '## Verification'."

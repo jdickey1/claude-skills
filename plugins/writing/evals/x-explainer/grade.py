@@ -9,6 +9,8 @@ import json, re, sys, pathlib
 
 run = pathlib.Path(sys.argv[1])
 variant = sys.argv[2] if len(sys.argv) > 2 else "walk"
+if variant not in ("walk", "rule"):
+    sys.exit(f"unknown mode {variant!r}; use walk or rule")
 t = (run / "outputs/thread.md").read_text()
 
 # Grade only the FINAL version when drafts are included, and stop at the first
@@ -26,6 +28,7 @@ first = t[: p2.start()] if p2 else t[:900]  # part 1 = text before the 2/N marke
 walk = t[len(first):]
 
 secs = [int(x) for x in re.findall(r"(?m)^\W*Sec(?:tion|\.)\s*(\d+)", t)]
+any_secs = re.findall(r"(?m)^\W*Sec(?:tion|\.)\s*\(?\w+", t)  # numbered or lettered, e.g. Sec. (a)
 excl = len(re.findall(r"![\"”]?\s*$", first, re.M))  # objection lines may end in !"
 parts = len(re.findall(r"(?m)^\W*\d{1,2}/\d{1,2}\W*$", t))  # n/N on its own line
 objections = ["ban", "noise", "wells", "bills", "hulk", "overstep", "free pass"]
@@ -35,7 +38,7 @@ last_parts = t[-2500:]
 
 checks = [
     ("hook-is-myth-list", excl >= 5 or "fact vs. fiction" in first.lower(), f"{excl} exclaimed lines in part 1"),
-    ("hook-names-version", bool(re.search(r"\b(adopted|filed|enacted|proposed)\b", first, re.I)), "version phrase in part 1"),
+    ("hook-names-version", bool(re.search(r"\bas (adopted|filed|enacted|passed|proposed)\b|\b(adopted|filed|enacted|proposed)\b", first, re.I)), "version phrase in part 1"),
     ("walk-opens-with-section-numbers", len(secs) >= 6, f"{len(secs)} lines start with Sec. N"),
     ("walk-in-text-order", len(secs) >= 2 and secs == sorted(secs), f"order {secs}"),
     ("parts-numbered-n-of-N", parts >= 6, f"{parts} n/N lines"),
@@ -52,11 +55,11 @@ if variant == "rule":
         ("hook-leads-with-hard-number", re.search(r"\$\s?\d|\d+\s?%", hook.split("\n\n")[0]) is not None, "$ or % in hook's first paragraph"),
         ("hook-not-invented-myth-list", len(re.findall(r"(?m)^\W*[\"\u201c].*[!?][\"\u201d]?\s*$", hook)) < 3, "fewer than 3 quoted objection lines in hook (the source has no objections)"),
         ("hook-no-link", not re.search(r"https?://|\.example|\.gov", hook), "no URL in hook"),
-        ("thread-6-to-9-posts", 6 <= len(thread) <= 9, f"{len(thread)} thread posts"),
-        ("not-a-section-walk", len(secs) < 3, f"{len(secs)} lines start with Sec. N"),
+        ("thread-6-to-8-posts", 6 <= len(thread) <= 8, f"{len(thread)} thread posts"),
+        ("not-a-section-walk", len(any_secs) < 3, f"{len(any_secs)} lines start with Sec. N or Sec. (x)"),
         ("scenario-question-post", any(re.match(r"[^\n?]{3,90}\?", p) for p in thread[1:]), "a body post opens with a question"),
         ("close-has-docket-and-deadline", "99001" in tail and re.search(r"November 14|Nov\.? 14|11/14", tail) is not None, "project number + deadline in last 2 posts"),
-        ("concedes-or-names-all-sides", re.search(r"(?i)utilit|consumer|environment|ranch|farm|cit(y|ies)", t) is not None, "other filers named"),
+        ("names-other-filers", re.search(r"(?i)\b(utilit(y|ies)|consumer\w*|environmental\w*|ranch\w*|farm\w*|cit(y|ies)|residents?|water authorit(y|ies))\b[^\n]{0,80}\b(argue|push|want|file|say|comment)", "\n".join(thread[1:])) is not None, "a named group near argue/push/want/file in a body post"),
         ("no-em-dashes", "\u2014" not in t, f"{t.count(chr(0x2014))} em dashes"),
     ]
 
