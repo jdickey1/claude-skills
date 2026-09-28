@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.8.7
+version: 2.9.0
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -388,6 +388,7 @@ Read the appropriate reference before writing:
 - **AI slop patterns (anti-patterns)**: See [references/ai-slop-patterns.md](references/ai-slop-patterns.md)
 - **Editorial edit patterns (revision-pass posture catches)**: See [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md)
 - **X Articles (long-form)**: See [references/x-articles.md](references/x-articles.md)
+- **X regulation or statute explainer threads (walk a bill, rule, or ordinance section by section)**: See [references/x-explainer-threads.md](references/x-explainer-threads.md)
 - **LinkedIn posts & articles**: See [references/linkedin.md](references/linkedin.md)
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)
 - **Presentations & slide decks (persuasive talks)**: See [references/presentations.md](references/presentations.md)
@@ -584,6 +585,7 @@ Patterns to watch:
 - Which formats (X, LinkedIn, web) trigger the most corrections? (suggests the format reference needs sharpening)
 - When do contractions hurt rather than help? (suggests rule #15 examples to add)
 - Which rationalizations recur? (suggests new rows in the defense table)
+- Which x-explainer-threads.md overrides (length, 280-char, closer) do users push back on, and how did posted explainer threads perform against the SB 2 exemplar? (log posted metrics as `edge_case` with context `"explainer_metrics"`)
 - Which channel-context overrides surface most? (suggests rule #15's "channel context modifies voice-mirror" needs more channels named)
 - Which rules conflict with each other under pressure? (suggests new examples or hierarchies in rule #15)
 
