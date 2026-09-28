@@ -109,7 +109,7 @@ Full analysis in the latest @ProjectHandle briefing:
 
 Threads get ~63% higher engagement than single tweets. Use them for the strongest narrative arc from each briefing.
 
-> **Explaining a bill, statute, rule, or ordinance?** Use [x-explainer-threads.md](x-explainer-threads.md) instead. That format deliberately overrides the length, character, closer, and link-placement rules below.
+> **Explaining a rule, a legal gap, a bill, or hearing testimony?** Use [x-explainer-threads.md](x-explainer-threads.md) instead. It has four variants. Some deliberately override the length, character, closer, and link-placement rules below.
 
 - **5-7 tweets optimal** (7 is sweet spot)
 - Tweet 1: HOOK. Must work as a standalone post. End with thread indicator.
