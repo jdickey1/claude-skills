@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.9.0
+version: 2.10.0
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -388,7 +388,7 @@ Read the appropriate reference before writing:
 - **AI slop patterns (anti-patterns)**: See [references/ai-slop-patterns.md](references/ai-slop-patterns.md)
 - **Editorial edit patterns (revision-pass posture catches)**: See [references/editorial-edit-patterns.md](references/editorial-edit-patterns.md)
 - **X Articles (long-form)**: See [references/x-articles.md](references/x-articles.md)
-- **X regulation or statute explainer threads (walk a bill, rule, or ordinance section by section)**: See [references/x-explainer-threads.md](references/x-explainer-threads.md)
+- **X regulation or statute explainer threads (a new or proposed rule, a legal gap, a contested bill, or hearing testimony)**: See [references/x-explainer-threads.md](references/x-explainer-threads.md)
 - **LinkedIn posts & articles**: See [references/linkedin.md](references/linkedin.md)
 - **Website copy & blog posts**: See [references/web-copy.md](references/web-copy.md)
 - **Presentations & slide decks (persuasive talks)**: See [references/presentations.md](references/presentations.md)
