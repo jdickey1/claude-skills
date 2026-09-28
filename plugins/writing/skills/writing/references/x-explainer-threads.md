@@ -22,10 +22,10 @@ If the reader can't open or watch the record (bill text, rule, docket, hearing v
 1. **The hook states a hard fact about the rule in plain words, with a number when the record has one.** "Texas just told datacenter developers: put up $25 million before your interconnection study even starts." "Texas developers can build datacenters in rural counties without telling anyone." A topic line ("One of the biggest opposition arguments on data centers, especially in Texas, is around water use.") pulls less. End the hook with a colon, then the thread emoji, so it promises the next post (x-posts.md). The statute walk is the exception: its hook is the myth list.
 2. **Name real actors and the record.** Agency and docket number, county and judge, witness and title with @ handles, bill number and version ("as filed," "proposed"). Named sources make the thread checkable and invite reposts from the people named.
 3. **Concede the true point outright.** "The developer told commissioners he has every right to build. He's correct." "Yes. That's the max." Conceding first earns trust with the side that expects to be dismissed.
-4. **One point per post, in everyday scale.** One provision, one witness, or one fact, with a comparison the reader already knows (2.5x a Walmart, five households, the local district's per-student spend). Isolate the key number on its own line when it's the punch ("Four percent.").
+4. **One point per post, in everyday scale.** One provision, one witness, or one fact, with a comparison the reader already knows (2.5x a Walmart, five households, the local district's per-student spend). The comparison needs its source (rule 7), unless it comes from the record itself. Isolate the key number on its own line when it's the punch ("Four percent.").
 5. **Write the whole thread first, then post every part in one sitting.** Three exemplars went out within a minute. The 19-part SB 2 thread took about 20 minutes.
 6. **Close on something the reader can act on or answer.** A docket and deadline, the source text, or an open question. Save your personal stance for a self-reply 60 to 90 minutes later ("I love that Texas is pro-freedom... But..."). The thread stays shareable across camps, and the late reply restarts the conversation.
-7. **Every claim about the record cites it. Claims about effects need a source or get cut.** Superlatives and comparisons to past rules ("the toughest interconnection framework in the country," "steeper than any water bond Texas has priced before") count as effects claims. So does widening the text's scope when you paraphrase it (a rule triggered by a drought declaration doesn't apply "anywhere in the state"). These are the lines critics pull on.
+7. **Every factual sentence traces to a line in the record or a cited source. If it doesn't, cite it or cut it.** Apply it as a test to each sentence. It catches firsts and superlatives ("the nation's first," "the toughest interconnection framework in the country"), comparisons to past rules, cost and timing predictions ("this adds two years to every project"), outside benchmarks without a source, the wrong actor (a rule the agency writes described as one the utilities write), and paraphrases that widen or narrow the text's scope (a rule for new loads above 75 MW described as covering "every data center"). Closing punchlines count too. These are the lines critics pull on. Three kinds of sentence pass without a citation: arithmetic on the record's own numbers with the inputs shown ("$50,000 per MW on a 500 MW request is $25 million"), the stakes-first post saying who will file and what each will push for, framed as expectation ("Expect consumer groups to push the penalty higher"), and your own stance in a self-reply, framed as yours.
 
 The writing skill's universal rules still apply. Two need care here:
 
@@ -45,7 +45,7 @@ The writing skill's universal rules still apply. Two need care here:
    [The only way out.]
 4  [What's open for comment: list the knobs.] [Who can file.] [Deadline on its own line.]
 5  [Why the process matters, one principle.]
-6  [Who else will file and what each will push for.] [The rule gets written either way.]
+6  [Who else will file and what each will push for, framed as "Expect X to push Y."] [The rule gets written either way.] (Keep this post. Rule 7 allows it.)
 7  [Docket number. Statute it implements. Deadline.] [Consequence of sitting out.] [Soft ask.]
 ```
 
@@ -136,8 +136,8 @@ Run this after the writing skill's universal self-audit and checklist.
 - [ ] Part 1 has no link and ends with a colon and the thread emoji (statute walk: 1/N). Except in a statute walk, it states a hard fact, with a number when the record has one.
 - [ ] Real actors are named: agency and docket, county and judge, witness and title, or bill and version.
 - [ ] At least one true point from the other side is conceded plainly.
-- [ ] One point per post, each with an everyday-scale comparison where a number appears.
-- [ ] No effects claim without a source. The writer's own arithmetic shows its inputs.
+- [ ] One point per post, each with a sourced everyday-scale comparison where a number appears.
+- [ ] Trace pass done: list every factual sentence that is not in the record. Each one is cited, cut, or one of rule 7's three allowed kinds (arithmetic with inputs, expected filer positions, stance in a self-reply).
 - [ ] No verdict is followed by a restated label (rule #10). Verdicts vary.
 - [ ] The close gives an action, the record, or an open question. The stance self-reply is drafted.
 

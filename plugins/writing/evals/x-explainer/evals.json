@@ -23,7 +23,7 @@
       "grader_mode": "rule"
     }
   ],
-  "notes": "Fictional fixtures. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. Scores with the grader as of PR #54, run 2026-09-28. Evals 1-2 (walk): writing 2.8.7 = 3/9 and 1/9. 2.9.0 = 9/9 and 9/9 (eval 1 scored 8/9 in its pre-release draft, before the adjacent-grouping fix). 2.10.0 = 9/9 and 9/9. The 2.10.0 eval-2 score depends on the PR #54 loosening of hook-names-version (accepts 'adopted 4-1') and share-ask-self-reply (accepts 'the first one is the post worth sharing'); it was 7/9 on the earlier regexes. Eval 3 (rule): 2.9.0 = 3/9 (myth-list hook with 7 invented objections, a 9-post lettered-section walk, no other filers named). 2.10.0 = 8/9, then 9/9 after the scenario-question guidance. Run-to-version map in the local workspace: 2.8.7 = iteration-1 old_skill; 2.9.0 = iteration-2 eval-1, iteration-1 eval-2 with_skill, iteration-3 eval-3 old_skill; 2.10.0 = iteration-3 with_skill, iteration-4 eval-3.",
+  "notes": "Fictional fixtures. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. Walk mode has 9 checks; rule mode has 10 since 2.10.1 (9 before: no-unsourced-superlatives was added). Evals 1-2 (walk): writing 2.8.7 = 3/9 and 1/9; 2.9.0 = 9/9 and 9/9 (eval 1 scored 8/9 in its pre-release draft, before the adjacent-grouping fix); 2.10.0 = 9/9 and 9/9. The 2.10.0 eval-2 score depends on the PR #54 loosening of hook-names-version and share-ask-self-reply; it was 7/9 on the earlier regexes. Eval 3 (rule), on the 10-check grader: 2.9.0 = 4/10 (myth-list hook with 7 invented objections, lettered-section walk, no filers named). 2.10.0 = 9/10 (iteration-4, flags 'anywhere in the state' and 'than any water bond...'). Rule 7, three runs per version: 2.10.0 (iteration-5) scored 9, 9, 9/10: two tripwire flags ('costs more than the deposit', \"state's first\") and one run that dropped the filer post. 2.10.1 first draft (iteration-6) scored 0 of 3 flagged, but its rule 7 examples quoted the tripwire's own phrases and the fixture's arithmetic, so that result was contaminated. 2.10.1 as merged (iteration-7, examples drawn from outside the fixture, runs told not to read evals/): 10, 10, 9/10, 0 of 3 flagged, filer post kept 3 of 3, scenario question 3 of 3. A manual read still found one small invented detail in 2 of 3 ('exclusive water rights'; 'in cash' where the rule says 'security'). That rate held across iterations 5-7, so rule wording has plateaued; the next lever is a separate fact-check pass, not more rule text. Run-to-version map in the local workspace: 2.8.7 = iteration-1 old_skill; 2.9.0 = iteration-2 eval-1, iteration-1 eval-2 with_skill, iteration-3 eval-3 old_skill; 2.10.0 = iteration-3 with_skill, iteration-4, iteration-5; 2.10.1 = iteration-7.",
   "assertions": [
     "hook-is-myth-list",
     "hook-names-version",
@@ -44,6 +44,7 @@
     "scenario-question-post",
     "close-has-docket-and-deadline",
     "names-other-filers",
+    "no-unsourced-superlatives",
     "no-em-dashes"
   ],
   "output_format": "Harness asks agents for drafts first, then '## FINAL' with posts separated by lines of ---, self-replies starting 'Self-reply', checklists under '## Verification'."

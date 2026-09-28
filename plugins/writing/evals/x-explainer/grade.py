@@ -47,7 +47,16 @@ checks = [
     ("share-ask-self-reply", re.search(r"\bshar(e|ing)\b[^\n]*\b(first|thread)\b|\bfirst (post|one)\b[^\n]*\bshar(e|ing)\b", t, re.I) is not None, "share-the-first-post ask present"),
     ("no-em-dashes", "—" not in t, f"{t.count(chr(0x2014))} em dashes"),
 ]
+# Rule 7 tripwire: firsts, superlatives, comparisons, cost predictions, and scope-widening phrases
+# that the source doesn't contain. Keyword-based, so it misses rephrasings; read the thread too.
 if variant == "rule":
+    SUPERLATIVE = (r"(?i)\b(toughest|strictest|harshest|steepest|largest|biggest|unprecedented|never before|nowhere else"
+                   r"|first[- ](ever|of its kind)|first[- ]in[- ]the[- ](state|nation|country)"
+                   r"|(state|nation|country|texas)['\u2019]?s? first"
+                   r"|than any\b[^.\n]{0,40}\w*|costs? more than[^.\n]{0,40}\w*|anywhere in the state"
+                   r"|most \w+ in (the country|the nation|texas|history))")
+    src = (pathlib.Path(__file__).parent / "proposed-rule-99001.md").read_text().lower()
+    unsourced = sorted({m.group(0).strip() for m in re.finditer(SUPERLATIVE, t) if m.group(0).lower().strip() not in src})
     posts = [p.strip() for p in re.split(r"(?m)^\s*---\s*$", t) if p.strip()]  # harness asks for --- between posts
     thread = [p for p in posts if not re.match(r"(?i)^\W*(self[- ]?repl|reply)", p)]
     hook, tail = (thread[0] if thread else ""), "\n".join(thread[-2:])
@@ -60,6 +69,7 @@ if variant == "rule":
         ("scenario-question-post", any(re.match(r"[^\n?]{3,90}\?", p) for p in thread[1:]), "a body post opens with a question"),
         ("close-has-docket-and-deadline", "99001" in tail and re.search(r"November 14|Nov\.? 14|11/14", tail) is not None, "project number + deadline in last 2 posts"),
         ("names-other-filers", re.search(r"(?i)\b(utilit(y|ies)|consumer\w*|environmental\w*|ranch\w*|farm\w*|cit(y|ies)|residents?|water authorit(y|ies))\b[^\n]{0,80}\b(argue|push|want|file|say|comment)", "\n".join(thread[1:])) is not None, "a named group near argue/push/want/file in a body post"),
+        ("no-unsourced-superlatives", not unsourced, f"flagged: {unsourced}" if unsourced else "none flagged"),
         ("no-em-dashes", "\u2014" not in t, f"{t.count(chr(0x2014))} em dashes"),
     ]
 
