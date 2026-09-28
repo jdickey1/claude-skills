@@ -15,11 +15,13 @@ All four share one move: the thread is anchored to a record the reader can check
 
 If the reader can't open or watch the record (bill text, rule, docket, hearing video), none of these fit. Write commentary instead.
 
+A source record that states a legal requirement is the primary text, quoted, with the citation. Do not draft or test from an invented agency, code section, fee, or deposit.
+
 **Reading the numbers.** All four are @jamesdickey threads. The three 2026 data center threads ran on a hotter topic and a larger account than the 2025 SB 2 thread, so don't read the reach gap as proof that short beats long. What the numbers do support: the two biggest hooks stated a hard legal fact (one with dollar and percent figures), and the weakest 2026 hook (hearing record) named a topic instead. Across all four, 80 to 96 percent of bookmarks landed on the hook. Readers save the hook as the reference and return to the thread from it.
 
 ## Shared rules (all variants)
 
-1. **The hook states a hard fact about the rule in plain words, with a number when the record has one.** "Texas just told datacenter developers: put up $25 million before your interconnection study even starts." "Texas developers can build datacenters in rural counties without telling anyone." A topic line ("One of the biggest opposition arguments on data centers, especially in Texas, is around water use.") pulls less. End the hook with a colon, then the thread emoji, so it promises the next post (x-posts.md). The statute walk is the exception: its hook is the myth list.
+1. **The hook states a hard fact about the rule in plain words, with a number when the record has one.** "A large-load customer posts $50,000 per megawatt before ERCOT includes the load in an interconnection study." "Texas developers can build datacenters in rural counties without telling anyone." A topic line ("One of the biggest opposition arguments on data centers, especially in Texas, is around water use.") pulls less. End the hook with a colon, then the thread emoji, so it promises the next post (x-posts.md). The statute walk is the exception: its hook is the myth list.
 2. **Name real actors and the record.** Agency and docket number, county and judge, witness and title with @ handles, bill number and version ("as filed," "proposed"). Named sources make the thread checkable and invite reposts from the people named.
 3. **Concede the true point outright.** "The developer told commissioners he has every right to build. He's correct." "Yes. That's the max." Conceding first earns trust with the side that expects to be dismissed.
 4. **One point per post, in everyday scale.** One provision, one witness, or one fact, with a comparison the reader already knows (2.5x a Walmart, five households, the local district's per-student spend). The comparison needs its source (rule 7), unless it comes from the record itself. Isolate the key number on its own line when it's the punch ("Four percent.").
@@ -45,7 +47,7 @@ The writing skill's universal rules still apply. Two need care here:
    [The only way out.]
 4  [What's open for comment: list the knobs.] [Who can file.] [Deadline on its own line.]
 5  [Why the process matters, one principle.]
-6  [Who else will file and what each will push for, framed as "Expect X to push Y."] [The rule gets written either way.] (Keep this post. Rule 7 allows it.)
+6  [Who else will file and what each will push for, framed as "Expect X to push Y."] (Keep this post. Rule 7 allows the expectation. Do not add a claim about how the rule gets written.)
 7  [Docket number. Statute it implements. Deadline.] [Consequence of sitting out.] [Soft ask.]
 ```
 
@@ -96,6 +98,7 @@ N  Don't take my word for any of the above. Read the [bill] yourself at [link]. 
 - **Define the loaded word once**, with one everyday analogy ("Strings are unrelated requirements like 'I'll give you this money for gas but only if you stop by the store for me.'"). Then state the provision and let the reader conclude.
 - Answer pushback in replies with the words the thread already defined.
 - **Draft variations of part 1 only.** Write the walk once. The text fixes its order.
+- **An objection in the myth list is a quote from the record.** If the record contains no objection quotes, do not invent any. Walk the sections.
 
 ### Hearing record
 
@@ -143,5 +146,5 @@ Run this after the writing skill's universal self-audit and checklist.
 
 **Stakes-first rule:** the docket number, the statute, and the deadline sit together in the last post.
 **Legal gap:** every post is under 280 characters, and the thread takes no position that belongs in the self-reply.
-**Statute walk:** part 1 is the myth list and names the version; every walk post opens with a section number in the text's order, grouped sections are adjacent, and every myth from part 1 is answered.
+**Statute walk:** part 1 names the version; every walk post opens with a section number in the text's order, grouped sections are adjacent. A myth list is used only when those objections are quotes in the record, and every quoted myth is answered. If the record has no objection quotes, do not invent any.
 **Hearing record:** every number is attributed to a named witness, and the hearing video link is ready for the self-reply.

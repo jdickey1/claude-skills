@@ -73,64 +73,64 @@ Use `hook`, `alternate hook`, the post number, or `self-reply` in `post`. One bl
 
 ## Examples
 
-These examples are invented. They are part of this prompt. They are not the captured record. Do not emit these rows for a real thread.
+These examples are a private invoice. They are not a statute, a rule, an agency record, or the captured record. Do not emit these rows for a real thread. Do not copy them into a source record.
 
-Invented record:
+Private invoice:
 
-> Bayline Harbor Board, Docket HB-77, proposed crane-fee order, published January 9, 2027.
+> North Dock Hauling, invoice 441, to one customer. Not a government record.
 >
-> (a) A terminal operator pays a crane fee of $8 per container lift.
-> (b) The fee is due as a certified check before the first lift of the month.
-> (c) Night work from 9 p.m. to 6 a.m. needs a separate night permit. The night permit fee is $400.
-> (d) Staff's worksheet uses 2,000 lifts.
-> (e) Comments close March 3, 2027. A resident, a carrier, or a terminal operator may submit a comment.
+> Line 1. Hauling charge is $8 per crate.
+> Line 2. Payment is by certified check before the first crate of the month.
+> Line 3. A second signature is required for a crate picked up from 9 p.m. to 6 a.m. The after-hours charge is $400.
+> Line 4. The worksheet uses 2,000 crates.
+> Line 5. Questions close March 3, 2027. The customer may send a question.
 
 post: hook
-sentence: The crane fee for a terminal operator is $8 per container lift.
+sentence: The hauling charge is $8 per crate.
 label: traced
-evidence: "A terminal operator pays a crane fee of $8 per container lift."
+evidence: "Hauling charge is $8 per crate."
 
 post: alternate hook
-sentence: Comments close March 3, 2027.
+sentence: Questions close March 3, 2027.
 label: traced
-evidence: "Comments close March 3, 2027."
+evidence: "Questions close March 3, 2027."
 
 post: 2
-sentence: The night permit fee is four hundred dollars.
+sentence: The after-hours charge is four hundred dollars.
 label: traced
-evidence: "The night permit fee is $400."
+evidence: "The after-hours charge is $400."
 
 post: 3
 sentence: $400.
 label: traced
-evidence: "The night permit fee is $400."
+evidence: "The after-hours charge is $400."
 
 post: 4
-sentence: $8 per container lift on 2,000 lifts is $16,000.
+sentence: $8 per crate on 2,000 crates is $16,000.
 label: allowed
 evidence: arithmetic
 
 post: 5
-sentence: Expect terminal operators to push the crane fee down.
+sentence: Expect the customer to push the hauling charge down.
 label: allowed
 evidence: filer-expectation
 
 post: self-reply
-sentence: I want the night permit kept.
+sentence: I want the second signature kept.
 label: allowed
 evidence: stance
 
 post: 6
-sentence: The fee is due by wire transfer before the first lift of the month.
+sentence: Payment is by wire transfer before the first crate of the month.
 label: unsupported
-evidence: Closest record wording: "The fee is due as a certified check before the first lift of the month." The form word "wire transfer" is not the record's "certified check."
+evidence: Closest record wording: "Payment is by certified check before the first crate of the month." The form word "wire transfer" is not the record's "certified check."
 
 post: 5
-sentence: Expect terminal operators to push the crane fee down and to claim a right to skip the night permit.
+sentence: Expect the customer to push the hauling charge down and to claim a right to skip the second signature.
 label: unsupported
-evidence: Closest record wording: "Night work from 9 p.m. to 6 a.m. needs a separate night permit." The sentence adds a right to skip that permit. The record does not grant that right. The sentence should be cut.
+evidence: Closest record wording: "A second signature is required for a crate picked up from 9 p.m. to 6 a.m." The sentence adds a right to skip that signature. The invoice does not grant that right. The sentence should be cut.
 
 post: 7
-sentence: The order waives the crane fee for empty containers.
+sentence: The invoice waives the hauling charge for empty crates.
 label: unsupported
-evidence: Closest record wording: "A terminal operator pays a crane fee of $8 per container lift." The waiver for empty containers has no record basis and should be cut.
+evidence: Closest record wording: "Hauling charge is $8 per crate." The waiver for empty crates has no record basis and should be cut.

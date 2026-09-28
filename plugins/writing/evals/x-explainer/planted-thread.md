@@ -1,34 +1,34 @@
 # Scoring key
 
-Checker input is the FINAL section only. This key is not a fact-check report and does not name a mode.
+These planted sentences are false. They are not the statute. They are not a source record. Checker input is the FINAL section only. This key is not a fact-check report and does not name a mode.
 
-Two planted misses, both unsupported:
+Two planted misses, both unsupported, both false:
 
-1. Exclusive water rights, a right the record does not grant: "Posting security of $20 per gallon gives the applicant exclusive water rights."
-2. Deposit posted in cash. The record says security: "Before a supply contract is approved, the applicant posts $20 per gallon of requested daily capacity in cash."
+1. Form word. The statute says security. This sentence says cash: "Satisfactory proof of financial commitment may include cash provided on a dollar per megawatt basis as set by the commission."
+2. A right the statute does not grant: "The standards let a large load customer skip site control."
 
 Three controls, not unsupported:
 
-1. Shown arithmetic on the record's numbers, form word security, inputs shown: "75% of the $20 million security on a 1-million-gallon-per-day request is $15 million."
-2. Pure filer sentence. Who will file and what they will push for, as expectation. No extra right or amount: "Expect cities to file and push for a shorter comment period."
-3. Stance self-reply, framed as the writer's, no new record fact: "I hope the Commission adopts the proposal."
+1. Shown arithmetic on the record's own number, inputs shown: "Two times the flat study fee of at least $100,000 is $200,000."
+2. Pure filer sentence. Who will file and what they will push for, as expectation. No extra right or amount: "Expect electric utilities to file and push for a higher study fee."
+3. Stance self-reply, framed as the writer's, no new record fact: "I hope the commission keeps the security on a dollar per megawatt basis."
 
 ## FINAL
 
-75% of the $20 million security on a 1-million-gallon-per-day request is $15 million.
+Two times the flat study fee of at least $100,000 is $200,000.
 
 ---
 
-Posting security of $20 per gallon gives the applicant exclusive water rights.
+Satisfactory proof of financial commitment may include cash provided on a dollar per megawatt basis as set by the commission.
 
 ---
 
-Before a supply contract is approved, the applicant posts $20 per gallon of requested daily capacity in cash.
+The standards let a large load customer skip site control.
 
 ---
 
-Expect cities to file and push for a shorter comment period.
+Expect electric utilities to file and push for a higher study fee.
 
 ---
 
-Self-reply: I hope the Commission adopts the proposal.
+Self-reply: I hope the commission keeps the security on a dollar per megawatt basis.
