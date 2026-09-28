@@ -25,7 +25,7 @@ If the reader can't open or watch the record (bill text, rule, docket, hearing v
 4. **One point per post, in everyday scale.** One provision, one witness, or one fact, with a comparison the reader already knows (2.5x a Walmart, five households, the local district's per-student spend). Isolate the key number on its own line when it's the punch ("Four percent.").
 5. **Write the whole thread first, then post every part in one sitting.** Three exemplars went out within a minute. The 19-part SB 2 thread took about 20 minutes.
 6. **Close on something the reader can act on or answer.** A docket and deadline, the source text, or an open question. Save your personal stance for a self-reply 60 to 90 minutes later ("I love that Texas is pro-freedom... But..."). The thread stays shareable across camps, and the late reply restarts the conversation.
-7. **Every claim about the record cites it. Claims about effects need a source or get cut.** Superlatives and comparisons to past rules ("the toughest interconnection framework in the country," "steeper than any water bond Texas has priced before") count as effects claims. So does widening the text's scope when you paraphrase it (a rule triggered by a drought declaration doesn't apply "anywhere in the state"). These are the lines critics pull on.
+7. **Every factual sentence traces to a line in the record or a cited source. If it doesn't, cite it or cut it.** This is a test, not a list of banned phrases. It catches firsts and superlatives ("the state's first," "the toughest in the country"), comparisons to past rules, cost and timing predictions ("retrofitting later costs more than the deposit"), outside benchmarks, and paraphrases that widen or narrow the text's scope ("anywhere in the state," "anyone in the county"). These are the lines critics pull on. Three kinds of sentence pass without a citation: arithmetic on the record's own numbers with the inputs shown ("Request 2 million gallons a day and you'll post $40 million"), the stakes-first post saying who will file and what each will push for, framed as expectation ("Expect utilities to push the rate up"), and your own stance in a self-reply, framed as yours.
 
 The writing skill's universal rules still apply. Two need care here:
 
@@ -45,7 +45,7 @@ The writing skill's universal rules still apply. Two need care here:
    [The only way out.]
 4  [What's open for comment: list the knobs.] [Who can file.] [Deadline on its own line.]
 5  [Why the process matters, one principle.]
-6  [Who else will file and what each will push for.] [The rule gets written either way.]
+6  [Who else will file and what each will push for, framed as "Expect X to push Y."] [The rule gets written either way.] (Keep this post. Rule 7 allows it.)
 7  [Docket number. Statute it implements. Deadline.] [Consequence of sitting out.] [Soft ask.]
 ```
 
@@ -137,7 +137,7 @@ Run this after the writing skill's universal self-audit and checklist.
 - [ ] Real actors are named: agency and docket, county and judge, witness and title, or bill and version.
 - [ ] At least one true point from the other side is conceded plainly.
 - [ ] One point per post, each with an everyday-scale comparison where a number appears.
-- [ ] No effects claim without a source. The writer's own arithmetic shows its inputs.
+- [ ] Trace pass done: list every factual sentence that is not in the record. Each one is cited, cut, or one of rule 7's three allowed kinds (arithmetic with inputs, expected filer positions, stance in a self-reply).
 - [ ] No verdict is followed by a restated label (rule #10). Verdicts vary.
 - [ ] The close gives an action, the record, or an open question. The stance self-reply is drafted.
 
