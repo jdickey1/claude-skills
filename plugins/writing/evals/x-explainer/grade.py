@@ -7,11 +7,59 @@ Reads <run_dir>/outputs/thread.md and writes (overwrites) <run_dir>/grading.json
 """
 import json, re, sys, pathlib
 
+def fact_check_body(raw):
+    # Heading text is Fact-check. Not a FINAL heading and not a self-reply heading.
+    heads = list(re.finditer(r"(?m)^#+\s*(.*)$", raw))
+    body = None
+    for i, h in enumerate(heads):
+        if not re.fullmatch(r"(?i)fact-check", h.group(1).strip()):
+            continue
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(raw)
+        body = raw[h.end():end]
+    return body
+
+def fact_check_mode(body):
+    # First match wins. The word "passed" is not a mode. No heading is not a failure.
+    if body is None:
+        return "fact-check: absent"
+    if "the fact-check was not run" in body.lower():
+        return "not-run"
+    if re.search(r"(?i)\bnot checked\b", body):
+        return "incomplete"
+    first = next((ln.strip() for ln in body.splitlines() if ln.strip()), "")
+    if re.match(r"(?i)fallback\b", first):
+        return "fallback"
+    if re.match(r"(?i)independent\b", first):
+        return "independent"
+    return "incomplete"
+
+def fact_check_quote_misses(body, variant):
+    if not body:
+        return []
+    quotes = []
+    for q in re.findall(r'"([^"]*)"', body):
+        nq = re.sub(r"\s+", " ", q).strip()
+        # ponytail: skip quotes no longer than "filer-expectation". Drop the cutoff if a real trace quote is that short.
+        if len(nq) <= len("filer-expectation"):
+            continue
+        if nq not in quotes:
+            quotes.append(nq)
+    if not quotes:
+        return []
+    name = "proposed-rule-99001.md" if variant == "rule" else "ordinance-2026-14.md"
+    src = re.sub(r"\s+", " ", (pathlib.Path(__file__).parent / name).read_text())
+    return [q for q in quotes if q not in src]
+
 run = pathlib.Path(sys.argv[1])
 variant = sys.argv[2] if len(sys.argv) > 2 else "walk"
 if variant not in ("walk", "rule"):
     sys.exit(f"unknown mode {variant!r}; use walk or rule")
-t = (run / "outputs/thread.md").read_text()
+raw = (run / "outputs/thread.md").read_text()
+report = fact_check_body(raw)
+# Side field from the raw file, before the FINAL cut. Not part of summary.total.
+fact_check = fact_check_mode(report)
+quote_misses = fact_check_quote_misses(report, variant)
+t = raw
 
 # Grade only the FINAL version when drafts are included, and stop at the first
 # appendix heading after it (Self-replies stays: the share ask lives there).
@@ -75,5 +123,7 @@ if variant == "rule":
 
 res = {"expectations": [{"text": n, "passed": bool(p), "evidence": e} for n, p, e in checks]}
 res["summary"] = {"passed": sum(c[1] for c in checks), "total": len(checks)}
+res["fact_check"] = fact_check
+res["fact_check_quote_misses"] = quote_misses
 (run / "grading.json").write_text(json.dumps(res, indent=2))
-print(run.parent.name, run.name, f"{res['summary']['passed']}/{len(checks)}", [n for n, p, _ in checks if not p])
+print(run.parent.name, run.name, f"{res['summary']['passed']}/{len(checks)}", fact_check, [n for n, p, _ in checks if not p])
