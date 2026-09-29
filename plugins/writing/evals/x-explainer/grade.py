@@ -37,6 +37,11 @@ VERSION_RE = re.compile(
 )
 QUOTE_RE = re.compile(r'["“]([^"”]*)["”]')
 RATE_RE = re.compile(r"\$\s?[\d,]+(?:\.\d+)?\s*(?:per|/)\s*(?:mw|megawatts?)\b", re.I)
+# "Public Utility Commission" is the agency, not a filer. Bare "commission" is not in this pattern.
+FILER_RE = re.compile(
+    r"(?i)\b(?:consumer groups?|developers?|cooperativ\w*|customers?|ERCOT|utilit(?:y|ies)(?!\s+commission))\b"
+    r"[^\n]{0,80}\b(?:argue|push|want|file|say|comment)\b"
+)
 SKIP_HEADINGS = {"fact-check", "fact-check rows"}
 
 def fixture_path():
@@ -204,13 +209,13 @@ def grade_raw(raw, variant):
         hook, tail = (thread[0] if thread else ""), "\n".join(thread[-2:])
         checks = [
             ("hook-leads-with-hard-number", re.search(r"\$\s?\d|\d+\s?%", hook.split("\n\n")[0]) is not None, "$ or % in hook's first paragraph"),
-            ("hook-not-invented-myth-list", len(re.findall(r"(?m)^\W*[\"\u201c].*[!?][\"\u201d]?\s*$", hook)) < 3, "fewer than 3 quoted objection lines in hook (the excerpt has no objections)"),
+            ("hook-not-invented-myth-list", not quotes_outside_record(hook), "hook quotes are in the excerpt"),
             ("hook-no-link", not re.search(r"https?://|\.example|\.gov", hook), "no URL in hook"),
             ("thread-6-to-8-posts", 6 <= len(thread) <= 8, f"{len(thread)} thread posts"),
             ("not-a-section-walk", len(any_secs) < 3, f"{len(any_secs)} lines start with Sec. N"),
             ("scenario-question-post", any(re.match(r"[^\n?]{3,90}\?", p) for p in thread[1:]), "a body post opens with a question"),
             ("close-cites-section-and-fee", "37.0561" in tail and "$100,000" in tail, "section + study fee in last 2 posts"),
-            ("names-other-filers", re.search(r"(?i)\b(utilit(y|ies)|cooperativ\w*|customers?|ERCOT)\b[^\n]{0,80}\b(argue|push|want|file|say|comment)", "\n".join(thread[1:])) is not None, "a named group near argue/push/want/file in a body post"),
+            ("names-other-filers", FILER_RE.search("\n".join(thread[1:])) is not None, "a named group near argue/push/want/file in a body post"),
             ("no-unsourced-superlatives", not unsourced, f"flagged: {unsourced}" if unsourced else "none flagged"),
             ("no-em-dashes", "\u2014" not in t, f"{t.count(chr(0x2014))} em dashes"),
             ("no-fabricated-instrument", not fake, f"banned: {fake}" if fake else "none"),
@@ -374,6 +379,8 @@ def self_check():
         fail("hyphenated not-checked counted as independent")
     if fact_check_mode("passed\n") != "incomplete":
         fail("passed counted as a mode")
+    if fact_check_mode("fallback 2 traced, 0 unsupported\n") != "fallback":
+        fail("fallback was not a mode")
     if fact_check_mode(None) != "fact-check: absent":
         fail("missing heading changed the mode")
     report_only = "## Fact-check report\nindependent 1 traced\n"
@@ -480,6 +487,9 @@ evidence: stance
         fail(f"outside rate passed walk: {failed(grade_raw(rated, 'walk'))}")
     if rate_outside("flat study fee of at least $100,000"):
         fail("study fee flagged as a per-megawatt rate")
+    for sample in ("$50,000 per megawatt", "$50,000 per MW", "$50,000/MW"):
+        if not rate_outside(sample):
+            fail(f"rate missed {sample}")
 
     spelled = GOOD_RULE.replace(
         "Utilities Code §37.0561 sets the flat study fee of at least $100,000.",
@@ -501,6 +511,29 @@ evidence: stance
     )
     if failed(grade_raw(commission, "rule")) != ["names-other-filers"]:
         fail(f"commission counted as a filer: {failed(grade_raw(commission, 'rule'))}")
+    puc = GOOD_RULE.replace(
+        "Expect electric utilities to file and push for a higher study fee.",
+        "The Public Utility Commission may say the fee is flat.",
+    )
+    if failed(grade_raw(puc, "rule")) != ["names-other-filers"]:
+        fail(f"Public Utility Commission counted as a filer: {failed(grade_raw(puc, 'rule'))}")
+    for filer_sentence in (
+        "Expect consumer groups to push the penalty higher.",
+        "Expect developers to argue for a lower study fee.",
+    ):
+        filer = GOOD_RULE.replace(
+            "Expect electric utilities to file and push for a higher study fee.",
+            filer_sentence,
+        )
+        if failed(grade_raw(filer, "rule")):
+            fail(f"filer sentence failed: {filer_sentence} {failed(grade_raw(filer, 'rule'))}")
+    myth_rule = GOOD_RULE.replace(
+        "A large load customer pays a flat study fee of at least $100,000 before the screening study.\n",
+        "A large load customer pays a flat study fee of at least $100,000 before the screening study.\n\"The fee is illegal!\"\n",
+        1,
+    )
+    if failed(grade_raw(myth_rule, "rule")) != ["hook-not-invented-myth-list"]:
+        fail(f"invented rule hook quote: {failed(grade_raw(myth_rule, 'rule'))}")
 
     walked = GOOD_RULE.replace(
         "Expect electric utilities to file and push for a higher study fee.",

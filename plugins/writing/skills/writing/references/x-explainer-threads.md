@@ -78,7 +78,7 @@ The writing skill's universal rules still apply. Two need care here:
 
 ```
 1  [Bill number] as [filed/enrolled/enacted/adopted]:
-   When the record contains objection quotes, list 6 to 8 of them, one per line, in the opponents' own words.
+   When the record contains objection quotes, list those quotes, one per line, in the opponents' own words. Do not add a quote the record does not contain.
    When it does not, do not write objection lines.
    Think of [the thing] as [plain analogy]: [three bullets].
    But the details matter a LOT, and they address what the text says.
