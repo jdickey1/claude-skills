@@ -4,36 +4,38 @@
     {
       "id": 1,
       "name": "explicit-explainer",
-      "prompt": "/writing:write-x Write an X thread explaining Pecan County Order 2026-14 (text in evals/x-explainer/ordinance-2026-14.md) section by section, answering the objections people are raising.",
-      "expected_output": "Myth-list hook naming the version, section-numbered walk in order, quoted objections answered at their section, verify-it-yourself close with the source link, share-ask self-reply.",
+      "prompt": "/writing:write-x Walk Utilities Code §37.0561(c) and (f) through (j), as enrolled in S.B. 6 (89th Legislature). The only source is evals/x-explainer/sb6-37.0561.md. Quote the enrolled text in subsection order. Do not add a fee, a rate, a deadline, or an objection that the excerpt does not contain.",
+      "expected_output": "Version named in the hook, subsection walk in enrolled order, statutory phrases quoted from the excerpt, verify-it-yourself close with the capitol.texas.gov source link, share-ask self-reply. No invented objection list.",
       "grader_mode": "walk"
     },
     {
       "id": 2,
       "name": "indirect-set-record-straight",
-      "prompt": "/writing:write-x People on X are losing it over Pecan County's new data center order (evals/x-explainer/ordinance-2026-14.md). Help me post something that sets the record straight.",
-      "expected_output": "Recognizes this as a governing-text explainer and routes to the explainer format rather than a 5-7 tweet narrative.",
+      "prompt": "/writing:write-x People are misstating the large-load standards in enrolled S.B. 6. The only source is evals/x-explainer/sb6-37.0561.md. Set the record straight from that excerpt. Do not supply an objection, a fee, or a rate the excerpt does not contain.",
+      "expected_output": "Recognizes this as a governing-text explainer and routes to the explainer format rather than a 5-7 tweet narrative. Uses only the enrolled excerpt.",
       "grader_mode": "walk"
     },
     {
       "id": 3,
       "name": "proposed-rule-stakes-first",
-      "prompt": "/writing:write-x The Lone Star Water Commission just published a proposed rule for large industrial water users (evals/x-explainer/proposed-rule-99001.md). Write an X thread explaining it for data center developers.",
-      "expected_output": "Stakes-first rule variant: hook states the hardest requirements with $ and %, one provision per post, a scenario-question post, other filers named, close on project number + comment deadline. Not a section walk.",
+      "prompt": "/writing:write-x Explain the study fee and the financial-commitment provisions in enrolled Utilities Code §37.0561 for a large-load customer. The only source is evals/x-explainer/sb6-37.0561.md. Stakes first. The excerpt does not set a dollar-per-megawatt rate. Do not add one.",
+      "expected_output": "Stakes-first shape: hook states a hard number that is in the excerpt, one provision per post, a scenario-question post, other filers named as expectation, close on §37.0561 and the $100,000 study fee. Not a section walk. No rate the excerpt does not contain.",
       "grader_mode": "rule"
     }
   ],
-  "notes": "Fictional fixtures. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. Walk mode has 9 checks; rule mode has 10 since 2.10.1 (9 before: no-unsourced-superlatives was added). Evals 1-2 (walk): writing 2.8.7 = 3/9 and 1/9; 2.9.0 = 9/9 and 9/9 (eval 1 scored 8/9 in its pre-release draft, before the adjacent-grouping fix); 2.10.0 = 9/9 and 9/9. The 2.10.0 eval-2 score depends on the PR #54 loosening of hook-names-version and share-ask-self-reply; it was 7/9 on the earlier regexes. Eval 3 (rule), on the 10-check grader: 2.9.0 = 4/10 (myth-list hook with 7 invented objections, lettered-section walk, no filers named). 2.10.0 = 9/10 (iteration-4, flags 'anywhere in the state' and 'than any water bond...'). Rule 7, three runs per version: 2.10.0 (iteration-5) scored 9, 9, 9/10: two tripwire flags ('costs more than the deposit', \"state's first\") and one run that dropped the filer post. 2.10.1 first draft (iteration-6) scored 0 of 3 flagged, but its rule 7 examples quoted the tripwire's own phrases and the fixture's arithmetic, so that result was contaminated. 2.10.1 as merged (iteration-7, examples drawn from outside the fixture, runs told not to read evals/): 10, 10, 9/10, 0 of 3 flagged, filer post kept 3 of 3, scenario question 3 of 3. A manual read still found one small invented detail in 2 of 3 ('exclusive water rights'; 'in cash' where the rule says 'security'). That rate held across iterations 5-7, so rule wording has plateaued; the next lever is a separate fact-check pass, not more rule text. Run-to-version map in the local workspace: 2.8.7 = iteration-1 old_skill; 2.9.0 = iteration-2 eval-1, iteration-1 eval-2 with_skill, iteration-3 eval-3 old_skill; 2.10.0 = iteration-3 with_skill, iteration-4, iteration-5; 2.10.1 = iteration-7.",
+  "notes": "Source record is the enrolled excerpt in sb6-37.0561.md, quoted from https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm. Both grader modes read that file. Walk mode has 11 checks. Rule mode has 12. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. python3 grade.py --self-check scans *.md, *.py, and *.json under plugins/writing, case-insensitively, and skips grade.py because the denylist tuple lives there. It also asserts that tuple still contains its strings, and it grades the synthetic walk and rule threads plus the fact-check mode and traced-quote parser. Historical scores through writing 2.10.1 were produced against source records that have been deleted. Those scores are not reusable and are not restated here. planted-thread.md holds two sentences marked false (a form-word swap, and a right the statute does not grant) plus three controls (shown arithmetic, a pure filer sentence, a stance self-reply). The checker prompt's examples are a private invoice, not a law. grade.py records fact_check beside summary: independent, fallback, not-run, incomplete, or fact-check: absent. Only independent is the independent result. A Fact-check heading before the last FINAL does not count. The heading text Fact-check report is absent. fact_check_quote_misses reads traced evidence under ## Fact-check rows. Straight and curly quotes count, at any length. A quote that is not a whitespace-normalized substring of the excerpt is a miss. Quotes in the live ## Fact-check block are not read. A miss does not change summary.total.",
   "assertions": [
-    "hook-is-myth-list",
     "hook-names-version",
     "walk-opens-with-section-numbers",
     "walk-in-text-order",
     "parts-numbered-n-of-N",
     "close-links-primary-source",
-    "objections-quoted-in-walk",
+    "statutory-phrases-present",
     "share-ask-self-reply",
-    "no-em-dashes"
+    "no-em-dashes",
+    "no-fabricated-instrument",
+    "hook-quotes-are-in-the-record",
+    "no-rate-outside-the-record"
   ],
   "assertions_rule": [
     "hook-leads-with-hard-number",
@@ -42,10 +44,12 @@
     "thread-6-to-8-posts",
     "not-a-section-walk",
     "scenario-question-post",
-    "close-has-docket-and-deadline",
+    "close-cites-section-and-fee",
     "names-other-filers",
     "no-unsourced-superlatives",
-    "no-em-dashes"
+    "no-em-dashes",
+    "no-fabricated-instrument",
+    "no-rate-outside-the-record"
   ],
-  "output_format": "Harness asks agents for drafts first, then '## FINAL' with posts separated by lines of ---, self-replies starting 'Self-reply', checklists under '## Verification'."
+  "output_format": "Harness asks agents for drafts first, then '## FINAL' with posts separated by lines of ---, self-replies starting 'Self-reply', checklists under '## Verification'. '## Fact-check' follows the self-replies and is not graded. '## Fact-check rows' holds the checker rows. The grader reads traced quotes there."
 }

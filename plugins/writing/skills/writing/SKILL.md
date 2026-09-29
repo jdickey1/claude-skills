@@ -1,7 +1,7 @@
 ---
 name: writing
 description: Use when writing any content, copy, social posts, articles, blog posts, website text, emails, newsletters, headlines, descriptions, or any text that will be read by humans. Also use when reviewing or editing AI-generated text for quality.
-version: 2.10.1
+version: 2.10.4
 effort: high
 expires_when: "Claude's unprompted prose drops the em dashes, banned buzzwords, corrective reframes, copula avoidance, and slop patterns, retiring the tic-suppression apparatus and self-audit; the voice-precedence machinery (rule #15, pre-write context check), the org brand roster, headlines.md, and persuasion-frameworks.md stay"
 ---
@@ -557,6 +557,8 @@ If a rationalization isn't on this list, write it down before acting on it. New 
 - **Self-audit must precede the pre-publish checklist, not replace it.** The checklist is lexical (catches em dashes, banned words, copula avoidance). The audit is structural (catches the residual AI shape). Run the audit, revise, then run the checklist on the revised version. A draft that "passes the checklist" without the audit will still feel AI-shaped on mandatory channels.
 - **"No AI tells in this draft" is a fake audit.** If the model returns zero bullets in step 2 of the self-audit on a first draft, the audit was skipped, not passed. Push back: name 2–4 honest tells before revising.
 - **Bare-surname H2s are first instances.** Section heads like `## Kolkhorst put...` break rule #20 even when the next paragraph opens with `Senator Lois Kolkhorst`. Scan H1/H2 and the lede independently before clearing the checklist.
+- **The drafter's own trace misses invented details.** An explainer thread requires the fact-check in write-x, using `references/x-explainer-fact-check.md`, with the report under `## Fact-check` after the self-replies.
+- **A legal source record is the primary text.** An explainer example or eval source that states a legal requirement is a verbatim quote from a cited primary source. An invented agency, code section, fee, or deposit does not go in the file. A planted checker error is marked false in that file and is not a source record.
 
 ## Learning
 
