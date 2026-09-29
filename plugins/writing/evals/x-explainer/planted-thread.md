@@ -9,13 +9,13 @@ Two planted misses, both unsupported, both false:
 
 Three controls, not unsupported:
 
-1. Shown arithmetic on the record's own number, inputs shown: "Two times the flat study fee of at least $100,000 is $200,000."
+1. Shown arithmetic on the record's own number, inputs shown: "Two times the flat study fee of at least $100,000 is at least $200,000."
 2. Pure filer sentence. Who will file and what they will push for, as expectation. No extra right or amount: "Expect electric utilities to file and push for a higher study fee."
 3. Stance self-reply, framed as the writer's, no new record fact: "I hope the commission keeps the security on a dollar per megawatt basis."
 
 ## FINAL
 
-Two times the flat study fee of at least $100,000 is $200,000.
+Two times the flat study fee of at least $100,000 is at least $200,000.
 
 ---
 

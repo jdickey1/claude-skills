@@ -23,7 +23,7 @@
       "grader_mode": "rule"
     }
   ],
-  "notes": "Source record is the enrolled excerpt in sb6-37.0561.md, quoted from https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm. Both grader modes read that file. Walk mode has 9 checks. Rule mode has 11. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. python3 grade.py --self-check fails if a banned invented-instrument string is anywhere under plugins/writing. Historical scores through writing 2.10.1 were produced against source records that have been deleted. Those scores are not reusable and are not restated here. planted-thread.md holds two sentences marked false (a form-word swap, and a right the statute does not grant) plus three controls (shown arithmetic, a pure filer sentence, a stance self-reply). The checker prompt's examples are a private invoice, not a law. grade.py records fact_check beside summary: independent, fallback, not-run, incomplete, or fact-check: absent. Only independent is the independent result. fact_check_quote_misses lists double-quoted traced evidence that is not a whitespace-normalized substring of the excerpt. A miss does not change summary.total.",
+  "notes": "Source record is the enrolled excerpt in sb6-37.0561.md, quoted from https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00006F.htm. Both grader modes read that file. Walk mode has 11 checks. Rule mode has 12. Grade a run dir (containing outputs/thread.md) with: python3 grade.py <run_dir> [walk|rule]. python3 grade.py --self-check scans *.md, *.py, and *.json under plugins/writing, case-insensitively, and skips grade.py because the denylist tuple lives there. It also asserts that tuple still contains its strings, and it grades the synthetic walk and rule threads plus the fact-check mode and traced-quote parser. Historical scores through writing 2.10.1 were produced against source records that have been deleted. Those scores are not reusable and are not restated here. planted-thread.md holds two sentences marked false (a form-word swap, and a right the statute does not grant) plus three controls (shown arithmetic, a pure filer sentence, a stance self-reply). The checker prompt's examples are a private invoice, not a law. grade.py records fact_check beside summary: independent, fallback, not-run, incomplete, or fact-check: absent. Only independent is the independent result. A Fact-check heading before the last FINAL does not count. The heading text Fact-check report is absent. fact_check_quote_misses reads traced evidence under ## Fact-check rows. Straight and curly quotes count, at any length. A quote that is not a whitespace-normalized substring of the excerpt is a miss. Quotes in the live ## Fact-check block are not read. A miss does not change summary.total.",
   "assertions": [
     "hook-names-version",
     "walk-opens-with-section-numbers",
@@ -33,7 +33,9 @@
     "statutory-phrases-present",
     "share-ask-self-reply",
     "no-em-dashes",
-    "no-fabricated-instrument"
+    "no-fabricated-instrument",
+    "hook-quotes-are-in-the-record",
+    "no-rate-outside-the-record"
   ],
   "assertions_rule": [
     "hook-leads-with-hard-number",
@@ -46,7 +48,8 @@
     "names-other-filers",
     "no-unsourced-superlatives",
     "no-em-dashes",
-    "no-fabricated-instrument"
+    "no-fabricated-instrument",
+    "no-rate-outside-the-record"
   ],
-  "output_format": "Harness asks agents for drafts first, then '## FINAL' with posts separated by lines of ---, self-replies starting 'Self-reply', checklists under '## Verification'. '## Fact-check' follows the self-replies and is not graded."
+  "output_format": "Harness asks agents for drafts first, then '## FINAL' with posts separated by lines of ---, self-replies starting 'Self-reply', checklists under '## Verification'. '## Fact-check' follows the self-replies and is not graded. '## Fact-check rows' holds the checker rows. The grader reads traced quotes there."
 }
