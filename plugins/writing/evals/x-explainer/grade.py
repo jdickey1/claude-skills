@@ -64,7 +64,11 @@ def fabricated(text):
     return banned_hits(text)
 
 def headings(raw):
-    return list(re.finditer(r"(?m)^#+\s*(.*)$", raw))
+    return list(re.finditer(r"(?m)^(#+)\s*(.*)$", raw))
+
+def heading_key(text):
+    # "Fact-check", "Fact check", and "Fact-check:" are one heading. "Fact-check report" is not.
+    return re.sub(r"[^a-z]", "", text.lower())
 
 def after_last_final(raw):
     finals = list(re.finditer(r"(?im)^#+\s*FINAL\b.*$", raw))
@@ -77,9 +81,11 @@ def section_body(raw, title):
     found = None
     heads = headings(region)
     for i, h in enumerate(heads):
-        if h.group(1).strip().lower() != title:
+        if heading_key(h.group(2)) != heading_key(title):
             continue
-        end = heads[i + 1].start() if i + 1 < len(heads) else len(region)
+        # A subheading (### Rows) stays inside the section; a same-or-higher heading ends it.
+        level = len(h.group(1))
+        end = next((x.start() for x in heads[i + 1:] if len(x.group(1)) <= level), len(region))
         found = region[h.end():end]
     return found
 
@@ -97,7 +103,7 @@ def fact_check_mode(body, rows=None):
         return "fact-check: absent"
     if "the fact-check was not run" in body.lower():
         return "not-run"
-    if re.search(r"(?i)\bnot[- ]checked\b", body):
+    if re.search(r"(?i)\bnot[- ]checked\b", re.sub(r"(?i)\b0\s+not[- ]checked\b", "", body)):
         return "incomplete"
     if rows and re.search(r"(?mi)^label:\s*not[- ]checked\s*$", rows):
         return "incomplete"
@@ -143,7 +149,7 @@ def drop_skipped_sections(text):
         heads = headings(text)
         cut = None
         for i, h in enumerate(heads):
-            if h.group(1).strip().lower() not in SKIP_HEADINGS:
+            if h.group(2).strip().lower() not in SKIP_HEADINGS:
                 continue
             end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
             cut = (h.start(), end)
@@ -157,7 +163,7 @@ def graded_span(raw):
     # sit before Self-replies. The next other heading still ends the span.
     t = drop_skipped_sections(after_last_final(raw))
     for h in headings(t):
-        if not re.match(r"(?i)self[- ]?repl", h.group(1)):
+        if not re.match(r"(?i)self[- ]?repl", h.group(2)):
             return t[:h.start()]
     return t
 
@@ -548,13 +554,32 @@ evidence: stance
     if failed(grade_raw(walked, "rule")) != ["not-a-section-walk"]:
         fail(f"section lines: {failed(grade_raw(walked, 'rule'))}")
 
-    # Hook number: above the fold counts, even on line 3; a number buried past 280 characters does not.
-    split = "Datacenters have 60 days to sign.\n\nMiss it and the utility cancels.\n\nAt 300 MW, the floor is $15 million: \U0001f9f5"
-    buried = "Datacenters have a deadline.\n\n" + ("Background line. " * 20) + "\n\nThe floor is $15 million: \U0001f9f5"
-    for hk, want in ((split, True), (buried, False)):
-        got = bool(re.search(r"\$\s?\d|\d+\s?%", hk[:280]))
-        if got != want:
-            fail(f"hook fold check: {got} for {hk[:40]!r}")
+    # Hook number: a one-sentence-per-line hook passes with the number on line 3;
+    # a number buried past the 280-character fold fails.
+    old_hook = "A large load customer pays a flat study fee of at least $100,000 before the screening study."
+    split_hook = "Large load customers face a study fee.\n\nThey pay it before the screening study.\n\nThe flat fee is at least $100,000."
+    buried_hook = "Large load customers face a study fee.\n\n" + "They pay it before the screening study. " * 8 + "\n\nThe flat fee is at least $100,000."
+    if old_hook not in GOOD_RULE:
+        fail("GOOD_RULE hook changed; update the fold check")
+    for hk, want_pass in ((split_hook, True), (buried_hook, False)):
+        res = grade_raw(GOOD_RULE.replace(old_hook, hk), "rule")
+        if ("hook-leads-with-hard-number" not in failed(res)) != want_pass:
+            fail(f"hook fold check: {failed(res)} for {hk[:40]!r}")
+
+    if fact_check_mode("independent 12 traced, 2 allowed, 0 not checked\n") != "independent":
+        fail("zero not-checked count read as incomplete")
+    if fact_check_mode("independent 12 traced, 10 not checked\n") != "incomplete":
+        fail("nonzero not-checked count lost")
+    sub = "## FINAL\nThe thread.\n\n## Fact-check\nindependent 1 traced\n\n### Notes\nOne sentence was not checked.\n\n## Appendix\nx\n"
+    if fact_check_mode(fact_check_body(sub)) != "incomplete":
+        fail("subheading cut the Fact-check body short")
+    if "Appendix" in (fact_check_body(sub) or ""):
+        fail("same-level heading did not end the Fact-check body")
+    variant_heading = "## FINAL\nThe thread.\n\n## Fact check\nfallback 1 traced\n"
+    if fact_check_mode(fact_check_body(variant_heading)) != "fallback":
+        fail("'Fact check' heading variant read as absent")
+    if fact_check_body("## FINAL\nx\n\n## Fact-check report\nindependent\n") is not None:
+        fail("'Fact-check report' counted as the Fact-check heading")
 
     print("self-check ok")
 

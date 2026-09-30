@@ -31,9 +31,9 @@ A source record that states a legal requirement is the primary text, quoted, wit
 6. **Close on something the reader can act on or answer.** A docket and deadline, the source text, or an open question. Save your personal stance for a self-reply 60 to 90 minutes later ("I love that Texas is pro-freedom... But..."). The thread stays shareable across camps, and the late reply restarts the conversation.
 7. **Every factual sentence traces to a line in the record or a cited source. If it doesn't, cite it or cut it.** Apply it as a test to each sentence. It catches firsts and superlatives ("the nation's first," "the toughest interconnection framework in the country"), comparisons to past rules, cost and timing predictions ("this adds two years to every project"), outside benchmarks without a source, the wrong actor (a rule the agency writes described as one the utilities write), and paraphrases that widen or narrow the text's scope (a rule for new loads above 75 MW described as covering "every data center"). Closing punchlines count too. These are the lines critics pull on. Three kinds of sentence pass without a citation: arithmetic on the record's own numbers with the inputs shown ("$50,000 per MW on a 500 MW request is $25 million"), the stakes-first post saying who will file and what each will push for, framed as expectation ("Expect consumer groups to push the penalty higher"), and your own stance in a self-reply, framed as yours.
 
-8. **Open each post on its fact or on the reader's question.** Cut the set-up sentence ("Verification comes first." "The allocation brings the bill." "Selling a tenant a delivery date because the site is 'in Batch Zero'? Ask which category first.") and start with the provision, the date, or the number ("10/12 5pm CT is a separate deadline"). A question earns its place only when the next words answer it with a fact from the record, set apart on their own: "Late or incomplete response? Excluded." "The earliest modeled energization date for the studied group? 1/1/28" "Got in?"
+8. **Open each post on its fact or on the reader's question.** Cut the set-up sentence ("Verification comes first." "The allocation brings the bill." "Selling a tenant a delivery date because the site is 'in Batch Zero'? Ask which category first.") and start with the provision, the date, or the number ("10/12 5pm CT is a separate deadline"). A question earns its place only when the next words answer it with a fact from the record, set apart on their own: "Late or incomplete response? Excluded." "The earliest modeled energization date for the studied group? 1/1/28" "Got in? Put up the greater of $50k per contracted MW or the system-upgrade costs allocated to the project."
 9. **Keep the record's hedge. Cut the writer's.** When the record says "may," keep it and stress it ("Previously posted Batch Zero $ *may* be credited."). Cut sentences that head off a misreading the reader didn't make, such as "It isn't a floor for every project," "Don't assume X means Y," or "Neither date is a promised restart." They pass rule 7, and they still cost a line. Keep one only when the reader would act on the wrong reading.
-10. **Compress a branch table into its range.** When a provision has four outcomes by category, the post gives the span ("Could forfeit 20-50% plus costs") and the source reply links the table. Keep the table only when the thread is a statute walk.
+10. **Compress a branch table into its range.** When a provision has four outcomes by category, the post gives the span ("Could forfeit 20-50% plus costs") and the source self-reply links the table. The checker traces a range when each end has its own quote, so keep both ends in the record's terms. Keep the table only when the thread is a statute walk.
 
 The writing skill's universal rules still apply. Two need care here:
 
@@ -45,8 +45,10 @@ The writing skill's universal rules still apply. Two need care here:
 ### Stakes-first rule
 
 ```
-1  [Agency/State] just told [audience]: [requirement with $], [requirement with %], and [requirement].
-   [Rule name + scope] is [one-line characterization, sourced]: 🧵
+1  [Audience] [has/must] [requirement with its clock or $].
+   [Consequence of missing it.]
+   [Hardest number, on its own line.]
+   [What else the thread covers]: 🧵
 2  [Who cares, framed as their worry?] This rule requires [provision].
    [One-line effect.]
 3  [Scenario question: "Miss your milestone by six months?"] [Penalty]. [What happens next.]
@@ -133,7 +135,7 @@ x-posts.md's threading rules target 5 to 7 tweet narrative arcs. Some variants b
 | 5 to 7 tweets | 10 to 20 posts | Statute walk | The length proves completeness. Shrink uncontested sections to one line. Don't drop them. |
 | 5 to 7 tweets | Up to 8 posts | Stakes-first rule, legal gap | One post per provision or beat. Both exemplars ran 7; stop at 8. |
 | Under 280 chars | Long posts (Premium) | Stakes-first rule, statute walk | A provision plus its consequence rarely fits. Keep the hook's key fact above the "Show more" fold. Without Premium, use legal gap or hearing record, or an X Article (x-articles.md). |
-| End on a debatable question | End on the docket and deadline when the record has them. Otherwise end on the source text | Stakes-first rule, statute walk | The close hands the reader the record. The question moves to a self-reply. |
+| End on a debatable question | End on the docket and deadline when the record has them. After adoption, with comments closed, end on the next clock and move the citation to the source self-reply. Otherwise end on the source text | Stakes-first rule, statute walk | The close hands the reader the record. The question moves to a self-reply. |
 | Links go in a self-reply | The source link goes in the closing post | Statute walk | The link is the payoff of the close, and the reach penalty costs little by then. |
 
 Hearing record follows x-posts.md as written, and legal gap does apart from the post count. Everything else there applies to all four: no link in the hook, soft transitions, the reply-back window, fresh closers, and @ mentions.
@@ -151,7 +153,7 @@ Run this after the writing skill's universal self-audit and checklist.
 - [ ] Fact-check report is attached after the self-replies, or the report says the fact-check was not run. Checker rows sit under Fact-check rows, and traced quotes stay there.
 - [ ] No verdict is followed by a restated label (rule #10). Verdicts vary.
 - [ ] The close gives an action, the record, or an open question. The stance self-reply is drafted.
-- [ ] The hook's subject is the reader who has to act. The hook runs one sentence per line.
+- [ ] Stakes-first and legal gap: the hook's subject is the reader who has to act, and the hook runs one sentence per line. The statute walk keeps its version line or myth list, and the hearing record keeps its on-record number.
 - [ ] No post opens with a set-up sentence. Record hedges ("may") are kept. Writer caveats are cut.
 - [ ] Every @ handle was looked up on X, or is listed for the user to confirm before posting.
 
