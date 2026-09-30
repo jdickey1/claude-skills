@@ -112,7 +112,7 @@ ROWS_OK = "post: hook\nsentence: x\nlabel: traced\nevidence: \"flat study fee of
 KNOWN_LABELS = {"traced", "allowed", "unsupported", "no fact", "cited"}
 
 def clean_row_line(line):
-    return re.sub(r"[*`]", "", re.sub(r"^[\s>*`-]*", "", line)).strip()
+    return re.sub(r"[*`]", "", re.sub(r"^[\s>*`-]*(?:\d+[.)]\s*)?", "", line)).strip()
 
 def parse_rows(rows):
     # One dict per row: post, sentence, label, evidence. Bullets, bold, and backticks are ignored.
@@ -123,7 +123,8 @@ def parse_rows(rows):
         if not m:
             continue
         key, val = m.group(1).lower(), m.group(2).strip()
-        if key == "post" or not out:
+        # A repeated key starts a new row even when the checker left out post:.
+        if key == "post" or not out or key in out[-1]:
             out.append({})
         out[-1][key] = val
     return out
@@ -140,11 +141,13 @@ def fact_check_mode(body, rows=None):
     # A missing heading returns fact-check: absent and does not change summary.total.
     if body is None:
         return "fact-check: absent"
-    if "the fact-check was not run" in body.lower() or "record not read" in (body + (rows or "")).lower():
+    record_not_read = re.fullmatch(r"\s*`?RECORD NOT READ`?\s*", rows or "") or re.search(r"(?m)^\s*`?RECORD NOT READ`?\s*$", body)
+    if "the fact-check was not run" in body.lower() or record_not_read:
         return "not-run"
-    if unchecked_mention(body):
-        return "incomplete"
     first = next((ln.strip() for ln in body.splitlines() if ln.strip()), "")
+    # The counts line carries the not-checked count. Change lines can say "unchecked growth".
+    if unchecked_mention(first) or re.search(r"(?i)\bnot[- ]checked\b", body.replace(first, "", 1)):
+        return "incomplete"
     token = "fallback" if re.match(r"(?i)fallback\b", first) else "independent" if re.match(r"(?i)independent\b", first) else None
     if token is None:
         return "incomplete"
@@ -182,10 +185,15 @@ def fact_check_quote_misses(rows):
         # " / " separates quotes. Each piece runs from its first quote mark to its last,
         # so a quote nested inside a quote is checked whole.
         for piece in evidence.split(" / "):
-            m = re.search(r'"(.*)"', piece)
-            q = norm(m.group(1) if m else piece)
-            if q and q not in src and q not in misses:
-                misses.append(q)
+            parts = [norm(x) for x in QUOTE_RE.findall(piece) if norm(x)]
+            if not parts or any(x not in src for x in parts):
+                m = re.search(r'"(.*)"', piece)
+                whole = norm(m.group(1) if m else piece)
+                # Several quotes that all trace pass; otherwise judge the whole piece.
+                parts = [whole] if not parts or whole in src else [x for x in parts if x not in src]
+            for q in parts:
+                if q and q not in src and q not in misses:
+                    misses.append(q)
     return misses
 
 def quotes_outside_record(text):
@@ -661,6 +669,27 @@ evidence: stance
     short = grade_raw(GOOD_RULE.replace("$100,000", "$100k"), "rule")
     if "close-cites-section-and-fee" in failed(short):
         fail("$100k shorthand failed the close check")
+
+    numbered = ("1. post: 1\n   label: not checked\n   evidence: none\n\n"
+                "2. post: 2\n   sentence: x\n   label: traced\n   evidence: \"FAKE TWO here\"\n\n"
+                "3. post: 3\n   sentence: y\n   label: traced\n   evidence: \"75 megawatts\"\n")
+    if fact_check_quote_misses(numbered) != ["FAKE TWO here"]:
+        fail(f"numbered rows merged: {fact_check_quote_misses(numbered)}")
+    if fact_check_mode("independent 3 traced, 0 not checked\n", numbered) != "incomplete":
+        fail("numbered not-checked row lost")
+    no_post = ("sentence: a\nlabel: traced\nevidence: \"FAKE ONE here\"\n\n"
+               "sentence: b\nlabel: traced\nevidence: \"75 megawatts\"\n")
+    if fact_check_quote_misses(no_post) != ["FAKE ONE here"]:
+        fail(f"rows without post: merged: {fact_check_quote_misses(no_post)}")
+    comma = "post: 1\nsentence: x\nlabel: traced\nevidence: \"75 megawatts\", \"flat study fee of at least $100,000\"\n"
+    if fact_check_quote_misses(comma):
+        fail(f"comma-joined quotes flagged: {fact_check_quote_misses(comma)}")
+    change = "independent 12 traced, 0 not checked\nCut: \"Growth runs unchecked\" (unsupported).\n"
+    if fact_check_mode(change, ROWS_OK) != "independent":
+        fail("'unchecked' in a change line read as incomplete")
+    phrase_rows = ROWS_OK + "\npost: 2\nsentence: The record not read aloud.\nlabel: no fact\nevidence: none\n"
+    if fact_check_mode("independent 2 traced\n", phrase_rows) != "independent":
+        fail("'record not read' inside a sentence read as not-run")
 
     print("self-check ok")
 
