@@ -51,6 +51,7 @@ def fixture_text():
     return fixture_path().read_text()
 
 def norm(text):
+    text = text.replace("\u2018", "'").replace("\u2019", "'").replace("\u201c", '"').replace("\u201d", '"')
     return re.sub(r"\s+", " ", text).strip()
 
 def subsection_letters(text):
@@ -89,11 +90,49 @@ def section_body(raw, title):
         found = region[h.end():end]
     return found
 
+def section_bodies(raw, title):
+    region = after_last_final(raw)
+    heads = headings(region)
+    bodies = []
+    for i, h in enumerate(heads):
+        if heading_key(h.group(2)) != heading_key(title):
+            continue
+        level = len(h.group(1))
+        end = next((x.start() for x in heads[i + 1:] if len(x.group(1)) <= level), len(region))
+        bodies.append(region[h.end():end])
+    return bodies
+
 def fact_check_body(raw):
     return section_body(raw, "fact-check")
 
 def fact_check_rows(raw):
     return section_body(raw, "fact-check rows")
+
+ROWS_OK = "post: hook\nsentence: x\nlabel: traced\nevidence: \"flat study fee of at least $100,000\"\n"
+KNOWN_LABELS = {"traced", "allowed", "unsupported", "no fact", "cited"}
+
+def clean_row_line(line):
+    return re.sub(r"[*`]", "", re.sub(r"^[\s>*`-]*", "", line)).strip()
+
+def parse_rows(rows):
+    # One dict per row: post, sentence, label, evidence. Bullets, bold, and backticks are ignored.
+    out = []
+    for line in (rows or "").splitlines():
+        ln = clean_row_line(line)
+        m = re.match(r"(?i)(post|sentence|label|evidence)\s*:\s*(.*)$", ln)
+        if not m:
+            continue
+        key, val = m.group(1).lower(), m.group(2).strip()
+        if key == "post" or not out:
+            out.append({})
+        out[-1][key] = val
+    return out
+
+def unchecked_mention(text):
+    # "0 not checked", "not checked: 0", "zero not checked" are counts, not unchecked sentences.
+    text = re.sub(r"(?i)\b(0|zero|no)\s+(not[- ]checked|unchecked)\b", "", text)
+    text = re.sub(r"(?i)\b(not[- ]checked|unchecked)\s*:?\s*(0|zero|none)\b", "", text)
+    return re.search(r"(?i)\b(not[- ]checked|unchecked)\b", text) is not None
 
 def fact_check_mode(body, rows=None):
     # Priority, not document order: the not-run phrase, then an unchecked sentence,
@@ -101,18 +140,30 @@ def fact_check_mode(body, rows=None):
     # A missing heading returns fact-check: absent and does not change summary.total.
     if body is None:
         return "fact-check: absent"
-    if "the fact-check was not run" in body.lower():
+    if "the fact-check was not run" in body.lower() or "record not read" in (body + (rows or "")).lower():
         return "not-run"
-    if re.search(r"(?i)\bnot[- ]checked\b", re.sub(r"(?i)\b0\s+not[- ]checked\b", "", body)):
-        return "incomplete"
-    if rows and re.search(r"(?mi)^label:\s*not[- ]checked\s*$", rows):
+    if unchecked_mention(body):
         return "incomplete"
     first = next((ln.strip() for ln in body.splitlines() if ln.strip()), "")
-    if re.match(r"(?i)fallback\b", first):
-        return "fallback"
-    if re.match(r"(?i)independent\b", first):
-        return "independent"
-    return "incomplete"
+    token = "fallback" if re.match(r"(?i)fallback\b", first) else "independent" if re.match(r"(?i)independent\b", first) else None
+    if token is None:
+        return "incomplete"
+    # A mode claim needs rows behind it, every row with a known label.
+    parsed = parse_rows(rows)
+    if not parsed or any(r.get("label", "").strip(" .").lower() not in KNOWN_LABELS for r in parsed):
+        return "incomplete"
+    return token
+
+def fact_check_mode_all(bodies, rows=None):
+    # Two Fact-check blocks after FINAL: a later block cannot hide an earlier honest one.
+    if not bodies:
+        return "fact-check: absent"
+    modes = [fact_check_mode(b, rows) for b in bodies]
+    if "not-run" in modes:
+        return "not-run"
+    if len(modes) > 1 or "incomplete" in modes:
+        return "incomplete"
+    return modes[0]
 
 def fact_check_quote_misses(rows):
     # Traced evidence under ## Fact-check rows only. The live ## Fact-check block is not scanned.
@@ -121,17 +172,19 @@ def fact_check_quote_misses(rows):
         return []
     src = norm(fixture_text())
     misses = []
-    for block in re.split(r"(?m)^(?=post:)", rows):
-        if not re.search(r"(?mi)^label:\s*traced\s*$", block):
+    for row in parse_rows(rows):
+        if row.get("label", "").strip(" .").lower() != "traced":
             continue
-        evidence = "\n".join(ln for ln in block.splitlines() if re.match(r"(?i)\s*evidence:", ln))
-        quoted = [norm(q) for q in QUOTE_RE.findall(evidence)]
-        quoted = [q for q in quoted if q]
-        if not quoted:
-            rest = norm(re.sub(r"(?i)^\s*evidence:\s*", "", evidence))
-            quoted = [rest] if rest else []
-        for q in quoted:
-            if q not in src and q not in misses:
+        evidence = norm(row.get("evidence", ""))
+        if not evidence:
+            misses.append(f"(no evidence) {row.get('sentence', '')}".strip())
+            continue
+        # " / " separates quotes. Each piece runs from its first quote mark to its last,
+        # so a quote nested inside a quote is checked whole.
+        for piece in evidence.split(" / "):
+            m = re.search(r'"(.*)"', piece)
+            q = norm(m.group(1) if m else piece)
+            if q and q not in src and q not in misses:
                 misses.append(q)
     return misses
 
@@ -172,7 +225,7 @@ def grade_raw(raw, variant):
         raise SystemExit(f"unknown mode {variant!r}; use walk or rule")
     report = fact_check_body(raw)
     rows = fact_check_rows(raw)
-    fact_check = fact_check_mode(report, rows)
+    fact_check = fact_check_mode_all(section_bodies(raw, "fact-check"), rows)
     quote_misses = fact_check_quote_misses(rows)
     t = graded_span(raw)
 
@@ -220,7 +273,7 @@ def grade_raw(raw, variant):
             ("thread-6-to-8-posts", 6 <= len(thread) <= 8, f"{len(thread)} thread posts"),
             ("not-a-section-walk", len(any_secs) < 3, f"{len(any_secs)} lines start with Sec. N"),
             ("scenario-question-post", any(re.match(r"[^\n?]{3,90}\?", p) for p in thread[1:]), "a body post opens with a question"),
-            ("close-cites-section-and-fee", "37.0561" in tail and "$100,000" in tail, "section + study fee in last 2 posts"),
+            ("close-cites-section-and-fee", "37.0561" in tail and re.search(r"\$100(?:,000|k)\b", tail) is not None, "section + study fee in last 2 posts"),
             ("names-other-filers", FILER_RE.search("\n".join(thread[1:])) is not None, "a named group near argue/push/want/file in a body post"),
             ("no-unsourced-superlatives", not unsourced, f"flagged: {unsourced}" if unsourced else "none flagged"),
             ("no-em-dashes", "\u2014" not in t, f"{t.count(chr(0x2014))} em dashes"),
@@ -385,7 +438,7 @@ def self_check():
         fail("hyphenated not-checked counted as independent")
     if fact_check_mode("passed\n") != "incomplete":
         fail("passed counted as a mode")
-    if fact_check_mode("fallback 2 traced, 0 unsupported\n") != "fallback":
+    if fact_check_mode("fallback 2 traced, 0 unsupported\n", ROWS_OK) != "fallback":
         fail("fallback was not a mode")
     if fact_check_mode(None) != "fact-check: absent":
         fail("missing heading changed the mode")
@@ -566,7 +619,7 @@ evidence: stance
         if ("hook-leads-with-hard-number" not in failed(res)) != want_pass:
             fail(f"hook fold check: {failed(res)} for {hk[:40]!r}")
 
-    if fact_check_mode("independent 12 traced, 2 allowed, 0 not checked\n") != "independent":
+    if fact_check_mode("independent 12 traced, 2 allowed, 0 not checked\n", ROWS_OK) != "independent":
         fail("zero not-checked count read as incomplete")
     if fact_check_mode("independent 12 traced, 10 not checked\n") != "incomplete":
         fail("nonzero not-checked count lost")
@@ -576,10 +629,38 @@ evidence: stance
     if "Appendix" in (fact_check_body(sub) or ""):
         fail("same-level heading did not end the Fact-check body")
     variant_heading = "## FINAL\nThe thread.\n\n## Fact check\nfallback 1 traced\n"
-    if fact_check_mode(fact_check_body(variant_heading)) != "fallback":
+    if fact_check_mode(fact_check_body(variant_heading), ROWS_OK) != "fallback":
         fail("'Fact check' heading variant read as absent")
     if fact_check_body("## FINAL\nx\n\n## Fact-check report\nindependent\n") is not None:
         fail("'Fact-check report' counted as the Fact-check heading")
+
+    good_rows = "post: hook\nsentence: x\nlabel: traced\nevidence: \"flat study fee of at least $100,000\"\n"
+    for body, rows, want in (
+        ("independent traced 12, allowed 2, not checked 0\n", good_rows, "independent"),
+        ("independent 12 traced, zero not checked\n", good_rows, "independent"),
+        ("independent 12 traced, 0 not checked\n", None, "incomplete"),
+        ("independent 12 traced, 0 not checked\n", "", "incomplete"),
+        ("independent 12 traced\n", "RECORD NOT READ\n", "not-run"),
+        ("independent 12 traced\n", "post: 1\nsentence: x\nlabel: not checked (no row)\nevidence: none\n", "incomplete"),
+        ("independent 12 traced\n", "- post: 1\n  - sentence: x\n  - **label:** `unlabeled`\n", "incomplete"),
+        ("independent 1 unchecked\n", good_rows, "incomplete"),
+    ):
+        if fact_check_mode(body, rows) != want:
+            fail(f"mode {fact_check_mode(body, rows)} != {want} for {body!r} / {rows!r}")
+    two = "## FINAL\nx\n\n## Fact-check\nincomplete 3 not checked\n\n## Fact-check\nindependent 12 traced\n"
+    if fact_check_mode_all(section_bodies(two, "fact-check"), good_rows) != "incomplete":
+        fail("second Fact-check block hid the first")
+    drift = "- post: 1\n  - sentence: x\n  - **label:** traced\n  - **evidence:** \"FABRICATED QUOTE here\"\n"
+    if fact_check_quote_misses(drift) != ["FABRICATED QUOTE here"]:
+        fail(f"bulleted traced row escaped: {fact_check_quote_misses(drift)}")
+    if fact_check_quote_misses("post: 1\nsentence: The fee.\nlabel: traced\n") != ["(no evidence) The fee."]:
+        fail("traced row with no evidence passed")
+    rng = "post: 1\nsentence: x\nlabel: traced\nevidence: “flat study fee of at least $100,000” / \"75 megawatts\"\n"
+    if fact_check_quote_misses(rng):
+        fail(f"curly or range evidence missed: {fact_check_quote_misses(rng)}")
+    short = grade_raw(GOOD_RULE.replace("$100,000", "$100k"), "rule")
+    if "close-cites-section-and-fee" in failed(short):
+        fail("$100k shorthand failed the close check")
 
     print("self-check ok")
 

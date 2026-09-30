@@ -27,6 +27,7 @@ Write an X/Twitter post about the provided topic (`$ARGUMENTS`). If no topic is 
    - One re-check only. It is a new call under the same dispatch condition, on the changed sentences only, with the saved record and that same prompt. Repairs that restore a post count, the filer post, or a required walk quote are changed sentences and go in that re-check. There is no third round.
    - On that re-check, a sentence fixed by adding a source a reader can open gets the label `cited`. The source string is in the sentence. Nobody fetches the page, so `cited` means the source is named, not verified. The counts line lists cited sentences separately. A vague attribution stays unsupported and is cut.
    - After the re-check, only cuts are allowed. A new or reworded sentence is listed as not checked.
+   - If the first pass ran in a separate agent and the re-check runs in this session, the mode is `fallback`, or `incomplete` when any sentence is not checked.
    - If some rows parse and others do not, name the unlabeled sentences as not checked. Do not call them passed. That run is not independent. The thread is still shown.
    - If the checker returns nothing usable, or the saved record cannot be re-read, the report says exactly "the fact-check was not run". Before showing the thread, the drafter traces each factual sentence against whatever part of the record it can read (shared rule 7) and names what it could not read. Still show the thread. Never say the fact-check passed.
    - Append the report after the self-replies under the heading `## Fact-check`. That heading does not start with FINAL and does not match a self-reply heading. The live block is one mode-and-counts line, then one line per change. Do not put traced quotes in that block.
@@ -36,7 +37,7 @@ Write an X/Twitter post about the provided topic (`$ARGUMENTS`). If no topic is 
      - `fallback`: this session re-read the saved record because no separate agent could start. A fallback is not the independent result.
      - `incomplete`: any sentence is not checked, whichever way the check ran. The counts give the not-checked number.
      - `the fact-check was not run`: exactly that sentence, with no counts.
-     Counts use the labels: traced, allowed, cited, unsupported, not checked. A zero count may be listed.
+     Counts are number then label, in this order: `independent 12 traced, 2 allowed, 0 cited, 0 unsupported, 0 not checked`.
 8. Present the post.
    - If step 7 ran, present only the checked FINAL thread, its alternate hooks, its self-replies, and the short report. A draft variation that was outside the checker input is not an option.
    - If step 7 was skipped, present the best options with rationale.

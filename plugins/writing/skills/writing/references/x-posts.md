@@ -79,6 +79,7 @@ When a post runs long, shorten the notation before you cut a fact. These are X-o
 
 - Dates as m/d or m/d/yy ("10/12", "1/1/28", "4/9/27"), times as "5pm CT"
 - "&" for "and"; "$50k" for "$50,000"; "25MW+" for "25 megawatts or more"
+- Keep a figure verbatim inside a quote from the record, and in the citation a close depends on
 - Drop articles and helper verbs when the meaning survives ("Request is canceled & @ERCOT_ISO notified")
 
 ## Post Template
